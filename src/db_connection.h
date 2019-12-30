@@ -1,7 +1,8 @@
 #pragma once
 
-#include "db_session.h"
 #include "db_connection_i.h"
+#include "db_session.h"
+#include "mysql_types.h"
 
 #include <mysql/mysql.h>
 
@@ -10,7 +11,7 @@
 
 namespace app::db_access {
 
-  class db_connection : public db_connection_i
+  class db_connection final : public db_connection_i
   {
   public:
     using port_t = unsigned int;
@@ -25,7 +26,7 @@ namespace app::db_access {
       , database(std::move(database))
       , port(port)
       , session(std::move(session))
-      , connection(mysql_init(NULL), &mysql_close)
+      , connection(mysql_init(NULL))
     {
       this->connected = mysql_real_connect(this->connection.get(),
                                            this->hostname.c_str(),
@@ -39,21 +40,27 @@ namespace app::db_access {
 
     operator bool() const noexcept { return this->connected; }
 
-    virtual mysql_res_t
-    query(std::string query_string) noexcept override;
+    mysql_res_t
+    query(const std::string &query_string) noexcept override;
 
-    virtual bool
-    authenticate_user(std::string username,
-                      std::string password) noexcept override;
-    virtual void
-    shutdown() noexcept override;
+    bool
+    authenticate_user(const std::string &username,
+                      const std::string &password) noexcept override;
+    void
+    close() noexcept override;
+
+    bool
+    low_prio_auth() noexcept;
+
+    bool
+    check_credentials(const db_session &creds) noexcept;
 
   private:
     std::string hostname;
     std::string database;
     port_t port;
     db_session session;
-    std::unique_ptr<MYSQL, decltype(&mysql_close)> connection;
+    mysql_conn_t connection;
     bool connected = false;
   };
 } // namespace app::db_access

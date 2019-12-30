@@ -13,6 +13,12 @@ namespace app::db_access {
       , password(std::move(password))
     {}
 
+    std::string get_password_hash() const noexcept
+    {
+      // TODO implement hashing
+      return this->password;
+    }
+
     std::string username;
     std::string password;
   };
