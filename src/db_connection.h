@@ -1,4 +1,7 @@
+#pragma once
+
 #include "db_session.h"
+#include "db_connection_i.h"
 
 #include <mysql/mysql.h>
 
@@ -7,7 +10,7 @@
 
 namespace app::db_access {
 
-  class db_connection
+  class db_connection : public db_connection_i
   {
   public:
     using port_t = unsigned int;
@@ -17,7 +20,7 @@ namespace app::db_access {
     db_connection(std::string hostname,
                   std::string database,
                   port_t port,
-                  db_session session)
+                  db_session session) noexcept
       : hostname(std::move(hostname))
       , database(std::move(database))
       , port(port)
@@ -35,6 +38,15 @@ namespace app::db_access {
     }
 
     operator bool() const noexcept { return this->connected; }
+
+    virtual mysql_res_t
+    query(std::string query_string) noexcept override;
+
+    virtual bool
+    authenticate_user(std::string username,
+                      std::string password) noexcept override;
+    virtual void
+    shutdown() noexcept override;
 
   private:
     std::string hostname;

@@ -1,3 +1,5 @@
+#pragma once
+
 namespace app::db_access::defaults {
   static constexpr auto DB_HOSTNAME = "localhost";
   static constexpr auto DB_USERNAME = "root";
