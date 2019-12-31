@@ -1,11 +1,11 @@
-#include "db_connection.h"
-#include "db_defaults.h"
+#include "dbaccess/db_connection.h"
+#include "dbaccess/db_defaults.h"
 
 #include <fmt/format.h>
 
 using namespace std;
-using namespace app::db_access;
-using namespace app::db_access::defaults;
+using namespace app::dbaccess;
+using namespace app::dbaccess::defaults;
 
 int
 main()

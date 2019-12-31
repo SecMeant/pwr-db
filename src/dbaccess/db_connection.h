@@ -1,15 +1,15 @@
 #pragma once
 
+#include "mysql_types.h"
 #include "db_connection_i.h"
 #include "db_session.h"
-#include "mysql_types.h"
 
 #include <mysql/mysql.h>
 
 #include <memory>
 #include <string>
 
-namespace app::db_access {
+namespace app::dbaccess {
 
   class db_connection final : public db_connection_i
   {
@@ -41,19 +41,17 @@ namespace app::db_access {
     operator bool() const noexcept { return this->connected; }
 
     mysql_res_t
+    query_res(const std::string &query_string) noexcept override;
+
+    bool
     query(const std::string &query_string) noexcept override;
 
     bool
-    authenticate_user(const std::string &username,
-                      const std::string &password) noexcept override;
+    authenticate(const std::string &username,
+                 const std::string &password) noexcept override;
+
     void
     close() noexcept override;
-
-    bool
-    low_prio_auth() noexcept;
-
-    bool
-    check_credentials(const db_session &creds) noexcept;
 
   private:
     std::string hostname;
@@ -63,4 +61,4 @@ namespace app::db_access {
     mysql_conn_t connection;
     bool connected = false;
   };
-} // namespace app::db_access
+} // namespace app::dbaccess

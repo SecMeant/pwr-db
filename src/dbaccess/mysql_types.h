@@ -3,7 +3,7 @@
 #include <mysql/mysql.h>
 #include <memory>
 
-namespace app::db_access {
+namespace app::dbaccess {
 
   struct mysql_res_deleter
   {
@@ -24,4 +24,4 @@ namespace app::db_access {
   using mysql_res_t = std::unique_ptr<MYSQL_RES, mysql_res_deleter>;
   using mysql_conn_t = std::unique_ptr<MYSQL, mysql_conn_deleter>; 
 
-} // namespace app::db_access
+} // namespace app::dbaccess

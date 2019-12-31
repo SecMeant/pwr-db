@@ -2,12 +2,11 @@
 
 #include <string>
 
-namespace app::db_access {
+namespace app::dbaccess {
   struct db_session
   {
   public:
-    db_session() = delete;
-
+    db_session() = default;
     db_session(std::string username, std::string password)
       : username(std::move(username))
       , password(std::move(password))
@@ -22,4 +21,4 @@ namespace app::db_access {
     std::string username;
     std::string password;
   };
-} // namespace app::db_access
+} // namespace app::dbaccess
