@@ -20,7 +20,7 @@ CREATE TABLE biuro_podrozy.tour (
   OfferId          int(10), 
   PRIMARY KEY (Id));
 
-CREATE TABLE biuro_podrozy.creditionals (
+CREATE TABLE biuro_podrozy.credentials (
   login      varchar(50) NOT NULL,
   pass_hash varchar(64) NOT NULL,
   account_type   INT(1) NOT NULL,
@@ -83,7 +83,7 @@ VALUES
   ('Facultative trips');
 
 INSERT INTO
-biuro_podrozy.creditionals  
+biuro_podrozy.credentials  
   (LOGIN,  PASS_HASH,  ACCOUNT_TYPE) 
 VALUES 
   ("mamanger_1", '5FD924625F6AB16A19CC9807C7C506AE1813490E4BA675F843D5A10E0BAACDB8',1),
@@ -1401,7 +1401,7 @@ CALL change_employee_tours(NULL, 2);
 
 
 -- INSERT INTO
--- biuro_podrozy.creditionals (LOGIN,  PASS_HASH,  ACCOUNT_TYPE) VALUES ("mamanger_1", 'Last minute',1);
+-- biuro_podrozy.credentials (LOGIN,  PASS_HASH,  ACCOUNT_TYPE) VALUES ("mamanger_1", 'Last minute',1);
 
 
 -- INSERT INTO 
