@@ -9,6 +9,7 @@ struct customer_t
   std::string name;
   std::string surname;
   std::string email;
+  std::string pesel;
 };
 
 }

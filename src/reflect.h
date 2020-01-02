@@ -10,7 +10,7 @@ size_t my_offsetof(M P::*member)
 template<class P, class M>
 P* container_of_(M* ptr, M P::*member)
 {
-    return (P*)( (char*)ptr - my_offsetof(member));
+    return (P*)((char*)ptr - my_offsetof(member));
 }
 
 #define container_of(ptr, type, member) \

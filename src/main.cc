@@ -1,5 +1,6 @@
 #include "dbaccess/db_connection.h"
 #include "dbaccess/db_defaults.h"
+#include "dbaccess/data_access_manager.h"
 
 #include <fmt/format.h>
 
