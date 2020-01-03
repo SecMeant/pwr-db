@@ -34,6 +34,8 @@ namespace app::dbaccess
   private:
     data_access_manager*
     parent() noexcept;
+    std::string
+    glue_params(const customer_t &entity, std::string separator) noexcept;
 
   };
 }

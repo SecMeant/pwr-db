@@ -31,45 +31,17 @@ namespace app::dbaccess
     {
       std::stringstream command;
       command << "SELECT * from customers WHERE";
-      bool concat = false; 
 
-      if(entity.name != "")
-      {
-        command << fmt::format(" name = {} ", entity.name);
-        concat =true;
-      }
-
-      if(entity.surname != "")
-      {
-        if(concat)
-          command << fmt::format(" and ");
-        else
-          concat = true;
-        command << fmt::format(" surname = {} ", entity.surname);
-      }
-
-      if(entity.email != "")
-      {
-        if(concat)
-          command << fmt::format(" and ");
-        else
-          concat = true;
-        command << fmt::format(" email = {} ", entity.email);
-      }
-
-      if(entity.pesel != "")
-      {
-        if(concat)
-          command << fmt::format(" and ");
-        command << fmt::format(" pesel = {} ", entity.pesel);
-      }
-
+      auto params = glue_params(entity, " and ");
+      
       customer_t customer;
       std::vector<customer_t> data{};
-      
-      if(concat == false)
-        return data;
 
+      if(params == "")
+        return data;
+      command << params;
+
+      
       auto* db_conn = this->parent()->get_dbconn();
       auto res = db_conn->query_res(command.str());
 
@@ -117,43 +89,14 @@ namespace app::dbaccess
     {
       std::stringstream command;
       command << "UPDATE biuro_podrozy.customers SET";
-      bool concat = false;
-      if(entity.name != "")
-      {
-        command << fmt::format(" name = {} ",entity.name);
-        concat = true; 
-      }
 
-      if(entity.surname != "")
-      {
-        if(concat)
-          command << ", ";
-        else
-          concat = true;
-        command << fmt::format(" surname = {} ", entity.surname);
-      }
-
-      if(entity.email != "")
-      {
-        if(concat)
-          command << ", ";
-        else
-          concat = true;
-        command << fmt::format(" email = {} ", entity.email);
-      }
-
-      if(entity.pesel != "")
-      {
-        if(concat)
-          command << ", ";
-        else
-          concat = true;
-        command <<fmt::format(" pesel = {} ", entity.pesel);
-      }
-
-      if(concat == false)
+      auto params = glue_params(entity, ", ");
+      
+      if(params == "")
         return;
-
+      command << params;
+      command << fmt::format("WHERE id = {}", entity.id);
+      
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command.str());
     }
@@ -162,40 +105,14 @@ namespace app::dbaccess
     {
       std::stringstream command;
       command << "DELETE from customers WHERE";
-      bool concat = false; 
-
-      if(entity.name != "")
-      {
-        command << fmt::format(" name = {} ", entity.name);
-        concat =true;
-      }
-
-      if(entity.surname != "")
-      {
-        if(concat)
-          command << fmt::format(" and ");
-        else
-          concat = true;
-        command << fmt::format(" surname = {} ", entity.surname);
-      }
-
-      if(entity.email != "")
-      {
-        if(concat)
-          command << fmt::format(" and ");
-        else
-          concat = true;
-        command << fmt::format(" email = {} ", entity.email);
-      }
-
-      if(entity.pesel != "")
-      {
-        if(concat)
-          command << fmt::format(" and ");
-        command << fmt::format(" pesel = {} ", entity.pesel);
-      }
-      if(concat == false)
+     
+      auto params = glue_params(entity, " and ");
+      
+      if(params == "")
         return;
+      command << params;
+      command << fmt::format("WHERE id = {}", entity.id);
+
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command.str());
     }
@@ -206,4 +123,42 @@ namespace app::dbaccess
       return container_of(this, data_access_manager, m_customer_manager);
     }
 
+    std::string
+    customer_manager::glue_params(const customer_t &entity, std::string separator) noexcept
+    {
+      std::stringstream params;
+      bool concat = false; 
+      if(entity.name != "")
+      {
+        params << fmt::format(" name = {} ", entity.name);
+        concat =true;
+      }
+
+      if(entity.surname != "")
+      {
+        if(concat)
+          params << fmt::format(" {} ",separator);
+        else
+          concat = true;
+        params << fmt::format(" surname = {} ", entity.surname);
+      }
+
+      if(entity.email != "")
+      {
+        if(concat)
+          params << fmt::format(" {} ",separator);
+        else
+          concat = true;
+        params << fmt::format(" email = {} ", entity.email);
+      }
+
+      if(entity.pesel != "")
+      {
+        if(concat)
+          params << fmt::format(" {} ",separator);
+
+        params << fmt::format(" pesel = {} ", entity.pesel);
+      }
+      return params.str();
+    }
 }
