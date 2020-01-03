@@ -49,6 +49,8 @@ namespace app::dbaccess
       for(uint i =0 ; i< res->row_count; i++)
       {
         auto row = mysql_fetch_row(res.get());
+        // FIXME row size and its contents depends on count and order of filtering
+        // expressions in the query.
         customer.id = atoi(row[0]);
         customer.name = row[1];
         customer.surname = row[2];
@@ -161,4 +163,5 @@ namespace app::dbaccess
       }
       return params.str();
     }
+    
 }
