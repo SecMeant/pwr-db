@@ -17,6 +17,9 @@ namespace app::dbaccess
 
   public:
     customer_manager m_customer_manager;
+    employee_manager m_employee_manager;
+    offer_manager m_offer_manager;
+    tour_manager m_tour_manager;
     data_access_manager();
     ~data_access_manager()=default;
 

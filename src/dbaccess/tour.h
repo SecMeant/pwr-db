@@ -8,7 +8,7 @@ struct tour_t
   int insurance;
   int extra_meals;
   int finished;
-  int customerid;
+  int customersid;
   int employeesid;
   int offerid;
   int customerspesel;

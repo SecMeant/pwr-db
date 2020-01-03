@@ -49,8 +49,6 @@ namespace app::dbaccess
       for(uint i =0 ; i< res->row_count; i++)
       {
         auto row = mysql_fetch_row(res.get());
-        // FIXME row size and its contents depends on count and order of filtering
-        // expressions in the query.
         customer.id = atoi(row[0]);
         customer.name = row[1];
         customer.surname = row[2];
@@ -81,7 +79,7 @@ namespace app::dbaccess
     
     void customer_manager::add(const customer_t &entity) noexcept
     {
-      std::string command = "INSERT INTO biuro_podrozy.customers  (name,surname,email,pesel) VALUES ({} {} {} {})";
+      std::string command = "INSERT INTO biuro_podrozy.customers  (name,surname,email,pesel) VALUES ({}, {}, {}, {})";
       command = fmt::format(command, entity.name, entity.surname, entity.email, entity.pesel);
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command);
