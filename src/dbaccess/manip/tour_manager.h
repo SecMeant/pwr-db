@@ -3,7 +3,7 @@
 #include "../tour.h"
 #include <string>
 
-namespace app::dbaccess 
+namespace app::dbaccess
 {
   class data_access_manager;
 
@@ -29,8 +29,8 @@ namespace app::dbaccess
     tour_t get(int id) noexcept override;
     void add(const tour_t &entity) noexcept override;
     void modify(const tour_t &entity) noexcept override;
-    void remove(const tour_t &entity) noexcept override; 
-    
+    void remove(const tour_t &entity) noexcept override;
+
   private:
     data_access_manager*
     parent() noexcept;

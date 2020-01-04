@@ -3,7 +3,7 @@
 #include "../data_access_manager.h"
 #include <sstream>
  #include <fmt/format.h>
-namespace app::dbaccess 
+namespace app::dbaccess
 {
     std::vector<customer_t> customer_manager::get_all() noexcept
     {
@@ -13,7 +13,7 @@ namespace app::dbaccess
 
       customer_t customer;
       std::vector<customer_t> data{};
-      
+
       for(uint i =0 ; i< res->row_count; i++)
       {
         auto row = mysql_fetch_row(res.get());
@@ -33,7 +33,7 @@ namespace app::dbaccess
       command << "SELECT * from customers WHERE";
 
       auto params = glue_params(entity, " and ");
-      
+
       customer_t customer;
       std::vector<customer_t> data{};
 
@@ -41,11 +41,11 @@ namespace app::dbaccess
         return data;
       command << params;
 
-      
+
       auto* db_conn = this->parent()->get_dbconn();
       auto res = db_conn->query_res(command.str());
 
-      
+
       for(uint i =0 ; i< res->row_count; i++)
       {
         auto row = mysql_fetch_row(res.get());
@@ -59,8 +59,8 @@ namespace app::dbaccess
 
       return data;
     }
-    
-    customer_t customer_manager::get(int id) noexcept 
+
+    customer_t customer_manager::get(int id) noexcept
     {
       auto* db_conn = this->parent()->get_dbconn();
       auto command = fmt::format("SELECT * from customers WHERE id = {}", id);
@@ -76,7 +76,7 @@ namespace app::dbaccess
       customer.pesel = row[4];
       return customer;
     }
-    
+
     void customer_manager::add(const customer_t &entity) noexcept
     {
       std::string command = "INSERT INTO biuro_podrozy.customers  (name,surname,email,pesel) VALUES ({}, {}, {}, {})";
@@ -84,30 +84,30 @@ namespace app::dbaccess
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command);
     }
-    
+
     void customer_manager::modify(const customer_t &entity) noexcept
     {
       std::stringstream command;
       command << "UPDATE biuro_podrozy.customers SET";
 
       auto params = glue_params(entity, ", ");
-      
+
       if(params == "")
         return;
       command << params;
       command << fmt::format("WHERE id = {}", entity.id);
-      
+
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command.str());
     }
-    
-    void customer_manager::remove(const customer_t &entity) noexcept 
+
+    void customer_manager::remove(const customer_t &entity) noexcept
     {
       std::stringstream command;
       command << "DELETE from customers WHERE";
-     
+
       auto params = glue_params(entity, " and ");
-      
+
       if(params == "")
         return;
       command << params;
@@ -127,7 +127,7 @@ namespace app::dbaccess
     customer_manager::glue_params(const customer_t &entity, std::string separator) noexcept
     {
       std::stringstream params;
-      bool concat = false; 
+      bool concat = false;
       if(entity.name != "")
       {
         params << fmt::format(" name = {} ", entity.name);
@@ -161,5 +161,5 @@ namespace app::dbaccess
       }
       return params.str();
     }
-    
+
 }

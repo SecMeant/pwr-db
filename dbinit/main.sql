@@ -1,5 +1,5 @@
-drop database biuro_podrozy;
-create database biuro_podrozy
+drop database IF EXISTS biuro_podrozy;
+create database IF NOT EXISTS biuro_podrozy
 	character set = 'utf8'
 	COLLATE = 'utf8_polish_ci';
 SET character_set_server = 'utf8';
@@ -9,15 +9,15 @@ USE biuro_podrozy;
 SET NAMES utf8;
 
 CREATE TABLE biuro_podrozy.tour (
-  Id               int(10) NOT NULL AUTO_INCREMENT, 
-  Debt             int(10) NOT NULL, 
+  Id               int(10) NOT NULL AUTO_INCREMENT,
+  Debt             int(10) NOT NULL,
   Insurance        int(1),
-  Extra_meals      int(1), 
-  Finished         int(1) NOT NULL, 
-  Reserved_tickets int(10) NOT NULL, 
-  CustomerPesel    bigint(12), 
-  EmployeeId       int(10), 
-  OfferId          int(10), 
+  Extra_meals      int(1),
+  Finished         int(1) NOT NULL,
+  Reserved_tickets int(10) NOT NULL,
+  CustomerId       int(10),
+  EmployeeId       int(10),
+  OfferId          int(10),
   PRIMARY KEY (Id));
 
 CREATE TABLE biuro_podrozy.credentials (
@@ -27,74 +27,75 @@ CREATE TABLE biuro_podrozy.credentials (
   PRIMARY KEY (login));
 
 CREATE TABLE biuro_podrozy.employees (
-  Id           int(10) NOT NULL AUTO_INCREMENT, 
-  Name         varchar(50) NOT NULL, 
-  Surname      varchar(50) NOT NULL, 
-  Hire_date    date NOT NULL, 
-  Salary       int(10) NOT NULL, 
-  Email        varchar(50) NOT NULL, 
-  Phone_number varchar(12) NOT NULL, 
+  Id           int(10) NOT NULL AUTO_INCREMENT,
+  Name         varchar(50) NOT NULL,
+  Surname      varchar(50) NOT NULL,
+  Hire_date    date NOT NULL,
+  Salary       int(10) NOT NULL,
+  Email        varchar(50) NOT NULL,
+  Phone_number varchar(12) NOT NULL,
   PRIMARY KEY (Id));
 
 CREATE TABLE biuro_podrozy.customers (
-  Pesel   bigint(12) NOT NULL, 
-  Name    varchar(50) NOT NULL, 
-  Surname varchar(50) NOT NULL, 
-  Email   varchar(50) NOT NULL, 
-  PRIMARY KEY (Pesel));
+  Id      int(10) NOT NULL AUTO_INCREMENT,
+  Pesel   bigint(12) NOT NULL,
+  Name    varchar(50) NOT NULL,
+  Surname varchar(50) NOT NULL,
+  Email   varchar(50) NOT NULL,
+  PRIMARY KEY (Id));
 
 CREATE TABLE biuro_podrozy.category (
-  Id   int(10) NOT NULL AUTO_INCREMENT, 
-  Name varchar(50) NOT NULL, 
+  Id   int(10) NOT NULL AUTO_INCREMENT,
+  Name varchar(50) NOT NULL,
   PRIMARY KEY (Id));
 
 CREATE TABLE biuro_podrozy.offers (
-  Id               int(10) NOT NULL AUTO_INCREMENT, 
-  Name             varchar(50) NOT NULL, 
-  Country          varchar(50) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL, 
-  City             varchar(40) NOT NULL, 
-  Tickets_count    int(10)     NOT NULL, 
-  Date_begin       date        NOT NULL, 
+  Id               int(10) NOT NULL AUTO_INCREMENT,
+  Name             varchar(50) NOT NULL,
+  Country          varchar(50) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
+  City             varchar(40) NOT NULL,
+  Tickets_count    int(10)     NOT NULL,
+  Date_begin       date        NOT NULL,
   Date_end         date        NOT NULL,
-  Price            int(10)     NOT NULL, 
+  Price            int(10)     NOT NULL,
   CategoryId       int(10)     NOT NULL,
   Insurance_cost   int(10),
   Extra_meals_cost int(10),
   PRIMARY KEY (Id));
 
 CREATE TABLE biuro_podrozy.annual_income (
-  Id int(10) NOT NULL AUTO_INCREMENT, 
-  Year int(4) NOT NULL, 
-  Balance int(13) NOT NULL, 
+  Id int(10) NOT NULL AUTO_INCREMENT,
+  Year int(4) NOT NULL,
+  Balance int(13) NOT NULL,
   PRIMARY KEY (Id));
 
-ALTER TABLE biuro_podrozy.tour ADD CONSTRAINT FKtour997364 FOREIGN KEY (CustomerPesel) REFERENCES biuro_podrozy.customers (Pesel);
+ALTER TABLE biuro_podrozy.tour ADD CONSTRAINT FKtour997364 FOREIGN KEY (CustomerId) REFERENCES biuro_podrozy.customers (Id);
 ALTER TABLE biuro_podrozy.tour ADD CONSTRAINT FKtour557083 FOREIGN KEY (EmployeeId) REFERENCES biuro_podrozy.employees (Id);
 ALTER TABLE biuro_podrozy.tour ADD CONSTRAINT FKtour774357 FOREIGN KEY (OfferId) REFERENCES biuro_podrozy.offers (Id);
 ALTER TABLE biuro_podrozy.offers ADD CONSTRAINT FKoffers229222 FOREIGN KEY (CategoryId) REFERENCES biuro_podrozy.category (Id);
 
 INSERT INTO
-biuro_podrozy.category 
-  (NAME) 
-VALUES 
+biuro_podrozy.category
+  (NAME)
+VALUES
   ('Last minute'),
   ('Sightseeing tour'),
   ('Cruise'),
   ('Facultative trips');
 
 INSERT INTO
-biuro_podrozy.credentials  
-  (LOGIN,  PASS_HASH,  ACCOUNT_TYPE) 
-VALUES 
+biuro_podrozy.credentials
+  (LOGIN,  PASS_HASH,  ACCOUNT_TYPE)
+VALUES
   ("mamanger_1", '5FD924625F6AB16A19CC9807C7C506AE1813490E4BA675F843D5A10E0BAACDB8',1),
   ("employee_1", 'A63AB36162A4F4EE6622CCD787B0A048C26B93ACFC05C6B1843659B253C3C00B',0),
   ("employee_2", 'C1B5F0EAC826B829526F13B182808F34515826D4F1F2F9DB4173568718A995E1',0),
   ("employee_3", 'F64AEEF4AE2075114506128EE0E944353022AD959F3E69E5738D13DC560E351B',0);
 
 
-INSERT INTO biuro_podrozy.annual_income 
-  (YEAR,BALANCE) 
-VALUES 
+INSERT INTO biuro_podrozy.annual_income
+  (YEAR,BALANCE)
+VALUES
   ( STR_TO_DATE('1978', '%Y'),  -5675),
   ( STR_TO_DATE('1979', '%Y'),  -7952),
   ( STR_TO_DATE('1980', '%Y'),  -3478),
@@ -139,8 +140,8 @@ VALUES
   (  STR_TO_DATE('2019', '%Y'),  0);
 
 
-INSERT INTO biuro_podrozy.employees 
-  (NAME,SURNAME, HIRE_DATE, SALARY,EMAIL,PHONE_NUMBER) 
+INSERT INTO biuro_podrozy.employees
+  (NAME,SURNAME, HIRE_DATE, SALARY,EMAIL,PHONE_NUMBER)
   VALUES
 ('Gerhardine','Loghan',STR_TO_DATE('30.07.09','%d.%m.%y'),4156,'gloghan0@china.com.cn','765-578-4612'),
 ('Aubree','Sturr',STR_TO_DATE('12.06.19','%d.%m.%y'),3598,'asturr1@linkedin.com','249-754-0474'),
@@ -443,9 +444,9 @@ INSERT INTO biuro_podrozy.employees
 ('Cal','Creelman',STR_TO_DATE('14.07.07','%d.%m.%y'),2503,'ccreelman7t@cnn.com','780-100-5024'),
 ('Marice','Butterley',STR_TO_DATE('03.06.08','%d.%m.%y'),3640,'mbutterley7u@wordpress.org','967-833-6443');
 
-INSERT INTO biuro_podrozy.customers 
-  (PESEL,NAME,SURNAME,EMAIL) 
-VALUES 
+INSERT INTO biuro_podrozy.customers
+  (PESEL,NAME,SURNAME,EMAIL)
+VALUES
  (92121963645,'Dannie','Blockey','dblockey0@paginegialle.it'),
  (91102158153,'Philippine','Bosson','pbosson1@cdc.gov'),
  (98050322889,'York','Penwarden','ypenwarden2@360.cn'),
@@ -1078,9 +1079,9 @@ VALUES
  (97043097531,'Merla','Sidey','msideyhh@sciencedirect.com');
 
 
-INSERT INTO biuro_podrozy.offers 
-  ( NAME, CITY, COUNTRY, DATE_BEGIN, DATE_END, PRICE, CATEGORYID, INSURANCE_COST, EXTRA_MEALS_COST, TICKETS_COUNT) 
-VALUES 
+INSERT INTO biuro_podrozy.offers
+  ( NAME, CITY, COUNTRY, DATE_BEGIN, DATE_END, PRICE, CATEGORYID, INSURANCE_COST, EXTRA_MEALS_COST, TICKETS_COUNT)
+VALUES
   ('Wycieczka 1','Tokio','Japonia',STR_TO_DATE('14.01.19','%d.%m.%y'),STR_TO_DATE('20.01.19','%d.%m.%y'),6412,1,830,393,55),
   ('Wycieczka 2','Meksyk-City','Meksyk',STR_TO_DATE('15.01.19','%d.%m.%y'),STR_TO_DATE('21.01.19','%d.%m.%y'),4298,4,614,538,55),
   ('Wycieczka 3','Nowy Jork','USA',STR_TO_DATE('16.01.19','%d.%m.%y'),STR_TO_DATE('22.01.19','%d.%m.%y'),6990,2,795,385,46),
@@ -1123,28 +1124,28 @@ VALUES
   ('Wycieczka 40','Brasilia','Brazylia',STR_TO_DATE('22.08.19','%d.%m.%y'),STR_TO_DATE('28.08.19','%d.%m.%y'),3363,1,1493,329,50);
 
 CREATE TRIGGER on_new_tour_appear
-AFTER INSERT ON biuro_podrozy.tour  
-FOR EACH ROW 
+AFTER INSERT ON biuro_podrozy.tour
+FOR EACH ROW
 UPDATE biuro_podrozy.offers
   SET offers.Tickets_count = offers.Tickets_count - NEW.Reserved_tickets
   WHERE offers.Id = NEW.OfferId;
 
 
-INSERT INTO biuro_podrozy.tour 
-  (OFFERID, CustomerPesel, EMPLOYEEID, Insurance, Extra_meals, DEBT, FINISHED, RESERVED_TICKETS) 
-VALUES 
-  (28,92121963645,41,1,0,1379,1,2),
-  (3,91102158153,8,1,1,1062,0,2),
-  (5,98050322889,263,1,1,2509,0,3),
-  (27,95052933721,286,0,0,1122,0,1),
-  (38,99022565682,36,0,0,2381,0,3),
-  (4,92020595486,219,0,0,2020,1,4),
-  (35,90050252168,235,1,1,1446,0,4);
+INSERT INTO biuro_podrozy.tour
+  (OFFERID, CustomerId, EMPLOYEEID, Insurance, Extra_meals, DEBT, FINISHED, RESERVED_TICKETS)
+VALUES
+  (28,1,41,1,0,1379,1,2),
+  (3,2,8,1,1,1062,0,2),
+  (5,3,263,1,1,2509,0,3),
+  (27,4,286,0,0,1122,0,1),
+  (38,5,36,0,0,2381,0,3),
+  (4,6,219,0,0,2020,1,4),
+  (35,7,235,1,1,1446,0,4);
 
 
 CREATE TRIGGER on_employee_remove
-AFTER DELETE ON biuro_podrozy.employees 
-FOR EACH ROW 
+AFTER DELETE ON biuro_podrozy.employees
+FOR EACH ROW
 UPDATE biuro_podrozy.tour
   SET tour.EmployeeId = NULL WHERE tour.EmployeeId = OLD.Id;
 
@@ -1165,28 +1166,28 @@ proc_begin:BEGIN
   DECLARE offer_Insurance_cost INT;
   DECLARE offer_extra_meals_cost INT;
   DECLARE offer_price INT;
-  
+
   SELECT Tickets_count, price, Insurance_cost, Extra_meals_cost
   INTO offer_ticket_count, offer_price, offer_Insurance_cost, offer_extra_meals_cost
   FROM offers WHERE offers.Id = offerid;
-  
+
   IF offer_ticket_count < ticket_count THEN
     LEAVE proc_begin;
   END IF;
-  
+
   SET offer_price = offer_price*ticket_count;
-  
+
   IF offer_Insurance_cost IS NOT NULL AND Insurance <> 0 THEN
     SET offer_price = offer_price + offer_Insurance_cost*ticket_count;
   END IF;
-  
+
   IF offer_extra_meals_cost IS NOT NULL AND extra_meals <> 0 THEN
     SET offer_price = offer_price + offer_extra_meals_cost*ticket_count;
   END IF;
-  
-  INSERT INTO biuro_podrozy.tour 
-  (OfferId, CustomerPesel, EMPLOYEEID, Insurance, Extra_meals, DEBT, FINISHED, RESERVED_TICKETS) 
-VALUES 
+
+  INSERT INTO biuro_podrozy.tour
+  (OfferId, CustomerId, EMPLOYEEID, Insurance, Extra_meals, DEBT, FINISHED, RESERVED_TICKETS)
+VALUES
   (offerid,customerid,employeeid,Insurance,extra_meals,offer_price,0,ticket_count);
 
 END//
@@ -1201,14 +1202,14 @@ proc_begin:BEGIN
       SET tour.EmployeeId = to_employee WHERE tour.EmployeeId IS NULL;
     LEAVE proc_begin;
   END IF;
-  
+
   UPDATE biuro_podrozy.tour
      SET tour.EmployeeId = to_employee WHERE tour.EmployeeId = from_employee;
 END//
 
 
 CREATE PROCEDURE resign_from_insurance (
-  IN tourid INT 
+  IN tourid INT
 )
 proc_begin:BEGIN
   DECLARE withInsurance INT(1);
@@ -1233,15 +1234,15 @@ proc_begin:BEGIN
   SET tour_Debt = tour_Debt -  offer_insurance_cost*tour_reserved_tickets;
 
   UPDATE biuro_podrozy.tour
-     SET 
+     SET
         tour.Debt = tour_Debt,
-        tour.Insurance =0 
+        tour.Insurance =0
      WHERE tour.id = tourid;
 END//
 
 
 CREATE PROCEDURE resign_from_extra_meals (
-  IN tourid INT 
+  IN tourid INT
 )
 proc_begin:BEGIN
   DECLARE with_extra_meals INT(1);
@@ -1266,7 +1267,7 @@ proc_begin:BEGIN
   SET tour_Debt = tour_Debt -  offer_extra_meals_cost*tour_reserved_tickets;
 
   UPDATE biuro_podrozy.tour
-     SET 
+     SET
      tour.Debt = tour_Debt,
      tour.Extra_meals =0
     WHERE tour.id = tourid;
@@ -1279,9 +1280,9 @@ CREATE PROCEDURE forget_customer (
 proc_begin:BEGIN
 
   DECLARE tours_count INT;
-  SET return_value = 0; 
-  SELECT COUNT(*) 
-  INTO tours_count 
+  SET return_value = 0;
+  SELECT COUNT(*)
+  INTO tours_count
   FROM tour WHERE tour.customerid = customerId AND tour.finished = 0;
   IF tours_count <> 0 THEN
     SET return_value = -1;
@@ -1297,9 +1298,9 @@ CREATE PROCEDURE forget_offer (
 proc_begin:BEGIN
 
   DECLARE tours_count INT;
-  SET return_value = 0; 
-  SELECT COUNT(*) 
-  INTO tours_count 
+  SET return_value = 0;
+  SELECT COUNT(*)
+  INTO tours_count
   FROM tour WHERE tour.offerid = offerId AND tour.finished = 0;
   IF tours_count <> 0 THEN
     SET return_value = -1;
@@ -1311,11 +1312,11 @@ END//
 
 CREATE PROCEDURE modify_offer(
   IN OfferId INT,
-  IN OffName VARCHAR(50), 
-  IN Country VARCHAR(50), 
-  IN City VARCHAR(40),  
-  IN Date_begin DATE, 
-  IN Date_end DATE, 
+  IN OffName VARCHAR(50),
+  IN Country VARCHAR(50),
+  IN City VARCHAR(40),
+  IN Date_begin DATE,
+  IN Date_end DATE,
   IN Price INT,
   IN Insurance_cost INT,
   IN Extra_meals_cost INT,
@@ -1332,14 +1333,14 @@ proc_begin:BEGIN
   DECLARE current_extra_melas_cost INT;
   DECLARE affected_tours_count INT;
   DECLARE tour_cursor
-    CURSOR FOR  
-   SELECT id, Debt, Insurance, Extra_meals, Reserved_tickets FROM tour 
+    CURSOR FOR
+   SELECT id, Debt, Insurance, Extra_meals, Reserved_tickets FROM tour
   WHERE  tour.OfferId = OfferId;
 
   SELECT offers.Insurance_cost, offers.Extra_meals_cost
   INTO current_insurance_cost, current_extra_melas_cost
   FROM offers WHERE offers.id = OfferId;
-  
+
   OPEN tour_cursor;
   select FOUND_ROWS() into affected_tours_count;
   IF affected_tours_count <> 0 THEN
@@ -1354,18 +1355,18 @@ proc_begin:BEGIN
          SET cost_diff = cost_diff + (Extra_meals_cost - current_extra_melas_cost);
       END IF;
       SET cost_diff = cost_diff * tour_reserved_count;
-      
+
      UPDATE biuro_podrozy.tour
       SET
         tour.Debt = tour_debt + cost_diff
       WHERE  tour.id = tour_id;
-      
+
     END LOOP tour_update;
   END IF;
   CLOSE tour_cursor;
 
   UPDATE biuro_podrozy.offers
-     SET 
+     SET
       offers.Name = OffName,
       offers.Country = Country,
       offers.City = City,
@@ -1379,8 +1380,8 @@ proc_begin:BEGIN
 END//
 
 delimiter ;
--- procedura delete client must check if client has any tours and not finished 
-CALL reserve_tour(1,4,92100265784,1,1,1);
+-- procedura delete client must check if client has any tours and not finished
+CALL reserve_tour(1,4,5,1,1,1);
 CALL resign_from_insurance(2);
 CALL resign_from_extra_meals(2);
 CALL resign_from_insurance(2);
@@ -1404,25 +1405,25 @@ CALL change_employee_tours(NULL, 2);
 -- biuro_podrozy.credentials (LOGIN,  PASS_HASH,  ACCOUNT_TYPE) VALUES ("mamanger_1", 'Last minute',1);
 
 
--- INSERT INTO 
+-- INSERT INTO
 -- biuro_podrozy.annual_income  (ID,YEAR,BALANCE) VALUES (1, STR_TO_DATE('1978', '%Y'),  -5675);
 
 
--- INSERT INTO 
+-- INSERT INTO
 -- biuro_podrozy.employees  (ID,NAME,SURNAME, HIRE_DATE, SALARY,EMAIL,PHONE_NUMBER) VALUES (1,'Gerhardine','Loghan',STR_TO_DATE('30.07.09','%d.%m.%y'),4156,'gloghan0@china.com.cn','765-578-4612');
 
 
--- INSERT INTO 
+-- INSERT INTO
 -- biuro_podrozy.customers  (PESEL,NAME,SURNAME,EMAIL) VALUES (92121963645,'Dannie','Blockey','dblockey0@paginegialle.it');
 
 
--- INSERT INTO biuro_podrozy.offers 
---   (ID, NAME, CITY, COUNTRY, DATE_BEGIN, DATE_END, PRICE, CATEGORYID, INSURANCE_COST, EXTRA_MEALS_COST, TICKETS_COUNT) 
--- VALUES 
+-- INSERT INTO biuro_podrozy.offers
+--   (ID, NAME, CITY, COUNTRY, DATE_BEGIN, DATE_END, PRICE, CATEGORYID, INSURANCE_COST, EXTRA_MEALS_COST, TICKETS_COUNT)
+-- VALUES
 --   (1,'Wycieczka 1','Tokio','Japonia',STR_TO_DATE('14.01.19','%d.%m.%y'),STR_TO_DATE('20.01.19','%d.%m.%y'),6412,1,830,393,55);
 
 
--- INSERT INTO biuro_podrozy.tour 
---   (ID,  OFFERID, CustomerPesel, EMPLOYEEID, Insurance, Extra_meals, DEBT, FINISHED, RESERVED_TICKETS) 
--- VALUES 
+-- INSERT INTO biuro_podrozy.tour
+--   (ID,  OFFERID, CustomerPesel, EMPLOYEEID, Insurance, Extra_meals, DEBT, FINISHED, RESERVED_TICKETS)
+-- VALUES
 --   (1,28,92121963645,41,1,0,1379,1,2);

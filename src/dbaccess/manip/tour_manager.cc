@@ -3,7 +3,7 @@
 #include "../data_access_manager.h"
 #include <sstream>
  #include <fmt/format.h>
-namespace app::dbaccess 
+namespace app::dbaccess
 {
     std::vector<tour_t> tour_manager::get_all() noexcept
     {
@@ -13,7 +13,7 @@ namespace app::dbaccess
 
       tour_t tour;
       std::vector<tour_t> data{};
-     
+
       for(uint i =0 ; i< res->row_count; i++)
       {
         auto row = mysql_fetch_row(res.get());
@@ -38,7 +38,7 @@ namespace app::dbaccess
       command << "SELECT * from tour WHERE";
 
       auto params = glue_params(entity, " and ");
-      
+
       tour_t tour;
       std::vector<tour_t> data{};
 
@@ -46,11 +46,11 @@ namespace app::dbaccess
         return data;
       command << params;
 
-      
+
       auto* db_conn = this->parent()->get_dbconn();
       auto res = db_conn->query_res(command.str());
 
-      
+
       for(uint i =0 ; i< res->row_count; i++)
       {
         auto row = mysql_fetch_row(res.get());
@@ -69,8 +69,8 @@ namespace app::dbaccess
 
       return data;
     }
-    
-    tour_t tour_manager::get(int id) noexcept 
+
+    tour_t tour_manager::get(int id) noexcept
     {
       auto* db_conn = this->parent()->get_dbconn();
       auto command = fmt::format("SELECT * from tour WHERE id = {}", id);
@@ -100,30 +100,30 @@ namespace app::dbaccess
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command);
     }
-    
+
     void tour_manager::modify(const tour_t &entity) noexcept
     {
       std::stringstream command;
       command << "UPDATE biuro_podrozy.tour SET";
 
       auto params = glue_params(entity, ", ");
-      
+
       if(params == "")
         return;
       command << params;
       command << fmt::format("WHERE id = {}", entity.id);
-      
+
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command.str());
     }
-    
-    void tour_manager::remove(const tour_t &entity) noexcept 
+
+    void tour_manager::remove(const tour_t &entity) noexcept
     {
       std::stringstream command;
       command << "DELETE from tour WHERE";
-     
+
       auto params = glue_params(entity, " and ");
-      
+
       if(params == "")
         return;
       command << params;
@@ -143,7 +143,7 @@ namespace app::dbaccess
     tour_manager::glue_params(const tour_t &entity, std::string separator) noexcept
     {
       std::stringstream params;
-      bool concat = false; 
+      bool concat = false;
       if(entity.debt != 0)
       {
         if(concat)
@@ -152,7 +152,7 @@ namespace app::dbaccess
           concat = true;
         params << fmt::format(" debt = {} ", entity.debt);
       }
-      
+
       if(entity.insurance != 0)
       {
         if(concat)
@@ -226,5 +226,5 @@ namespace app::dbaccess
 
       return params.str();
     }
-    
+
 }

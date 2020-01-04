@@ -3,7 +3,7 @@
 #include "../offer.h"
 
 
-namespace app::dbaccess 
+namespace app::dbaccess
 {
   class data_access_manager;
 
@@ -29,8 +29,8 @@ namespace app::dbaccess
     offer_t get(int id) noexcept override;
     void add(const offer_t &entity) noexcept override;
     void modify(const offer_t &entity) noexcept override;
-    void remove(const offer_t &entity) noexcept override; 
-    
+    void remove(const offer_t &entity) noexcept override;
+
   private:
     data_access_manager*
     parent() noexcept;

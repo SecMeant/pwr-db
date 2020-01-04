@@ -4,7 +4,7 @@
 #include <sstream>
 
  #include <fmt/format.h>
-namespace app::dbaccess 
+namespace app::dbaccess
 {
     std::vector<offer_t> offer_manager::get_all() noexcept
     {
@@ -14,7 +14,7 @@ namespace app::dbaccess
 
       offer_t offer;
       std::vector<offer_t> data{};
-     
+
       for(uint i =0 ; i< res->row_count; i++)
       {
         auto row = mysql_fetch_row(res.get());
@@ -40,7 +40,7 @@ namespace app::dbaccess
       command << "SELECT * from offers WHERE";
 
       auto params = glue_params(entity, " and ");
-      
+
       offer_t offer;
       std::vector<offer_t> data{};
 
@@ -48,11 +48,11 @@ namespace app::dbaccess
         return data;
       command << params;
 
-      
+
       auto* db_conn = this->parent()->get_dbconn();
       auto res = db_conn->query_res(command.str());
 
-      
+
       for(uint i =0 ; i< res->row_count; i++)
       {
         auto row = mysql_fetch_row(res.get());
@@ -72,8 +72,8 @@ namespace app::dbaccess
 
       return data;
     }
-    
-    offer_t offer_manager::get(int id) noexcept 
+
+    offer_t offer_manager::get(int id) noexcept
     {
       auto* db_conn = this->parent()->get_dbconn();
       auto command = fmt::format("SELECT * from offers WHERE id = {}", id);
@@ -104,30 +104,30 @@ namespace app::dbaccess
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command);
     }
-    
+
     void offer_manager::modify(const offer_t &entity) noexcept
     {
       std::stringstream command;
       command << "UPDATE biuro_podrozy.offers SET";
 
       auto params = glue_params(entity, ", ");
-      
+
       if(params == "")
         return;
       command << params;
       command << fmt::format("WHERE id = {}", entity.id);
-      
+
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command.str());
     }
-    
-    void offer_manager::remove(const offer_t &entity) noexcept 
+
+    void offer_manager::remove(const offer_t &entity) noexcept
     {
       std::stringstream command;
       command << "DELETE from offers WHERE";
-     
+
       auto params = glue_params(entity, " and ");
-      
+
       if(params == "")
         return;
       command << params;
@@ -147,7 +147,7 @@ namespace app::dbaccess
     offer_manager::glue_params(const offer_t &entity, std::string separator) noexcept
     {
       std::stringstream params;
-      bool concat = false; 
+      bool concat = false;
       if(entity.name != "")
       {
         params << fmt::format(" name = {} ", entity.name);
@@ -231,5 +231,5 @@ namespace app::dbaccess
 
       return params.str();
     }
-    
+
 }

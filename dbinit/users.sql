@@ -1,7 +1,7 @@
 CREATE USER 'loprio'@'localhost' IDENTIFIED BY 'bazydanych19';
 GRANT USAGE ON *.* TO 'loprio'@'localhost';
 REVOKE SELECT, ALTER, CREATE, DELETE, DROP, INSERT, INDEX, REFERENCES, UPDATE  ON TABLE *.* FROM 'loprio'@'localhost';
-GRANT SELECT, SHOW VIEW  ON TABLE `biuro_podrozy`.`creditionals` TO 'loprio'@'localhost';
+GRANT SELECT, SHOW VIEW  ON TABLE `biuro_podrozy`.`credentials` TO 'loprio'@'localhost';
 FLUSH PRIVILEGES;
 
 CREATE USER 'miprio'@'localhost' IDENTIFIED BY 'bazydanych19';

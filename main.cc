@@ -12,8 +12,11 @@ int
 main()
 {
   db_connection c(
-    DB_HOSTNAME, DB_DATABASE, DB_PORT_NO, { DB_USERNAME, DB_PASSWORD });
+    DB_HOSTNAME, DB_DATABASE, DB_PORT_NO, { DB_USERNAME_HIPRIO, DB_PASSWORD_HIPRIO });
 
   if (!c)
     fmt::print("Failed to open db con\n");
+  else
+    fmt::print("Db connected");
+
 }

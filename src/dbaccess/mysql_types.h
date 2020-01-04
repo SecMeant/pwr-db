@@ -22,6 +22,6 @@ namespace app::dbaccess {
   };
 
   using mysql_res_t = std::unique_ptr<MYSQL_RES, mysql_res_deleter>;
-  using mysql_conn_t = std::unique_ptr<MYSQL, mysql_conn_deleter>; 
+  using mysql_conn_t = std::unique_ptr<MYSQL, mysql_conn_deleter>;
 
 } // namespace app::dbaccess

@@ -3,7 +3,7 @@
 #include "../data_access_manager.h"
 #include <sstream>
  #include <fmt/format.h>
-namespace app::dbaccess 
+namespace app::dbaccess
 {
     std::vector<employee_t> employee_manager::get_all() noexcept
     {
@@ -13,7 +13,7 @@ namespace app::dbaccess
 
       employee_t employee;
       std::vector<employee_t> data{};
- 
+
       for(uint i =0 ; i< res->row_count; i++)
       {
         auto row = mysql_fetch_row(res.get());
@@ -23,7 +23,7 @@ namespace app::dbaccess
         employee.hire_date = str2epoch(row[3], "%d.%m.%y");
         employee.salary = atoi(row[4]);
         employee.email = row[5];
-        employee.phone_number = row[6]; 
+        employee.phone_number = row[6];
         data.push_back(employee);
       }
       return data;
@@ -35,7 +35,7 @@ namespace app::dbaccess
       command << "SELECT * from employees WHERE";
 
       auto params = glue_params(entity, " and ");
-      
+
       employee_t employee;
       std::vector<employee_t> data{};
 
@@ -43,11 +43,11 @@ namespace app::dbaccess
         return data;
       command << params;
 
-      
+
       auto* db_conn = this->parent()->get_dbconn();
       auto res = db_conn->query_res(command.str());
 
-      
+
       for(uint i =0 ; i< res->row_count; i++)
       {
         auto row = mysql_fetch_row(res.get());
@@ -63,8 +63,8 @@ namespace app::dbaccess
 
       return data;
     }
-    
-    employee_t employee_manager::get(int id) noexcept 
+
+    employee_t employee_manager::get(int id) noexcept
     {
       auto* db_conn = this->parent()->get_dbconn();
       auto command = fmt::format("SELECT * from employees WHERE id = {}", id);
@@ -80,10 +80,10 @@ namespace app::dbaccess
       employee.salary = atoi(row[4]);
       employee.email = row[5];
       employee.phone_number = row[6];
-      
+
       return employee;
     }
-    
+
     void employee_manager::add(const employee_t &entity) noexcept
     {
       std::string command = "INSERT INTO biuro_podrozy.employees (name,surname,hire_date, salary, email, phone_number) VALUES ({}, {}, {}, {}, {}, {})";
@@ -91,30 +91,30 @@ namespace app::dbaccess
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command);
     }
-    
+
     void employee_manager::modify(const employee_t &entity) noexcept
     {
       std::stringstream command;
       command << "UPDATE biuro_podrozy.employees SET";
 
       auto params = glue_params(entity, ", ");
-      
+
       if(params == "")
         return;
       command << params;
       command << fmt::format("WHERE id = {}", entity.id);
-      
+
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command.str());
     }
-    
-    void employee_manager::remove(const employee_t &entity) noexcept 
+
+    void employee_manager::remove(const employee_t &entity) noexcept
     {
       std::stringstream command;
       command << "DELETE from employees WHERE";
-     
+
       auto params = glue_params(entity, " and ");
-      
+
       if(params == "")
         return;
       command << params;
@@ -134,7 +134,7 @@ namespace app::dbaccess
     employee_manager::glue_params(const employee_t &entity, std::string separator) noexcept
     {
       std::stringstream params;
-      bool concat = false; 
+      bool concat = false;
       if(entity.name != "")
       {
         params << fmt::format(" name = {} ", entity.name);
@@ -187,5 +187,5 @@ namespace app::dbaccess
       }
       return params.str();
     }
-    
+
 }

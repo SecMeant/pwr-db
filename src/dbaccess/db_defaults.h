@@ -11,10 +11,10 @@ namespace app::dbaccess::defaults {
   static constexpr auto DB_SOCKET = nullptr;
   static constexpr auto DB_OPT = 0;
 
-  inline static std::string DB_USERNAME_HIPRIO = "root";
-  inline static std::string DB_PASSWORD_HIPRIO = "alamakota";
-  inline static std::string DB_USERNAME_MIPRIO = "root";
-  inline static std::string DB_PASSWORD_MIPRIO = "alamakota";
-  inline static std::string DB_USERNAME_LOPRIO = "root";
-  inline static std::string DB_PASSWORD_LOPRIO = "alamakota";
+  inline static std::string DB_USERNAME_HIPRIO = "hiprio";
+  inline static std::string DB_PASSWORD_HIPRIO = "bazydanych19";
+  inline static std::string DB_USERNAME_MIPRIO = "miprio";
+  inline static std::string DB_PASSWORD_MIPRIO = "bazydanych19";
+  inline static std::string DB_USERNAME_LOPRIO = "loprio";
+  inline static std::string DB_PASSWORD_LOPRIO = "bazydanych19";
 } // namespace app::dbaccess::defaults
