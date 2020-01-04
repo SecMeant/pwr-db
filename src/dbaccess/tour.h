@@ -11,7 +11,6 @@ struct tour_t
   int customersid;
   int employeesid;
   int offerid;
-  int customerspesel;
   int reserved_tickets;
 };
 }

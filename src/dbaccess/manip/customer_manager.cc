@@ -10,18 +10,19 @@ namespace app::dbaccess
 
       auto* db_conn = this->parent()->get_dbconn();
       auto res = db_conn->query_res("SELECT * from customers");
-
       customer_t customer;
       std::vector<customer_t> data{};
+      if(res == nullptr)
+        return data;
 
       for(uint i =0 ; i< res->row_count; i++)
       {
         auto row = mysql_fetch_row(res.get());
         customer.id = atoi(row[0]);
-        customer.name = row[1];
-        customer.surname = row[2];
-        customer.email = row[3];
-        customer.pesel = row[4];
+        customer.pesel = fmt::format("{:0<12}",row[1]);
+        customer.name = row[2];
+        customer.surname = row[3];
+        customer.email = row[4];
         data.push_back(customer);
       }
       return data;
@@ -39,21 +40,22 @@ namespace app::dbaccess
 
       if(params == "")
         return data;
-      command << params;
 
+      command << params;
 
       auto* db_conn = this->parent()->get_dbconn();
       auto res = db_conn->query_res(command.str());
-
+      if(res == nullptr)
+        return data;
 
       for(uint i =0 ; i< res->row_count; i++)
       {
         auto row = mysql_fetch_row(res.get());
         customer.id = atoi(row[0]);
-        customer.name = row[1];
-        customer.surname = row[2];
-        customer.email = row[3];
-        customer.pesel = row[4];
+        customer.pesel = fmt::format("{:0<12}",row[1]);
+        customer.name = row[2];
+        customer.surname = row[3];
+        customer.email = row[4];
         data.push_back(customer);
       }
 
@@ -65,21 +67,21 @@ namespace app::dbaccess
       auto* db_conn = this->parent()->get_dbconn();
       auto command = fmt::format("SELECT * from customers WHERE id = {}", id);
       auto res = db_conn->query_res(command);
-      customer_t customer;
+      customer_t customer={};
       if (!res || mysql_num_rows(res.get()) != 1)
        return customer;
       auto row = mysql_fetch_row(res.get());
       customer.id = id;
-      customer.name = row[1];
-      customer.surname = row[2];
-      customer.email = row[3];
-      customer.pesel = row[4];
+        customer.pesel = fmt::format("{:0<12}",row[1]);
+        customer.name = row[2];
+        customer.surname = row[3];
+        customer.email = row[4];
       return customer;
     }
 
     void customer_manager::add(const customer_t &entity) noexcept
     {
-      std::string command = "INSERT INTO biuro_podrozy.customers  (name,surname,email,pesel) VALUES ({}, {}, {}, {})";
+      std::string command = "INSERT INTO customers  (name,surname,email,pesel) VALUES (\'{}\', \'{}\', \'{}\', {});";
       command = fmt::format(command, entity.name, entity.surname, entity.email, entity.pesel);
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command);
@@ -88,7 +90,7 @@ namespace app::dbaccess
     void customer_manager::modify(const customer_t &entity) noexcept
     {
       std::stringstream command;
-      command << "UPDATE biuro_podrozy.customers SET";
+      command << "UPDATE customers SET";
 
       auto params = glue_params(entity, ", ");
 
@@ -105,14 +107,15 @@ namespace app::dbaccess
     {
       std::stringstream command;
       command << "DELETE from customers WHERE";
+      if(entity.id != 0)
+        command << fmt::format(" id = {}", entity.id);
+      else{
+        auto params = glue_params(entity, " and ");
 
-      auto params = glue_params(entity, " and ");
-
-      if(params == "")
-        return;
-      command << params;
-      command << fmt::format("WHERE id = {}", entity.id);
-
+        if(params == "")
+          return;
+        command << params;
+      }
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command.str());
     }
@@ -130,7 +133,7 @@ namespace app::dbaccess
       bool concat = false;
       if(entity.name != "")
       {
-        params << fmt::format(" name = {} ", entity.name);
+        params << fmt::format(" name = \'{}\' ", entity.name);
         concat =true;
       }
 
@@ -140,7 +143,7 @@ namespace app::dbaccess
           params << fmt::format(" {} ",separator);
         else
           concat = true;
-        params << fmt::format(" surname = {} ", entity.surname);
+        params << fmt::format(" surname = \'{}\' ", entity.surname);
       }
 
       if(entity.email != "")
@@ -149,7 +152,7 @@ namespace app::dbaccess
           params << fmt::format(" {} ",separator);
         else
           concat = true;
-        params << fmt::format(" email = {} ", entity.email);
+        params << fmt::format(" email = \'{}\' ", entity.email);
       }
 
       if(entity.pesel != "")

@@ -13,7 +13,8 @@ namespace app::dbaccess
 
       tour_t tour;
       std::vector<tour_t> data{};
-
+      if(res == nullptr)
+        return data;
       for(uint i =0 ; i< res->row_count; i++)
       {
         auto row = mysql_fetch_row(res.get());
@@ -22,11 +23,10 @@ namespace app::dbaccess
         tour.insurance = atoi(row[2]);
         tour.extra_meals = atoi(row[3]);
         tour.finished = atoi(row[4]);
-        tour.customersid = atoi(row[5]);
-        tour.employeesid = atoi(row[6]);
-        tour.offerid = atoi(row[7]);
-        tour.customerspesel = atoi(row[8]);
-        tour.reserved_tickets = atoi(row[9]);
+        tour.reserved_tickets = atoi(row[5]);
+        tour.customersid = atoi(row[6]);
+        tour.employeesid = atoi(row[7]);
+        tour.offerid = atoi(row[8]);
         data.push_back(tour);
       }
       return data;
@@ -49,7 +49,8 @@ namespace app::dbaccess
 
       auto* db_conn = this->parent()->get_dbconn();
       auto res = db_conn->query_res(command.str());
-
+      if(res == nullptr)
+        return data;
 
       for(uint i =0 ; i< res->row_count; i++)
       {
@@ -59,11 +60,10 @@ namespace app::dbaccess
         tour.insurance = atoi(row[2]);
         tour.extra_meals = atoi(row[3]);
         tour.finished = atoi(row[4]);
-        tour.customersid = atoi(row[5]);
-        tour.employeesid = atoi(row[6]);
-        tour.offerid = atoi(row[7]);
-        tour.customerspesel = atoi(row[8]);
-        tour.reserved_tickets = atoi(row[9]);
+        tour.reserved_tickets = atoi(row[5]);
+        tour.customersid = atoi(row[6]);
+        tour.employeesid = atoi(row[7]);
+        tour.offerid = atoi(row[8]);
         data.push_back(tour);
       }
 
@@ -85,18 +85,17 @@ namespace app::dbaccess
       tour.insurance = atoi(row[2]);
       tour.extra_meals = atoi(row[3]);
       tour.finished = atoi(row[4]);
-      tour.customersid = atoi(row[5]);
-      tour.employeesid = atoi(row[6]);
-      tour.offerid = atoi(row[7]);
-      tour.customerspesel = atoi(row[8]);
-      tour.reserved_tickets = atoi(row[9]);
+      tour.reserved_tickets = atoi(row[5]);
+      tour.customersid = atoi(row[6]);
+      tour.employeesid = atoi(row[7]);
+      tour.offerid = atoi(row[8]);
       return tour;
     }
 
     void tour_manager::add(const tour_t &entity) noexcept
     {
-      std::string command = "INSERT INTO biuro_podrozy.tour (customerpesel, employeeid, insurance, extra_meals, debt, finished, reserved_tickets)  VALUES ({}, {}, {}, {}, {}, {}, {})";
-      command = fmt::format(command, entity.customerspesel,entity.employeesid,entity.insurance,entity.extra_meals,entity.debt,entity.finished,entity.reserved_tickets);
+      std::string command = "INSERT INTO biuro_podrozy.tour (CustomerId, employeeid, insurance, extra_meals, debt, finished, reserved_tickets)  VALUES ({}, {}, {}, {}, {}, {}, {})";
+      command = fmt::format(command, entity.customersid,entity.employeesid,entity.insurance,entity.extra_meals,entity.debt,entity.finished,entity.reserved_tickets);
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command);
     }
@@ -122,13 +121,15 @@ namespace app::dbaccess
       std::stringstream command;
       command << "DELETE from tour WHERE";
 
-      auto params = glue_params(entity, " and ");
+      if(entity.id != 0)
+        command << fmt::format(" id = {}", entity.id);
+      else{
+        auto params = glue_params(entity, " and ");
 
-      if(params == "")
-        return;
-      command << params;
-      command << fmt::format("WHERE id = {}", entity.id);
-
+        if(params == "")
+          return;
+        command << params;
+      }
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command.str());
     }
@@ -204,15 +205,6 @@ namespace app::dbaccess
         else
           concat = true;
         params << fmt::format(" offerid = {} ", entity.offerid);
-      }
-
-      if(entity.customerspesel != 0)
-      {
-        if(concat)
-          params << fmt::format(" {} ",separator);
-        else
-          concat = true;
-        params << fmt::format(" customerpesel = {} ", entity.customerspesel);
       }
 
       if(entity.reserved_tickets != 0)

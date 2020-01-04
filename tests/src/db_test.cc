@@ -42,7 +42,6 @@ protected:
       hldb_inst.m_dbconn.query_res(line.c_str());
      }
    }
-
    hldb hldb_inst;
 
 };
@@ -60,9 +59,70 @@ TEST(DB_TEST, basicDatabaseConnection)
   c = db_connection(
     DB_HOSTNAME, DB_DATABASE, DB_PORT_NO, { DB_USERNAME_LOPRIO, DB_PASSWORD_LOPRIO });
   EXPECT_EQ(true, c)<< "LO_PRIO ACCOUNT INACCESSIBLE";
-
 }
 
 TEST_F(HldbTest, CostomerManagerTest){
-  EXPECT_EQ(0,0);
+  auto customers = hldb_inst.get_all_customers();
+  EXPECT_EQ(customers.size(), 0)<< "INCORRECT CUSTOMERS COUNT";
+  customer_t  customer;
+  customer.name ="Mario_1";
+  customer.surname ="Bros_1";
+  customer.email ="Mario_1.bros@op.pl";
+  customer.pesel ="111111111111";
+  hldb_inst.add_customer(customer);
+  customer.name ="Mario_2";
+  customer.surname ="Bros_2";
+  customer.email ="Mario_2.bros@op.pl";
+  customer.pesel ="222222222222";
+  hldb_inst.add_customer(customer);
+  customer.name ="Mario_3";
+  customer.surname ="Bros_3";
+  customer.email ="Mario_3.bros@op.pl";
+  customer.pesel ="333333333333";
+  hldb_inst.add_customer(customer);
+  customer.name ="Mario_4";
+  customer.surname ="Bros_4";
+  customer.email ="Mario_4.bros@op.pl";
+  customer.pesel ="444444444444";
+  hldb_inst.add_customer(customer);
+  customers = hldb_inst.get_all_customers();
+  EXPECT_EQ(customers.size(), 4)<< "INCORRECT CUSTOMERS COUNT";
+
+  customer.name ="Mario_4";
+  customer.surname ="Bros_4";
+  customer.email ="Mario_4.bros@op.pl";
+  customer.pesel ="444444444444";
+  hldb_inst.add_customer(customer);
+  customers = hldb_inst.get_all_customers();
+  EXPECT_EQ(customers.size(), 5)<< "INCORRECT CUSTOMERS COUNT";
+  customer.name ="Mario_4";
+  customer.surname ="Bros_4";
+  customer.email ="Mario_4.bros@op.pl";
+  customer.pesel ="444444444444";
+  hldb_inst.add_customer(customer);
+
+  customers = hldb_inst.get_customers_like(customer);
+  EXPECT_EQ(customers.size(), 3)<< "INCORRECT CUSTOMERS COUNT";
+  customer = customers[0];
+
+  customer = hldb_inst.get_customers_like(customer.id);
+  EXPECT_NE(customer.id, 0)<< "INCORRECT CUSTOMERS ID";
+
+  hldb_inst.rmeove_customer(customer);
+  customers = hldb_inst.get_customers_like(customer);
+  EXPECT_EQ(customers.size(), 2)<< "INCORRECT CUSTOMERS COUNT";
+
+  customer.id = 0;
+  hldb_inst.rmeove_customer(customer);
+  customers = hldb_inst.get_customers_like(customer);
+  EXPECT_EQ(customers.size(), 0)<< "INCORRECT CUSTOMERS COUNT";
+
+  customer.id = 1;
+  customer.name ="Mario_M";
+  customer.surname ="Bros_M";
+  customer.email ="Mario_M.bros@op.pl";
+  customer.pesel ="000000000000";
+  hldb_inst.modify_customer(customer);
+  customer = hldb_inst.get_customers_like(customer.id);
+  EXPECT_EQ(customer.pesel, "000000000000")<< "INCORRECT CUSTOMERS PESEL";
 }

@@ -13,7 +13,8 @@ namespace app::dbaccess
 
       employee_t employee;
       std::vector<employee_t> data{};
-
+      if(res == nullptr)
+        return data;
       for(uint i =0 ; i< res->row_count; i++)
       {
         auto row = mysql_fetch_row(res.get());
@@ -46,7 +47,8 @@ namespace app::dbaccess
 
       auto* db_conn = this->parent()->get_dbconn();
       auto res = db_conn->query_res(command.str());
-
+      if(res == nullptr)
+        return data;
 
       for(uint i =0 ; i< res->row_count; i++)
       {
@@ -86,7 +88,7 @@ namespace app::dbaccess
 
     void employee_manager::add(const employee_t &entity) noexcept
     {
-      std::string command = "INSERT INTO biuro_podrozy.employees (name,surname,hire_date, salary, email, phone_number) VALUES ({}, {}, {}, {}, {}, {})";
+      std::string command = "INSERT INTO biuro_podrozy.employees (name,surname,hire_date, salary, email, phone_number) VALUES (\'{}\', \'{}\', STR_TO_DATE(\'{}\',\'%d.%m.%y\'), {}, \'{}\', \'{}\')";
       command = fmt::format(command, entity.name, entity.surname,epoch2str(entity.hire_date), entity.salary, entity.email,entity.phone_number);
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command);
@@ -113,13 +115,15 @@ namespace app::dbaccess
       std::stringstream command;
       command << "DELETE from employees WHERE";
 
-      auto params = glue_params(entity, " and ");
+    if(entity.id != 0)
+        command << fmt::format(" id = {}", entity.id);
+      else{
+        auto params = glue_params(entity, " and ");
 
-      if(params == "")
-        return;
-      command << params;
-      command << fmt::format("WHERE id = {}", entity.id);
-
+        if(params == "")
+          return;
+        command << params;
+      }
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command.str());
     }
@@ -137,7 +141,7 @@ namespace app::dbaccess
       bool concat = false;
       if(entity.name != "")
       {
-        params << fmt::format(" name = {} ", entity.name);
+        params << fmt::format(" name = \'{}\'", entity.name);
         concat =true;
       }
 
@@ -147,7 +151,7 @@ namespace app::dbaccess
           params << fmt::format(" {} ",separator);
         else
           concat = true;
-        params << fmt::format(" surname = {} ", entity.surname);
+        params << fmt::format(" surname = \'{}\'' ", entity.surname);
       }
       auto date = epoch2str(entity.hire_date);
       if(date != "00.00.00")
@@ -156,7 +160,7 @@ namespace app::dbaccess
           params << fmt::format(" {} ",separator);
         else
           concat = true;
-        params << fmt::format(" hire_date = {} ", date);
+        params << fmt::format(" hire_date = STR_TO_DATE(\'{}\',\'%d.%m.%y\') ", date);
       }
 
       if(entity.salary != 0)
@@ -174,7 +178,7 @@ namespace app::dbaccess
           params << fmt::format(" {} ",separator);
         else
           concat = true;
-        params << fmt::format(" email = {} ", entity.email);
+        params << fmt::format(" email = \'{}\'' ", entity.email);
       }
 
 
@@ -183,7 +187,7 @@ namespace app::dbaccess
         if(concat)
           params << fmt::format(" {} ",separator);
 
-        params << fmt::format(" phone_number = {} ", entity.phone_number);
+        params << fmt::format(" phone_number = \'{}\'' ", entity.phone_number);
       }
       return params.str();
     }
