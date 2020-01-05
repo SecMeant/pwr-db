@@ -49,43 +49,6 @@ protected:
 
 };
 
-TEST(DB_TEST, basicDatabaseConnection)
-{
-  db_connection c(
-    DB_HOSTNAME, DB_DATABASE, DB_PORT_NO, { DB_USERNAME_HIPRIO, DB_PASSWORD_HIPRIO });
-  EXPECT_EQ(true, c)<< "HI_PRIO ACCOUNT INACCESSIBLE";
-
-  c = db_connection(
-    DB_HOSTNAME, DB_DATABASE, DB_PORT_NO, { DB_USERNAME_MIPRIO, DB_PASSWORD_MIPRIO });
-  EXPECT_EQ(true, c)<< "MI_PRIO ACCOUNT INACCESSIBLE";
-
-  c = db_connection(
-    DB_HOSTNAME, DB_DATABASE, DB_PORT_NO, { DB_USERNAME_LOPRIO, DB_PASSWORD_LOPRIO });
-  EXPECT_EQ(true, c)<< "LO_PRIO ACCOUNT INACCESSIBLE";
-}
-
-TEST(DB_UTILS, dateConverterTest)
-{
-  string d_str = "05.01.2020";
-  uint64_t time_mill = 1578178800000;
-
-  date_t base_date = date_t(tb(time_mill));
-  EXPECT_EQ(d_str, epoch2str(base_date));
-
-  uint64_t time_conv = str2epoch(d_str.c_str(), "%d.%m.%Y").time_since_epoch().count();
-  EXPECT_EQ(time_mill, time_conv);
-
-  d_str = "01.01.1970";
-  time_mill = 0;
-
-  base_date = date_t(tb(time_mill));
-  EXPECT_EQ(d_str, epoch2str(base_date));
-
-  time_conv = str2epoch(d_str.c_str(), "%d.%m.%Y").time_since_epoch().count();
-  EXPECT_EQ(time_mill, time_conv);
-}
-
-
 TEST_F(HldbTest, CostomerManagerTest){
   auto customers = hldb_inst.get_all_customers();
   EXPECT_EQ(customers.size(), 0)<< "INCORRECT CUSTOMERS COUNT";
@@ -127,7 +90,7 @@ TEST_F(HldbTest, CostomerManagerTest){
   hldb_inst.add_customer(customer);
 
   customers = hldb_inst.get_customers_like(customer);
-  EXPECT_EQ(customers.size(), 3)<< "INCORRECT CUSTOMERS COUNT";
+  ASSERT_EQ(customers.size(), 3)<< "INCORRECT CUSTOMERS COUNT";
   customer = customers[0];
 
   customer = hldb_inst.get_customers_like(customer.id);
@@ -153,68 +116,109 @@ TEST_F(HldbTest, CostomerManagerTest){
 }
 
 
-// TEST_F(HldbTest, EmployeeManagerTest){
-//   auto customers = hldb_inst.get_all_customers();
-//   EXPECT_EQ(customers.size(), 0)<< "INCORRECT CUSTOMERS COUNT";
-//   employee_t  employee;
-//   employee.name ="Mario_1";
-//   employee.surname ="Bros_1";
-//   employee.email ="Mario_1.bros@op.pl";
-//   employee.pesel ="111111111111";
-//   hldb_inst.add_employee(employee);
-//   employee.name ="Mario_2";
-//   employee.surname ="Bros_2";
-//   employee.email ="Mario_2.bros@op.pl";
-//   employee.pesel ="222222222222";
-//   hldb_inst.add_employee(employee);
-//   employee.name ="Mario_3";
-//   employee.surname ="Bros_3";
-//   employee.email ="Mario_3.bros@op.pl";
-//   employee.pesel ="333333333333";
-//   hldb_inst.add_employee(employee);
-//   employee.name ="Mario_4";
-//   employee.surname ="Bros_4";
-//   employee.email ="Mario_4.bros@op.pl";
-//   employee.pesel ="444444444444";
-//   hldb_inst.add_employee(employee);
-//   employees = hldb_inst.get_all_employees();
-//   EXPECT_EQ(employees.size(), 4)<< "INCORRECT employeeS COUNT";
+TEST_F(HldbTest, EmployeeManagerTest){
+  auto employees = hldb_inst.get_all_employees();
+  EXPECT_EQ(employees.size(), 0)<< "INCORRECT EMPLOYEES COUNT";
+  employee_t  employee;
+  employee.name ="worker_1";
+  employee.surname ="id_1";
+  employee.hire_date =str2epoch("01.10.2000");
+  employee.salary = 4000;
+  employee.email ="worker1_1.bros@op.pl";
+  employee.phone_number ="997998991";
+  hldb_inst.add_employee(employee);
 
-//   employee.name ="Mario_4";
-//   employee.surname ="Bros_4";
-//   employee.email ="Mario_4.bros@op.pl";
-//   employee.pesel ="444444444444";
-//   hldb_inst.add_employee(employee);
-//   employees = hldb_inst.get_all_employees();
-//   EXPECT_EQ(employees.size(), 5)<< "INCORRECT employeeS COUNT";
-//   employee.name ="Mario_4";
-//   employee.surname ="Bros_4";
-//   employee.email ="Mario_4.bros@op.pl";
-//   employee.pesel ="444444444444";
-//   hldb_inst.add_employee(employee);
+  employee.name ="worker_2";
+  employee.surname ="id_2";
+  employee.hire_date =str2epoch("01.10.2010");
+  employee.salary = 4000;
+  employee.email ="worker2_1.bros@op.pl";
+  employee.phone_number ="997998992";
+  hldb_inst.add_employee(employee);
 
-//   employees = hldb_inst.get_employees_like(employee);
-//   EXPECT_EQ(employees.size(), 3)<< "INCORRECT employeeS COUNT";
-//   employee = employees[0];
+  employee.name ="worker_3";
+  employee.surname ="id_3";
+  employee.hire_date =str2epoch("01.10.2015");
+  employee.salary = 4000;
+  employee.email ="worker_3.bros@op.pl";
+  employee.phone_number ="997998993";
+  hldb_inst.add_employee(employee);
 
-//   employee = hldb_inst.get_employees_like(employee.id);
-//   EXPECT_NE(employee.id, 0)<< "INCORRECT employeeS ID";
+  employee.name ="worker_3";
+  employee.surname ="id_3";
+  employee.hire_date =str2epoch("01.10.2013");
+  employee.salary = 4000;
+  employee.email ="worker_3.bros@op.pl";
+  employee.phone_number ="997998993";
+  hldb_inst.add_employee(employee);
 
-//   hldb_inst.rmeove_employee(employee);
-//   employees = hldb_inst.get_employees_like(employee);
-//   EXPECT_EQ(employees.size(), 2)<< "INCORRECT employeeS COUNT";
+  employee.name ="worker_3";
+  employee.surname ="id_3";
+  employee.hire_date =str2epoch("01.10.2013");
+  employee.salary = 4000;
+  employee.email ="worker_3.bros@op.pl";
+  employee.phone_number ="997998993";
+  hldb_inst.add_employee(employee);
+  employees = hldb_inst.get_all_employees();
+  EXPECT_EQ(employees.size(), 5)<< "INCORRECT employee COUNT";
 
-//   employee.id = 0;
-//   hldb_inst.rmeove_employee(employee);
-//   employees = hldb_inst.get_employees_like(employee);
-//   EXPECT_EQ(employees.size(), 0)<< "INCORRECT employeeS COUNT";
+  employee.name ="worker_3"; // search by name
+  employee.surname ="id_3";// search by surname
+  employee.hire_date =str2epoch(INVALID_DATE); //search param
+  employee.salary = 0; // don't search by salary
+  employee.email =""; // dont search by salary
+  employee.phone_number ="";// dont search by salary
 
-//   employee.id = 1;
-//   employee.name ="Mario_M";
-//   employee.surname ="Bros_M";
-//   employee.email ="Mario_M.bros@op.pl";
-//   employee.pesel ="000000000000";
-//   hldb_inst.modify_employee(employee);
-//   employee = hldb_inst.get_employees_like(employee.id);
-//   EXPECT_EQ(employee.pesel, "000000000000")<< "INCORRECT CUSTOMERS PESEL";
-// }
+  employees = hldb_inst.get_employees_like(employee);
+  EXPECT_EQ(employees.size(), 3)<< "INCORRECT employee COUNT";
+
+  employee.name =""; // don't search by name
+  employee.surname ="";// don't search by surname
+  employee.hire_date =str2epoch("01.10.2013"); //search param
+  employee.salary = 0; // don't search by salary
+  employee.email ="";// dont search by salary
+  employee.phone_number ="";// dont search by salary
+
+  employees = hldb_inst.get_employees_like(employee);
+  ASSERT_EQ(employees.size(), 2)<< "INCORRECT employee COUNT";
+
+  employee = employees[0];
+  employee = hldb_inst.get_employees_like(employee.id);
+  EXPECT_NE(employee.id, 0)<< "INCORRECT employee ID";
+  employee.id = 4;
+  // remove employee with specified id
+  hldb_inst.rmeove_employee(employee);
+  employee.id = 3;
+  employee.name ="worker_3"; // search by name
+  employee.surname ="id_3";// search by surname
+  employee.hire_date =str2epoch(INVALID_DATE); //search param
+  employee.salary = 0; // don't search by salary
+  employee.email =""; // dont search by salary
+  employee.phone_number ="";// dont search by salary
+  employees = hldb_inst.get_employees_like(employee);
+  EXPECT_EQ(employees.size(), 2)<< "INCORRECT employee COUNT";
+
+  employee.id = 0;
+  employee.name ="worker_3"; // search by name
+  employee.surname ="id_3";// search by surname
+  employee.hire_date =str2epoch(INVALID_DATE); //search param
+  employee.salary = 0; // don't search by salary
+  employee.email =""; // dont search by salary
+  employee.phone_number ="";// dont search by salary
+  // don't look on id, remove all employees speified py params
+  hldb_inst.rmeove_employee(employee);
+  employees = hldb_inst.get_employees_like(employee);
+  EXPECT_EQ(employees.size(), 0)<< "INCORRECT employee COUNT";
+
+  employee.id = 1;
+  employee.name ="worker_1";
+  employee.surname ="id_1";
+  employee.hire_date =str2epoch("02.03.2011");
+  employee.salary = 3500;
+  employee.email ="worker_3.bros@op.pl";
+  employee.phone_number ="997998993";
+  // modify first worker
+  hldb_inst.modify_employee(employee);
+  employee = hldb_inst.get_employees_like(employee.id);
+  EXPECT_EQ(epoch2str(employee.hire_date), "02.03.2011")<< "INCORRECT employee date";
+}

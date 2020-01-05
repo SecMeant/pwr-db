@@ -10,7 +10,7 @@ namespace app::dbaccess
     {
 
       auto* db_conn = this->parent()->get_dbconn();
-      auto res = db_conn->query_res("SELECT * from offers");
+      auto res = db_conn->query_res("SELECT id,name,country,city,tickets_count,DATE_FORMAT(date_begin,'%d.%m.%Y'),DATE_FORMAT(date_end,'%d.%m.%Y'),price,categoryid,insurance_cost,extra_meals_cost from offers");
 
       offer_t offer;
       std::vector<offer_t> data{};
@@ -24,8 +24,8 @@ namespace app::dbaccess
         offer.country = row[2];
         offer.city = row[3];
         offer.tickets_count = atoi(row[4]);
-        offer.date_begin = str2epoch(row[5], "%d.%m.%y");
-        offer.date_end = str2epoch(row[6], "%d.%m.%y");
+        offer.date_begin = str2epoch(row[5]);
+        offer.date_end = str2epoch(row[6]);
         offer.price = atoi(row[7]);
         offer.categoryid = atoi(row[8]);
         offer.insurance_cost = atoi(row[9]);
@@ -38,7 +38,7 @@ namespace app::dbaccess
     std::vector<offer_t> offer_manager::get_like(const offer_t &entity) noexcept
     {
       std::stringstream command;
-      command << "SELECT * from offers WHERE";
+      command << "SELECT id,name,country,city,tickets_count,DATE_FORMAT(date_begin,'%d.%m.%Y'),DATE_FORMAT(date_end,'%d.%m.%Y'),price,categoryid,insurance_cost,extra_meals_cost from offers WHERE";
 
       auto params = glue_params(entity, " and ");
 
@@ -63,22 +63,21 @@ namespace app::dbaccess
         offer.country = row[2];
         offer.city = row[3];
         offer.tickets_count = atoi(row[4]);
-        offer.date_begin = str2epoch(row[5], "%d.%m.%y");
-        offer.date_end = str2epoch(row[6], "%d.%m.%y");
+        offer.date_begin = str2epoch(row[5]);
+        offer.date_end = str2epoch(row[6]);
         offer.price = atoi(row[7]);
         offer.categoryid = atoi(row[8]);
         offer.insurance_cost = atoi(row[9]);
         offer.extra_meals_cost = atoi(row[10]);
         data.push_back(offer);
       }
-
       return data;
     }
 
     offer_t offer_manager::get(int id) noexcept
     {
       auto* db_conn = this->parent()->get_dbconn();
-      auto command = fmt::format("SELECT * from offers WHERE id = {}", id);
+      auto command = fmt::format("SELECT id,name,country,city,tickets_count,DATE_FORMAT(date_begin,'%d.%m.%Y'),DATE_FORMAT(date_end,'%d.%m.%Y'),price,categoryid,insurance_cost,extra_meals_cost from offers WHERE id = {}", id);
       auto res = db_conn->query_res(command);
       offer_t offer;
       if (!res || mysql_num_rows(res.get()) != 1)
@@ -90,8 +89,8 @@ namespace app::dbaccess
       offer.country = row[2];
       offer.city = row[3];
       offer.tickets_count = atoi(row[4]);
-      offer.date_begin = str2epoch(row[5], "%d.%m.%y");
-      offer.date_end = str2epoch(row[6], "%d.%m.%y");
+      offer.date_begin = str2epoch(row[5]);
+      offer.date_end = str2epoch(row[6]);
       offer.price = atoi(row[7]);
       offer.categoryid = atoi(row[8]);
       offer.insurance_cost = atoi(row[9]);
@@ -101,8 +100,8 @@ namespace app::dbaccess
 
     void offer_manager::add(const offer_t &entity) noexcept
     {
-      std::string command = "INSERT INTO biuro_podrozy.offers (name,country,city, date_begin, date_end, price, insurance_cost, extra_meals_cost, categoryid, tickets_count) VALUES (\'{}\', \'{}\', \'{}\', STR_TO_DATE(\'{}\',\'%d.%m.%y\'), STR_TO_DATE(\'{}\',\'%d.%m.%y\'), {}, {}, {}, {}, {})";
-      command = fmt::format(command, entity.name, entity.country,entity.city,epoch2str(entity.date_begin),epoch2str(entity.date_end),  entity.price, entity.insurance_cost,entity.extra_meals_cost, entity.categoryid, entity.tickets_count);
+      std::string command = "INSERT INTO offers (name,country,city, date_begin, date_end, price, insurance_cost, extra_meals_cost, categoryid, tickets_count) VALUES (\'{}\', \'{}\', \'{}\', STR_TO_DATE(\'{}\',\'%d.%m.%y\'), STR_TO_DATE(\'{}\',\'%d.%m.%y\'), {}, {}, {}, {}, {})";
+      command = fmt::format(command, entity.name, entity.country,entity.city,str2base_str(epoch2str(entity.date_begin)),str2base_str(epoch2str(entity.date_end)),  entity.price, entity.insurance_cost,entity.extra_meals_cost, entity.categoryid, entity.tickets_count);
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command);
     }
@@ -110,7 +109,7 @@ namespace app::dbaccess
     void offer_manager::modify(const offer_t &entity) noexcept
     {
       std::stringstream command;
-      command << "UPDATE biuro_podrozy.offers SET";
+      command << "UPDATE offers SET";
 
       auto params = glue_params(entity, ", ");
 
@@ -168,8 +167,8 @@ namespace app::dbaccess
         params << fmt::format(" country = \'{}\' ", entity.country);
       }
 
-      auto date = epoch2str(entity.date_begin);
-      if(date != "00.00.00")
+      auto date = str2base_str(epoch2str(entity.date_begin));
+      if(date != INVALID_DATE)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -178,8 +177,8 @@ namespace app::dbaccess
         params << fmt::format(" date_begin = STR_TO_DATE(\'{}\',\'%d.%m.%y\') ", date);
       }
 
-      date = epoch2str(entity.date_end);
-      if(date != "00.00.00")
+      date = str2base_str(epoch2str(entity.date_end));
+      if(date != INVALID_DATE)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -232,8 +231,6 @@ namespace app::dbaccess
           concat = true;
         params << fmt::format(" tickets_count = {} ", entity.tickets_count);
       }
-
-
       return params.str();
     }
 
