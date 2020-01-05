@@ -66,13 +66,22 @@ TEST(DB_TEST, basicDatabaseConnection)
 
 TEST(DB_UTILS, dateConverterTest)
 {
-  string d_str = "05.01.20";
+  string d_str = "05.01.2020";
   uint64_t time_mill = 1578178800000;
 
-  date_t base_date = date_t(Ms(time_mill));
+  date_t base_date = date_t(tb(time_mill));
   EXPECT_EQ(d_str, epoch2str(base_date));
 
-  uint64_t time_conv = str2epoch(d_str.c_str(), "%d.%m.%y").time_since_epoch().count();
+  uint64_t time_conv = str2epoch(d_str.c_str(), "%d.%m.%Y").time_since_epoch().count();
+  EXPECT_EQ(time_mill, time_conv);
+
+  d_str = "01.01.1970";
+  time_mill = 0;
+
+  base_date = date_t(tb(time_mill));
+  EXPECT_EQ(d_str, epoch2str(base_date));
+
+  time_conv = str2epoch(d_str.c_str(), "%d.%m.%Y").time_since_epoch().count();
   EXPECT_EQ(time_mill, time_conv);
 }
 
