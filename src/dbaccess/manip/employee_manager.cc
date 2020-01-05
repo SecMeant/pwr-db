@@ -9,7 +9,7 @@ namespace app::dbaccess
     {
 
       auto* db_conn = this->parent()->get_dbconn();
-      auto res = db_conn->query_res("SELECT * from employees");
+      auto res = db_conn->query_res("SELECT id,name,surname,DATE_FORMAT(hire_date,'%d.%m.%Y'),salary,email,phone_number from employees");
 
       employee_t employee;
       std::vector<employee_t> data{};
@@ -21,7 +21,7 @@ namespace app::dbaccess
         employee.id = atoi(row[0]);
         employee.name = row[1];
         employee.surname = row[2];
-        employee.hire_date = str2epoch(row[3], "%d.%m.%y");
+        employee.hire_date = str2epoch(row[3]);
         employee.salary = atoi(row[4]);
         employee.email = row[5];
         employee.phone_number = row[6];
@@ -33,7 +33,7 @@ namespace app::dbaccess
     std::vector<employee_t> employee_manager::get_like(const employee_t &entity) noexcept
     {
       std::stringstream command;
-      command << "SELECT * from employees WHERE";
+      command << "SELECT id,name,surname,DATE_FORMAT(hire_date,'%d.%m.%Y'),salary,email,phone_number from employees WHERE";
 
       auto params = glue_params(entity, " and ");
 
@@ -43,7 +43,6 @@ namespace app::dbaccess
       if(params == "")
         return data;
       command << params;
-
 
       auto* db_conn = this->parent()->get_dbconn();
       auto res = db_conn->query_res(command.str());
@@ -56,7 +55,7 @@ namespace app::dbaccess
         employee.id = atoi(row[0]);
         employee.name = row[1];
         employee.surname = row[2];
-        employee.hire_date = str2epoch(row[3], "%d.%m.%y");
+        employee.hire_date = str2epoch(row[3]);
         employee.salary = atoi(row[4]);
         employee.email = row[5];
         employee.phone_number = row[6];
@@ -69,7 +68,7 @@ namespace app::dbaccess
     employee_t employee_manager::get(int id) noexcept
     {
       auto* db_conn = this->parent()->get_dbconn();
-      auto command = fmt::format("SELECT * from employees WHERE id = {}", id);
+      auto command = fmt::format("SELECT id,name,surname,DATE_FORMAT(hire_date,'%d.%m.%Y'),salary,email,phone_number from employees WHERE id = {}", id);
       auto res = db_conn->query_res(command);
       employee_t employee;
       if (!res || mysql_num_rows(res.get()) != 1)
@@ -78,7 +77,7 @@ namespace app::dbaccess
       employee.id = atoi(row[0]);
       employee.name = row[1];
       employee.surname = row[2];
-      employee.hire_date = str2epoch(row[3], "%d.%m.%y");
+      employee.hire_date = str2epoch(row[3]);
       employee.salary = atoi(row[4]);
       employee.email = row[5];
       employee.phone_number = row[6];
@@ -88,8 +87,8 @@ namespace app::dbaccess
 
     void employee_manager::add(const employee_t &entity) noexcept
     {
-      std::string command = "INSERT INTO biuro_podrozy.employees (name,surname,hire_date, salary, email, phone_number) VALUES (\'{}\', \'{}\', STR_TO_DATE(\'{}\',\'%d.%m.%y\'), {}, \'{}\', \'{}\')";
-      command = fmt::format(command, entity.name, entity.surname,epoch2str(entity.hire_date), entity.salary, entity.email,entity.phone_number);
+      std::string command = "INSERT INTO employees (name,surname,hire_date, salary, email, phone_number) VALUES (\'{}\', \'{}\', STR_TO_DATE(\'{}\',\'%d.%m.%y\'), {}, \'{}\', \'{}\')";
+      command = fmt::format(command, entity.name, entity.surname,str2base_str(epoch2str(entity.hire_date)), entity.salary, entity.email,entity.phone_number);
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command);
     }
@@ -97,7 +96,7 @@ namespace app::dbaccess
     void employee_manager::modify(const employee_t &entity) noexcept
     {
       std::stringstream command;
-      command << "UPDATE biuro_podrozy.employees SET";
+      command << "UPDATE employees SET";
 
       auto params = glue_params(entity, ", ");
 
@@ -151,10 +150,10 @@ namespace app::dbaccess
           params << fmt::format(" {} ",separator);
         else
           concat = true;
-        params << fmt::format(" surname = \'{}\'' ", entity.surname);
+        params << fmt::format(" surname = \'{}\' ", entity.surname);
       }
-      auto date = epoch2str(entity.hire_date);
-      if(date != "00.00.00")
+      auto date = str2base_str(epoch2str(entity.hire_date));
+      if(date != INVALID_DATE)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -178,7 +177,7 @@ namespace app::dbaccess
           params << fmt::format(" {} ",separator);
         else
           concat = true;
-        params << fmt::format(" email = \'{}\'' ", entity.email);
+        params << fmt::format(" email = \'{}\' ", entity.email);
       }
 
 
@@ -187,7 +186,7 @@ namespace app::dbaccess
         if(concat)
           params << fmt::format(" {} ",separator);
 
-        params << fmt::format(" phone_number = \'{}\'' ", entity.phone_number);
+        params << fmt::format(" phone_number = \'{}\' ", entity.phone_number);
       }
       return params.str();
     }
