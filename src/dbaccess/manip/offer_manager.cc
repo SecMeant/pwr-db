@@ -102,6 +102,7 @@ namespace app::dbaccess
     {
       std::string command = "INSERT INTO offers (name,country,city, date_begin, date_end, price, insurance_cost, extra_meals_cost, categoryid, tickets_count) VALUES (\'{}\', \'{}\', \'{}\', STR_TO_DATE(\'{}\',\'%d.%m.%y\'), STR_TO_DATE(\'{}\',\'%d.%m.%y\'), {}, {}, {}, {}, {})";
       command = fmt::format(command, entity.name, entity.country,entity.city,str2base_str(epoch2str(entity.date_begin)),str2base_str(epoch2str(entity.date_end)),  entity.price, entity.insurance_cost,entity.extra_meals_cost, entity.categoryid, entity.tickets_count);
+
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command);
     }

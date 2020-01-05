@@ -71,3 +71,12 @@ ALTER TABLE biuro_podrozy_test.tour ADD CONSTRAINT FKtour997364 FOREIGN KEY (Cus
 ALTER TABLE biuro_podrozy_test.tour ADD CONSTRAINT FKtour557083 FOREIGN KEY (EmployeeId) REFERENCES biuro_podrozy_test.employees (Id);
 ALTER TABLE biuro_podrozy_test.tour ADD CONSTRAINT FKtour774357 FOREIGN KEY (OfferId) REFERENCES biuro_podrozy_test.offers (Id);
 ALTER TABLE biuro_podrozy_test.offers ADD CONSTRAINT FKoffers229222 FOREIGN KEY (CategoryId) REFERENCES biuro_podrozy_test.category (Id);
+
+INSERT INTO
+biuro_podrozy_test.category
+  (NAME)
+VALUES
+  ('Last minute'),
+  ('Sightseeing tour'),
+  ('Cruise'),
+  ('Facultative trips');
