@@ -1,28 +1,17 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.1.0)
 
-project(asdf LANGUAGES CXX)
-
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+project(helloworld)
 
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC OFF)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
 
-set(UI ${CMAKE_CURRENT_LIST_DIR}/mainwindow.ui)
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
-find_package(Qt5Core REQUIRED)
-
-qt5_wrap_ui(UI_HEADERS ${UI})
-add_executable(${PROJECT_NAME} ${UI_HEADERS} ${RESOURCE} ${SOURCES} )
-
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-
-
-add_executable(asdf
-    main.cpp
+add_executable(helloworld
+    mainwindow.ui
     mainwindow.cpp
-    mainwindow.h
-    mainwindow.ui)
+    main.cpp
+)
 
-target_link_libraries(asdf PRIVATE  Qt5::Core)
+target_link_libraries(helloworld Qt5::Widgets)
