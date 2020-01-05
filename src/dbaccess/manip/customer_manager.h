@@ -7,16 +7,7 @@ namespace app::dbaccess
 {
   class data_access_manager;
 
-  class customer_manager_i : public entity_manipulator<customer_t>
-  {
-  public:
-    virtual std::vector<customer_t> get_all() noexcept = 0;
-    virtual std::vector<customer_t> get_like(const customer_t &entity) noexcept = 0;
-    virtual customer_t get(int id) noexcept = 0;
-    virtual void add(const customer_t &entity) noexcept = 0;
-    virtual void modify(const customer_t &entity) noexcept = 0;
-    virtual void remove(const customer_t &entity) noexcept = 0;
-  };
+  using customer_manager_i = entity_manipulator<customer_t>;
 
   class customer_manager : public customer_manager_i
   {
