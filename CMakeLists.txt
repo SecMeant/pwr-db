@@ -4,6 +4,8 @@ project(useless LANGUAGES CXX DESCRIPTION "It's useless")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+option(BUILD_GUI "Build gui" ON)
+
 find_library(libfmt fmt REQUIRED)
 find_library(libmysqlclient mysqlclient REQUIRED)
 
@@ -16,6 +18,11 @@ set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 file(GLOB_RECURSE SRC_FILES_CXX ${SRC_DIR}/*.cc)
 
-add_executable(${TARGET_NAME} ${SRC_FILES_CXX})
+if (BUILD_GUI)
+  add_library(${TARGET_NAME} ${SRC_FILES_CXX})
+  add_subdirectory(gui/bdg/)
+else()
+  add_executable(${TARGET_NAME} ${SRC_FILES_CXX})
+endif()
 
 target_link_libraries(${TARGET_NAME} ${libfmt} ${libmysqlclient})

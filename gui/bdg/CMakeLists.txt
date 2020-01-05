@@ -14,4 +14,4 @@ add_executable(helloworld
     main.cpp
 )
 
-target_link_libraries(helloworld Qt5::Widgets)
+target_link_libraries(helloworld Qt5::Widgets ${TARGET_NAME})
