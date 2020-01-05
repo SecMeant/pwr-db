@@ -114,7 +114,7 @@ namespace app::dbaccess
       std::stringstream command;
       command << "DELETE from employees WHERE";
 
-    if(entity.id != 0)
+    if(entity.id != UNWANTED_DECIMAL_PARAM)
         command << fmt::format(" id = {}", entity.id);
       else{
         auto params = glue_params(entity, " and ");
@@ -138,13 +138,13 @@ namespace app::dbaccess
     {
       std::stringstream params;
       bool concat = false;
-      if(entity.name != "")
+      if(entity.name != UNWANTED_STR_PARAM)
       {
         params << fmt::format(" name = \'{}\'", entity.name);
         concat =true;
       }
 
-      if(entity.surname != "")
+      if(entity.surname != UNWANTED_STR_PARAM)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -162,7 +162,7 @@ namespace app::dbaccess
         params << fmt::format(" hire_date = STR_TO_DATE(\'{}\',\'%d.%m.%y\') ", date);
       }
 
-      if(entity.salary != 0)
+      if(entity.salary != UNWANTED_DECIMAL_PARAM)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -171,7 +171,7 @@ namespace app::dbaccess
         params << fmt::format(" salary = {} ", entity.salary);
       }
 
-      if(entity.email != "")
+      if(entity.email != UNWANTED_STR_PARAM)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -181,7 +181,7 @@ namespace app::dbaccess
       }
 
 
-      if(entity.phone_number != "")
+      if(entity.phone_number != UNWANTED_STR_PARAM)
       {
         if(concat)
           params << fmt::format(" {} ",separator);

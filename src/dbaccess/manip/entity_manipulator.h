@@ -1,6 +1,11 @@
 #pragma once
 
 #include <vector>
+#include <limits>
+
+constexpr const char * UNWANTED_STR_PARAM = "";
+
+constexpr const int UNWANTED_DECIMAL_PARAM = std::numeric_limits<int>::max();
 
 namespace app::dbaccess {
   template <typename T>

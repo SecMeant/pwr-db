@@ -94,8 +94,9 @@ namespace app::dbaccess
 
     void tour_manager::add(const tour_t &entity) noexcept
     {
-      std::string command = "INSERT INTO tour (CustomerId, employeeid, insurance, extra_meals, debt, finished, reserved_tickets)  VALUES ({}, {}, {}, {}, {}, {}, {})";
-      command = fmt::format(command, entity.customersid,entity.employeesid,entity.insurance,entity.extra_meals,entity.debt,entity.finished,entity.reserved_tickets);
+      std::string command = "INSERT INTO tour (CustomerId, employeeid, offerid, insurance, extra_meals, debt, finished, reserved_tickets)  VALUES ({}, {}, {}, {}, {}, {}, {}, {})";
+      command = fmt::format(command, entity.customersid,entity.employeesid,entity.offerid, entity.insurance,entity.extra_meals,entity.debt,entity.finished,entity.reserved_tickets);
+
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command);
     }
@@ -121,7 +122,7 @@ namespace app::dbaccess
       std::stringstream command;
       command << "DELETE from tour WHERE";
 
-      if(entity.id != 0)
+      if(entity.id != UNWANTED_DECIMAL_PARAM)
         command << fmt::format(" id = {}", entity.id);
       else{
         auto params = glue_params(entity, " and ");
@@ -145,7 +146,7 @@ namespace app::dbaccess
     {
       std::stringstream params;
       bool concat = false;
-      if(entity.debt != 0)
+      if(entity.debt != UNWANTED_DECIMAL_PARAM)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -154,7 +155,7 @@ namespace app::dbaccess
         params << fmt::format(" debt = {} ", entity.debt);
       }
 
-      if(entity.insurance != 0)
+      if(entity.insurance != UNWANTED_DECIMAL_PARAM)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -162,7 +163,7 @@ namespace app::dbaccess
           concat = true;
         params << fmt::format(" insurance = {} ", entity.insurance);
       }
-       if(entity.extra_meals != 0)
+       if(entity.extra_meals != UNWANTED_DECIMAL_PARAM)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -171,7 +172,7 @@ namespace app::dbaccess
         params << fmt::format(" extra_meals = {} ", entity.extra_meals);
       }
 
-      if(entity.finished != 0)
+      if(entity.finished != UNWANTED_DECIMAL_PARAM)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -180,25 +181,25 @@ namespace app::dbaccess
         params << fmt::format(" finished = {} ", entity.finished);
       }
 
-      if(entity.customersid != 0)
+      if(entity.customersid != UNWANTED_DECIMAL_PARAM)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
         else
           concat = true;
-        params << fmt::format(" customersid = {} ", entity.customersid);
+        params << fmt::format(" customerid = {} ", entity.customersid);
       }
 
-      if(entity.employeesid != 0)
+      if(entity.employeesid != UNWANTED_DECIMAL_PARAM)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
         else
           concat = true;
-        params << fmt::format(" employeesid = {} ", entity.employeesid);
+        params << fmt::format(" employeeid = {} ", entity.employeesid);
       }
 
-      if(entity.offerid != 0)
+      if(entity.offerid != UNWANTED_DECIMAL_PARAM)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -207,7 +208,7 @@ namespace app::dbaccess
         params << fmt::format(" offerid = {} ", entity.offerid);
       }
 
-      if(entity.reserved_tickets != 0)
+      if(entity.reserved_tickets != UNWANTED_DECIMAL_PARAM)
       {
         if(concat)
           params << fmt::format(" {} ",separator);

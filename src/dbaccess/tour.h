@@ -13,4 +13,5 @@ struct tour_t
   int offerid;
   int reserved_tickets;
 };
+
 }

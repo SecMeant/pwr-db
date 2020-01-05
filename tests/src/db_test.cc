@@ -100,7 +100,7 @@ TEST_F(HldbTest, CostomerManagerTest){
   customers = hldb_inst.get_customers_like(customer);
   EXPECT_EQ(customers.size(), 2)<< "INCORRECT CUSTOMERS COUNT";
 
-  customer.id = 0;
+  customer.id = UNWANTED_DECIMAL_PARAM;
   hldb_inst.rmeove_customer(customer);
   customers = hldb_inst.get_customers_like(customer);
   EXPECT_EQ(customers.size(), 0)<< "INCORRECT CUSTOMERS COUNT";
@@ -165,19 +165,19 @@ TEST_F(HldbTest, EmployeeManagerTest){
   employee.name ="worker_3"; // search by name
   employee.surname ="id_3";// search by surname
   employee.hire_date =str2epoch(INVALID_DATE); //search param
-  employee.salary = 0; // don't search by salary
-  employee.email =""; // dont search by salary
-  employee.phone_number ="";// dont search by salary
+  employee.salary = UNWANTED_DECIMAL_PARAM; // don't search by salary
+  employee.email =UNWANTED_STR_PARAM; // dont search by salary
+  employee.phone_number =UNWANTED_STR_PARAM;// dont search by salary
 
   employees = hldb_inst.get_employees_like(employee);
   EXPECT_EQ(employees.size(), 3)<< "INCORRECT employee COUNT";
 
-  employee.name =""; // don't search by name
-  employee.surname ="";// don't search by surname
+  employee.name =UNWANTED_STR_PARAM; // don't search by name
+  employee.surname =UNWANTED_STR_PARAM;// don't search by surname
   employee.hire_date =str2epoch("01.10.2013"); //search param
-  employee.salary = 0; // don't search by salary
-  employee.email ="";// dont search by salary
-  employee.phone_number ="";// dont search by salary
+  employee.salary = UNWANTED_DECIMAL_PARAM; // don't search by salary
+  employee.email =UNWANTED_STR_PARAM;// dont search by salary
+  employee.phone_number =UNWANTED_STR_PARAM;// dont search by salary
 
   employees = hldb_inst.get_employees_like(employee);
   ASSERT_EQ(employees.size(), 2)<< "INCORRECT employee COUNT";
@@ -192,19 +192,19 @@ TEST_F(HldbTest, EmployeeManagerTest){
   employee.name ="worker_3"; // search by name
   employee.surname ="id_3";// search by surname
   employee.hire_date =str2epoch(INVALID_DATE); //search param
-  employee.salary = 0; // don't search by salary
-  employee.email =""; // dont search by salary
-  employee.phone_number ="";// dont search by salary
+  employee.salary = UNWANTED_DECIMAL_PARAM; // don't search by salary
+  employee.email =UNWANTED_STR_PARAM; // dont search by salary
+  employee.phone_number =UNWANTED_STR_PARAM;// dont search by salary
   employees = hldb_inst.get_employees_like(employee);
   EXPECT_EQ(employees.size(), 2)<< "INCORRECT employee COUNT";
 
-  employee.id = 0;
+  employee.id = UNWANTED_DECIMAL_PARAM;
   employee.name ="worker_3"; // search by name
   employee.surname ="id_3";// search by surname
   employee.hire_date =str2epoch(INVALID_DATE); //search param
-  employee.salary = 0; // don't search by salary
-  employee.email =""; // dont search by salary
-  employee.phone_number ="";// dont search by salary
+  employee.salary = UNWANTED_DECIMAL_PARAM; // don't search by salary
+  employee.email =UNWANTED_STR_PARAM; // dont search by salary
+  employee.phone_number =UNWANTED_STR_PARAM;// dont search by salary
   // don't look on id, remove all employees speified py params
   hldb_inst.rmeove_employee(employee);
   employees = hldb_inst.get_employees_like(employee);
@@ -293,28 +293,27 @@ TEST_F(HldbTest, OfferManagerTest){
   offer.name ="WONDERFUL TRIP3";
   offer.country ="UKRAINE";
   offer.city ="KIJOW";
-  offer.tickets_count = 0;
+  offer.tickets_count = UNWANTED_DECIMAL_PARAM;
   offer.date_begin =str2epoch(INVALID_DATE);
   offer.date_end =str2epoch(INVALID_DATE);
-  offer.price = 0;
-  offer.categoryid = 0;
-  offer.insurance_cost =0;
-  offer.extra_meals_cost =0;
-  hldb_inst.add_offer(offer);
+  offer.price = UNWANTED_DECIMAL_PARAM;
+  offer.categoryid = UNWANTED_DECIMAL_PARAM;
+  offer.insurance_cost =UNWANTED_DECIMAL_PARAM;
+  offer.extra_meals_cost =UNWANTED_DECIMAL_PARAM;
 
   offers = hldb_inst.get_offers_like(offer);
   EXPECT_EQ(offers.size(), 3)<< "INCORRECT offer COUNT";
 
-   offer.name ="";
-  offer.country ="";
-  offer.city ="";
-  offer.tickets_count = 0;
+   offer.name =UNWANTED_STR_PARAM;
+  offer.country =UNWANTED_STR_PARAM;
+  offer.city =UNWANTED_STR_PARAM;
+  offer.tickets_count = UNWANTED_DECIMAL_PARAM;
   offer.date_begin = str2epoch("01.10.2021");
   offer.date_end =str2epoch(INVALID_DATE);
-  offer.price = 0;
-  offer.categoryid = 0;
-  offer.insurance_cost =0;
-  offer.extra_meals_cost =0;
+  offer.price = UNWANTED_DECIMAL_PARAM;
+  offer.categoryid = UNWANTED_DECIMAL_PARAM;
+  offer.insurance_cost =UNWANTED_DECIMAL_PARAM;
+  offer.extra_meals_cost =UNWANTED_DECIMAL_PARAM;
   hldb_inst.add_offer(offer);
 
   offers = hldb_inst.get_offers_like(offer);
@@ -330,27 +329,27 @@ TEST_F(HldbTest, OfferManagerTest){
   offer.name ="WONDERFUL TRIP3";
   offer.country ="UKRAINE";
   offer.city ="KIJOW";
-  offer.tickets_count = 0;
+  offer.tickets_count = UNWANTED_DECIMAL_PARAM;
   offer.date_begin =str2epoch(INVALID_DATE);
   offer.date_end =str2epoch(INVALID_DATE);
-  offer.price = 0;
-  offer.categoryid = 0;
-  offer.insurance_cost =0;
-  offer.extra_meals_cost =0;
+  offer.price = UNWANTED_DECIMAL_PARAM;
+  offer.categoryid = UNWANTED_DECIMAL_PARAM;
+  offer.insurance_cost =UNWANTED_DECIMAL_PARAM;
+  offer.extra_meals_cost =UNWANTED_DECIMAL_PARAM;
   offers = hldb_inst.get_offers_like(offer);
   EXPECT_EQ(offers.size(), 2)<< "INCORRECT offer COUNT";
 
-  offer.id = 0;
+  offer.id = UNWANTED_DECIMAL_PARAM;
   offer.name ="WONDERFUL TRIP3";
   offer.country ="UKRAINE";
   offer.city ="KIJOW";
-  offer.tickets_count = 0;
+  offer.tickets_count = UNWANTED_DECIMAL_PARAM;
   offer.date_begin =str2epoch(INVALID_DATE);
   offer.date_end =str2epoch(INVALID_DATE);
-  offer.price = 0;
-  offer.categoryid = 0;
-  offer.insurance_cost =0;
-  offer.extra_meals_cost =0;
+  offer.price = UNWANTED_DECIMAL_PARAM;
+  offer.categoryid = UNWANTED_DECIMAL_PARAM;
+  offer.insurance_cost =UNWANTED_DECIMAL_PARAM;
+  offer.extra_meals_cost =UNWANTED_DECIMAL_PARAM;
   // // don't look on id, remove all offers speified py params
   hldb_inst.rmeove_offer(offer);
   offers = hldb_inst.get_offers_like(offer);
@@ -372,4 +371,160 @@ TEST_F(HldbTest, OfferManagerTest){
   offer = hldb_inst.get_offers_like(offer.id);
   EXPECT_EQ(epoch2str(offer.date_begin), "01.10.2025")<< "INCORRECT offer date";
   EXPECT_EQ(offer.name, "WONDERFUL_TRI213")<< "INCORRECT offer date";
+}
+
+
+TEST_F(HldbTest, tourManagerTest){
+
+  offer_t offer;
+  offer.name ="WONDERFUL_TRIP1";
+  offer.country ="UKRAINE";
+  offer.city ="KIJOW";
+  offer.tickets_count = 50;
+  offer.date_begin =str2epoch("01.10.2021");
+  offer.date_end =str2epoch("02.11.2021");
+  offer.price = 4000;
+  offer.categoryid = 1;
+  offer.insurance_cost =300;
+  offer.extra_meals_cost =500;
+  hldb_inst.add_offer(offer);
+  auto offers = hldb_inst.get_all_offers();
+  ASSERT_EQ(offers.size(), 1)<< "INCORRECT offer COUNT";
+
+  employee_t employee;
+  employee.name ="worker_1";
+  employee.surname ="id_1";
+  employee.hire_date =str2epoch("01.10.2013");
+  employee.salary = 4000;
+  employee.email ="worker_1.bros@op.pl";
+  employee.phone_number ="997998993";
+  hldb_inst.add_employee(employee);
+  auto employees = hldb_inst.get_all_employees();
+  ASSERT_EQ(employees.size(), 1)<< "INCORRECT employee COUNT";
+
+  customer_t customer;
+  customer.name ="Mario_1";
+  customer.surname ="Bros_1";
+  customer.email ="Mario_1.bros@op.pl";
+  customer.pesel ="111111111111";
+  hldb_inst.add_customer(customer);
+  auto customers = hldb_inst.get_all_customers();
+  ASSERT_EQ(customers.size(), 1)<< "INCORRECT CUSTOMERS COUNT";
+
+  auto tours = hldb_inst.get_all_tours();
+  ASSERT_EQ(tours.size(), 0)<< "INCORRECT tourS COUNT";
+
+  tour_t  tour;
+  tour.debt =4000;
+  tour.insurance = 0;
+  tour.extra_meals =1;
+  tour.finished = 0;
+  tour.reserved_tickets =6;
+  tour.customersid = 1;
+  tour.employeesid = 1;
+  tour.offerid = 1;
+  hldb_inst.add_tour(tour);
+
+  tour.debt =6000;
+  tour.insurance = 1;
+  tour.extra_meals =0;
+  tour.finished = 0;
+  tour.reserved_tickets =4;
+  tour.customersid = 1;
+  tour.employeesid = 1;
+  tour.offerid = 1;
+  hldb_inst.add_tour(tour);
+
+  tour.debt =2000;
+  tour.insurance = 1;
+  tour.extra_meals =1;
+  tour.finished = 0;
+  tour.reserved_tickets =5;
+  tour.customersid = 1;
+  tour.employeesid = 1;
+  tour.offerid = 1;
+  hldb_inst.add_tour(tour);
+
+  tour.debt =2000;
+  tour.insurance = 1;
+  tour.extra_meals =1;
+  tour.finished = 0;
+  tour.reserved_tickets =5;
+  tour.customersid = 1;
+  tour.employeesid = 1;
+  tour.offerid = 1;
+  hldb_inst.add_tour(tour);
+
+  tour.debt =2000;
+  tour.insurance = 1;
+  tour.extra_meals =1;
+  tour.finished = 0;
+  tour.reserved_tickets =5;
+  tour.customersid = 1;
+  tour.employeesid = 1;
+  tour.offerid = 1;
+  hldb_inst.add_tour(tour);
+  tours = hldb_inst.get_all_tours();
+  EXPECT_EQ(tours.size(), 5)<< "INCORRECT tour COUNT";
+
+  tour.debt =2000;
+  tour.insurance = UNWANTED_DECIMAL_PARAM;
+  tour.extra_meals =UNWANTED_DECIMAL_PARAM;
+  tour.finished = UNWANTED_DECIMAL_PARAM;
+  tour.reserved_tickets =5;
+  tour.customersid = UNWANTED_DECIMAL_PARAM;
+  tour.employeesid = UNWANTED_DECIMAL_PARAM;
+  tour.offerid = UNWANTED_DECIMAL_PARAM;
+
+  tours = hldb_inst.get_tours_like(tour);
+  EXPECT_EQ(tours.size(), 3)<< "INCORRECT tour COUNT";
+
+  tour = tours[0];
+  tour = hldb_inst.get_tours_like(tour.id);
+  EXPECT_NE(tour.id, 0)<< "INCORRECT tour ID";
+
+  tour.id = 4;
+  // remove tour with specified id
+  hldb_inst.rmeove_tour(tour);
+  // // check if tour has been deleted
+  tour.debt =2000;
+  tour.insurance = UNWANTED_DECIMAL_PARAM;
+  tour.extra_meals =UNWANTED_DECIMAL_PARAM;
+  tour.finished = UNWANTED_DECIMAL_PARAM;
+  tour.reserved_tickets =5;
+  tour.customersid = UNWANTED_DECIMAL_PARAM;
+  tour.employeesid = UNWANTED_DECIMAL_PARAM;
+  tour.offerid = UNWANTED_DECIMAL_PARAM;
+
+  tours = hldb_inst.get_tours_like(tour);
+  EXPECT_EQ(tours.size(), 2)<< "INCORRECT tour COUNT";
+
+  tour.id = UNWANTED_DECIMAL_PARAM;
+  tour.debt =2000;
+  tour.insurance = UNWANTED_DECIMAL_PARAM;
+  tour.extra_meals =UNWANTED_DECIMAL_PARAM;
+  tour.finished = UNWANTED_DECIMAL_PARAM;
+  tour.reserved_tickets =5;
+  tour.customersid = UNWANTED_DECIMAL_PARAM;
+  tour.employeesid = UNWANTED_DECIMAL_PARAM;
+  tour.offerid = UNWANTED_DECIMAL_PARAM;
+  //don't look on id, remove all tours speified py params
+  hldb_inst.rmeove_tour(tour);
+  tours = hldb_inst.get_tours_like(tour);
+  EXPECT_EQ(tours.size(), 0)<< "INCORRECT tour COUNT";
+
+  tour.id = 1;
+  tour.debt =1234567;
+  tour.insurance = 0;
+  tour.extra_meals =1;
+  tour.finished = 0;
+  tour.reserved_tickets =12;
+  tour.customersid = 1;
+  tour.employeesid = 1;
+  tour.offerid = 1;
+  // modify first worker
+  hldb_inst.modify_tour(tour);
+  tour = hldb_inst.get_tours_like(tour.id);
+  EXPECT_EQ(tour.debt, 1234567)<< "INCORRECT tour debt";
+  EXPECT_EQ(tour.reserved_tickets, 12)<< "INCORRECT tour tickets count";
 }

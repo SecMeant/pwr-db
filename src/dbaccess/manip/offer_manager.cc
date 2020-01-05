@@ -128,7 +128,7 @@ namespace app::dbaccess
       std::stringstream command;
       command << "DELETE from offers WHERE";
 
-      if(entity.id != 0)
+      if(entity.id != UNWANTED_DECIMAL_PARAM)
         command << fmt::format(" id = {}", entity.id);
       else{
         auto params = glue_params(entity, " and ");
@@ -153,13 +153,13 @@ namespace app::dbaccess
     {
       std::stringstream params;
       bool concat = false;
-      if(entity.name != "")
+      if(entity.name != UNWANTED_STR_PARAM)
       {
         params << fmt::format(" name = \'{}\' ", entity.name);
         concat =true;
       }
 
-      if(entity.country != "")
+      if(entity.country != UNWANTED_STR_PARAM)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -188,7 +188,7 @@ namespace app::dbaccess
         params << fmt::format(" date_end = STR_TO_DATE(\'{}\',\'%d.%m.%y\') ", date);
       }
 
-      if(entity.price != 0)
+      if(entity.price != UNWANTED_DECIMAL_PARAM)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -197,7 +197,7 @@ namespace app::dbaccess
         params << fmt::format(" price = {} ", entity.price);
       }
 
-      if(entity.insurance_cost != 0)
+      if(entity.insurance_cost != UNWANTED_DECIMAL_PARAM)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -206,7 +206,7 @@ namespace app::dbaccess
         params << fmt::format(" insurance_cost = {} ", entity.insurance_cost);
       }
 
-      if(entity.extra_meals_cost != 0)
+      if(entity.extra_meals_cost != UNWANTED_DECIMAL_PARAM)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -215,7 +215,7 @@ namespace app::dbaccess
         params << fmt::format(" extra_meals_cost = {} ", entity.extra_meals_cost);
       }
 
-      if(entity.categoryid != 0)
+      if(entity.categoryid != UNWANTED_DECIMAL_PARAM)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -224,7 +224,7 @@ namespace app::dbaccess
         params << fmt::format(" categoryid = {} ", entity.categoryid);
       }
 
-      if(entity.tickets_count != 0)
+      if(entity.tickets_count != UNWANTED_DECIMAL_PARAM)
       {
         if(concat)
           params << fmt::format(" {} ",separator);
