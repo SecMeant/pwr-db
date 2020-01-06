@@ -76,12 +76,3 @@ alter table biuro_podrozy_test.tour add constraint fktour774357 foreign key (off
 alter table biuro_podrozy_test.offers add constraint fkoffers229222 foreign key (categoryid) references biuro_podrozy_test.category (id);
 alter table biuro_podrozy_test.credentials
   add constraint fk_credentials_employees foreign key (`employeeid`) references biuro_podrozy_test.employees (`id`);
-
-insert into
-biuro_podrozy_test.category
-  (name)
-values
-  ('last minute'),
-  ('sightseeing tour'),
-  ('cruise'),
-  ('facultative trips');

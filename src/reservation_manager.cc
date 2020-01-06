@@ -7,17 +7,17 @@ namespace app::logic
     void reservation_manager::reserve_tour(int off_id, int cus_id, int ticket_count, bool insurance, bool extra_meals)
     {
       auto hldb = parent();
-      auto off = hldb->get.get_offers_like(off_id);
+      auto o = hldb->get.get_offers_like(off_id);
 
-      if(!off.valid())
+      if(!o.valid())
         return false;
-      auto cus = hldb->get.get_customers_like(cus_id);
+      auto c = hldb->get.get_customers_like(cus_id);
 
-      if(!cus.valid())
+      if(!c.valid())
         return false;
 
-      auto usr = hldb->get.get_logged_user();
-      auto t = prepare();
+      auto e = hldb->get.get_logged_user();
+      auto t = prepare(o,c,e,ticket_count,insurance,extra_meals);
       if(!t.valid())
         return false;
 
@@ -25,14 +25,37 @@ namespace app::logic
       return true;
     }
 
-    void reservation_manager::resign(tour_t&)
+    void reservation_manager::resign(int tour_id)
     {
-
+      auto hldb = parent();
+      auto t = hldb.get_tour_like(tour_id);
+      if(!t.valid())
+        return false;
+      auto o = hldb.get_offer_like(t.offerid);
+      if(!o.valid())
+        return false;
+      o.tickets_count += t.tickets_count;
+      t.state = tour_state::RESIGNED;
+      hldb.modify_offer(o);
+      hldb.modify_tour(t);
     }
 
-    void reservation_manager::modify(tour_t&)
+    void reservation_manager::modify(tour_t &t1)
     {
-
+      auto hldb = parent();
+      auto t2 = hldb.get_tour_like(t.id);
+      if(!t2.valid())
+        return false;
+      int ticket_diff = t1.ticket_count - t2.ticket_count;
+      if(ticket_diff != 0)
+      {
+        auto o = hldb.get_offer_like(t.offerid);
+        if(!o.valid())
+          return false;
+        o.tickets_count += ticket_diff;
+        hldb.modify_offer(o);
+      }
+      hldb.modify_tour(t1);
     }
 
     logic::hldb*

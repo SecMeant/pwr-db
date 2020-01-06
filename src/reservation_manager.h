@@ -11,8 +11,8 @@ namespace app::logic
     reservation_manager();
     ~reservation_manager();
     void reserve_tour(int off_id, int cus_id, int ticket_count);
-    void resign(dbaccess::tour_t&);
-    void modify(dbaccess::tour_t&);
+    void resign(int tour_id);
+    void modify(int tour_id);
   private:
     hldb*
     parent() noexcept;

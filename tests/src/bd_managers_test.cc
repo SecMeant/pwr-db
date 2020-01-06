@@ -14,13 +14,14 @@ using namespace app::dbaccess;
 using namespace app::dbaccess::defaults;
 
 
-constexpr const char* DB_SCRIPT_INIT_PATH = "../dbinit/test_init.sql";
+constexpr const char* DB_SCRIPT_INIT_PATH = "../dbinit/base_init.sql";
+constexpr const char* DB_SCRIPT_DEP_PATH = "../dbinit/managers_dep_test.sql";
 constexpr const char* DB_DATABASE_TEST = "biuro_podrozy_test";
-class HldbTest : public ::testing::Test
+class DatabaseManagersTest : public ::testing::Test
 {
 protected:
-   HldbTest()=default;
-   virtual ~HldbTest()=default;
+   DatabaseManagersTest()=default;
+   virtual ~DatabaseManagersTest()=default;
    void SetUp() override
    {
      hldb_inst.m_dbconn = db_connection(
@@ -34,22 +35,35 @@ protected:
 
      if (!fs.is_open())
      {
-       FAIL() << "FAIL AT READING FILE\n";
+       FAIL() << "FAIL AT READING BASE FILE\n";
      }
      std::string query;
      while (std::getline(fs, query, ';'))
      {
-      if (query ==""){
-        continue;
-      }
-      hldb_inst.m_dbconn.query_res(query.c_str());
+       if (query ==""){
+         continue;
+       }
+       hldb_inst.m_dbconn.query_res(query.c_str());
+     }
+     fs.close();
+     fs.open(DB_SCRIPT_DEP_PATH, std::fstream::in | std::fstream::out);
+
+     if (!fs.is_open())
+     {
+       FAIL() << "FAIL AT READING DEP FILE\n";
+     }
+     while (std::getline(fs, query, ';'))
+     {
+       if (query ==""){
+         continue;
+       }
+       hldb_inst.m_dbconn.query_res(query.c_str());
      }
    }
    hldb hldb_inst;
-
 };
 
-TEST_F(HldbTest, CostomerManagerTest){
+TEST_F(DatabaseManagersTest, CostomerManagerTest){
   auto customers = hldb_inst.get_all_customers();
   EXPECT_EQ(customers.size(), 0)<< "INCORRECT CUSTOMERS COUNT";
   customer_t customer;
@@ -112,7 +126,7 @@ TEST_F(HldbTest, CostomerManagerTest){
 }
 
 
-TEST_F(HldbTest, EmployeeManagerTest){
+TEST_F(DatabaseManagersTest, EmployeeManagerTest){
   auto employees = hldb_inst.get_all_employees();
   EXPECT_EQ(employees.size(), 0)<< "INCORRECT EMPLOYEES COUNT";
   employee_t  employee;
@@ -220,7 +234,7 @@ TEST_F(HldbTest, EmployeeManagerTest){
 }
 
 
-TEST_F(HldbTest, OfferManagerTest){
+TEST_F(DatabaseManagersTest, OfferManagerTest){
   auto offers = hldb_inst.get_all_offers();
   EXPECT_EQ(offers.size(), 0)<< "INCORRECT offerS COUNT";
   offer_t  offer;
@@ -371,7 +385,7 @@ TEST_F(HldbTest, OfferManagerTest){
 }
 
 
-TEST_F(HldbTest, tourManagerTest){
+TEST_F(DatabaseManagersTest, tourManagerTest){
 
   offer_t offer;
   offer.name ="WONDERFUL_TRIP1";

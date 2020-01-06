@@ -3,7 +3,7 @@
 #include "dbaccess/table/valid.h"
 
 namespace app::dbaccess {
-  
+
 struct tour_t
 {
   VALIDATABLE_BY(int, id)

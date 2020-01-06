@@ -6,7 +6,7 @@
 
 namespace app::dbaccess
 {
-  enum class tour_state : int
+ enum class tour_state : int
   {
     UNFINSHED =0,
     FINISHED =1,
