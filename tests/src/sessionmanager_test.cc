@@ -23,31 +23,11 @@ protected:
   HldbTest()=default;
   virtual ~HldbTest()=default;
 
-  std::vector<credentials_t>
-  get_all_credentials()
+  struct creds
   {
-    constexpr auto query = "SELECT id, login, pass_hash, privilege, employeeid "
-      "FROM biuro_podrozy_test.credentials";
-
-    std::vector<credentials_t> ret;
-    auto res = hldb_inst.m_dbconn.query_res(query);
-
-    if (!res)
-      return ret;
-
-    for (auto i = 0ull; i < res->row_count; ++i) {
-      auto row = mysql_fetch_row(res.get());
-      credentials_t creds;
-      creds.id = atoi(row[0]);
-      creds.login = row[1];
-      creds.pass_hash = row[2];
-      creds.privilege = static_cast<privilege_level>(atoi(row[3]));
-      creds.employeeid = atoi(row[4]);
-      ret.push_back(std::move(creds));
-    }
-
-    return ret;
-  }
+    std::string_view username, password;
+    privilege_level priv;
+  };
 
   void
   execute_sql(const char * filename)
@@ -80,19 +60,24 @@ protected:
     execute_sql(DB_SCRIPT_INIT_PATH);
     execute_sql(DB_DEP_SCRIPT_INIT_PATH);
 
-    credentials = get_all_credentials();
+    credentials = {
+      {"mamanger_1", "passwd1", privilege_level::high},
+      {"employee_1", "passwd2", privilege_level::mid},
+      {"employee_2", "passwd3", privilege_level::mid},
+      {"employee_3", "passwd4", privilege_level::mid}
+    };
   }
 
   hldb hldb_inst;
-  std::vector<credentials_t> credentials;
+  std::vector<creds> credentials;
 };
 
 TEST_F(HldbTest, SessionManagerTest) {
   ASSERT_TRUE(credentials.size() > 0);
 
   for (auto &cred : credentials) {
-    EXPECT_TRUE(hldb_inst.m_session.authenticate(cred));
+    EXPECT_TRUE(hldb_inst.m_session.authenticate(cred.username, cred.password));
     EXPECT_EQ(hldb_inst.m_session.state(), state_t::logedin);
-    EXPECT_EQ(hldb_inst.m_session.privilege(), cred.privilege);
+    EXPECT_EQ(hldb_inst.m_session.privilege(), cred.priv);
   }
 }

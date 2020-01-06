@@ -1,5 +1,6 @@
 #include "session_manager.h"
 
+#include "dbaccess/table/credentials.h"
 #include "hldb.h"
 #include "privilege.h"
 #include "reflect.h"
@@ -34,8 +35,28 @@ namespace app::logic {
     id_type m_id;
   };
 
+  std::string
+  session_manager::hash(std::string_view s) noexcept
+  {
+    auto& dbconn = this->parent()->m_dbconn;
+    return session_manager::hash(dbconn, s);
+  }
+
+  std::string
+  session_manager::hash(dbaccess::db_connection &dbconn, std::string_view s) noexcept
+  {
+    constexpr auto query_template = "select password('{}');";
+
+    auto res = dbconn.query_res(fmt::format(query_template, s));
+
+    if (!res)
+      return "";
+
+    return mysql_fetch_row(res.get())[0]+1;
+  }
+
   static dbaccess::credentials_t
-  get_users_hash(dbaccess::db_connection &conn, const std::string &username)
+  get_user_info(dbaccess::db_connection &conn, std::string_view username)
   {
     //TODO use data manipulator
     constexpr auto query_template =
@@ -56,25 +77,26 @@ namespace app::logic {
     return creds;
   }
 
-  static employee_id
-  auth_(dbaccess::db_connection &dbconn, dbaccess::credentials_t &creds) noexcept
+  static dbaccess::credentials_t
+  auth_(dbaccess::db_connection &dbconn, std::string_view username,
+        std::string_view password) noexcept
   {
-    auto stored_creds = get_users_hash(dbconn, creds.login);
+    auto stored_creds = get_user_info(dbconn, username);
 
     if (!stored_creds.valid())
       return {};
 
-    auto hash_match = stored_creds.pass_hash == creds.pass_hash;
+    auto hash = session_manager::hash(dbconn, password);
+    auto hash_match = stored_creds.pass_hash == hash;
 
     if (!hash_match)
       return {};
 
-    creds.privilege = stored_creds.privilege;
-    return employee_id(creds.employeeid);
+    return stored_creds;
   }
 
   bool
-  session_manager::authenticate(dbaccess::credentials_t creds) noexcept
+  session_manager::authenticate(std::string_view username, std::string_view password) noexcept
   {
     auto& dbconn = this->parent()->m_dbconn;
     this->m_state = state_t::logedout;
@@ -83,37 +105,37 @@ namespace app::logic {
     if (!this->low_priv_auth())
       return false;
 
-    auto empid = auth_(dbconn, creds);
-    if (!empid.valid())
+    auto creds = auth_(dbconn, username, password);
+    if (!creds.valid())
       return false;
 
-    std::string *username;
-    std::string *password;
+    std::string *dbusername;
+    std::string *dbpassword;
 
     switch(creds.privilege) {
       case logic::privilege_level::high:
-        username = &dbaccess::defaults::DB_USERNAME_HIPRIO;
-        password = &dbaccess::defaults::DB_PASSWORD_HIPRIO;
+        dbusername = &dbaccess::defaults::DB_USERNAME_HIPRIO;
+        dbpassword = &dbaccess::defaults::DB_PASSWORD_HIPRIO;
         break;
       case logic::privilege_level::mid:
-        username = &dbaccess::defaults::DB_USERNAME_MIPRIO;
-        password = &dbaccess::defaults::DB_PASSWORD_MIPRIO;
+        dbusername = &dbaccess::defaults::DB_USERNAME_MIPRIO;
+        dbpassword = &dbaccess::defaults::DB_PASSWORD_MIPRIO;
         break;
       case logic::privilege_level::low:
-        username = &dbaccess::defaults::DB_USERNAME_LOPRIO;
-        password = &dbaccess::defaults::DB_PASSWORD_LOPRIO;
+        dbusername = &dbaccess::defaults::DB_USERNAME_LOPRIO;
+        dbpassword = &dbaccess::defaults::DB_PASSWORD_LOPRIO;
         break;
       case logic::privilege_level::none:
       default:
         return false;
     }
 
-    this->m_session = this->parent()->get_employees_like(empid.get());
+    this->m_session = this->parent()->get_employees_like(creds.employeeid);
 
     if (!this->m_session.valid())
       return false;
 
-    auto auth_status = dbconn.authenticate(*username, *password);
+    auto auth_status = dbconn.authenticate(*dbusername, *dbpassword);
 
     if (!auth_status)
       return false;
