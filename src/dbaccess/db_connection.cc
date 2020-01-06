@@ -24,7 +24,7 @@ namespace app::dbaccess {
   bool
   db_connection::query(const std::string &query_string) noexcept
   {
-    return mysql_query(this->connection.get(), query_string.c_str());
+    return !mysql_query(this->connection.get(), query_string.c_str());
   }
 
   bool

@@ -96,7 +96,6 @@ namespace app::dbaccess
     {
       std::string command = "INSERT INTO tour (CustomerId, employeeid, offerid, insurance, extra_meals, debt, state, reserved_tickets)  VALUES ({}, {}, {}, {}, {}, {}, {}, {})";
       command = fmt::format(command, entity.customersid,entity.employeesid,entity.offerid, entity.insurance,entity.extra_meals,entity.debt,entity.state,entity.reserved_tickets);
-
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command);
     }

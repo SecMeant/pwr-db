@@ -45,7 +45,7 @@ protected:
        }
        if(hldb_inst.m_dbconn.query(query.c_str()) == false)
        {
-        // FAIL() << "FAIL AT QUERY\n" << query;
+        FAIL() << "FAIL AT QUERY\n" << query;
        }
      }
      fs.close();
@@ -57,18 +57,18 @@ protected:
      }
      while (std::getline(fs, query, ';'))
      {
-       if (query ==""){
+       if (query =="" || query == "\n"){
          continue;
        }
        if(hldb_inst.m_dbconn.query(query.c_str()) == false)
        {
-        // FAIL() << "FAIL AT QUERY\n" << query;
+        FAIL() << "FAIL AT QUERY\n" << query;
        }
      }
    }
    hldb hldb_inst;
    std::string employee_log = "employee_1";
-   std::string employee_pass = "a63ab36162a4f4ee6622ccd787b0a048c26b93acfc05c6b1843659b253c3c00b";
+   std::string employee_pass = "alamakota";
 };
 
 TEST_F(MainLogicTest, ReservationManagerReserve)
@@ -85,9 +85,9 @@ TEST_F(MainLogicTest, ReservationManagerReserve)
   ASSERT_TRUE(customer.valid());
 
   offer_t offer;
-  offer.name ="wycieczka 1";
-  offer.country ="tokio";
-  offer.city ="japonia";
+  offer.country ="japonia";
+  offer.city ="tokio";
+  app::sql::set_any(offer.name);
   app::sql::set_any(offer.id);
   app::sql::set_any(offer.tickets_count);
   app::sql::set_any(offer.date_begin);
@@ -102,11 +102,7 @@ TEST_F(MainLogicTest, ReservationManagerReserve)
   offer = o[0];
   ASSERT_TRUE(offer.valid());
 
-  credentials_t cred;
-  app::sql::set_any(cred.id);
-  cred.login = employee_log;
-  cred.pass_hash = employee_pass;
-  hldb_inst.m_session.authenticate(cred);
+  hldb_inst.m_session.authenticate(employee_log, employee_pass);
   ASSERT_EQ(hldb_inst.m_session.state(),state_t::logedin);
 
   int tickets_count =10;
@@ -115,6 +111,6 @@ TEST_F(MainLogicTest, ReservationManagerReserve)
   auto tours = hldb_inst.get_all_tours();
   EXPECT_EQ(tours.size(), 1)<< "Tour hasn't been reserved";
   offer = hldb_inst.get_offers_like(offer.id);
-  EXPECT_EQ(offer.tickets_count,tc_copy+tickets_count) << "Offer has incorrect ticket number";
 
+  EXPECT_EQ(offer.tickets_count+tickets_count,tc_copy) << "Offer has incorrect ticket number";
 }

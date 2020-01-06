@@ -45,7 +45,7 @@ protected:
        }
        if(hldb_inst.m_dbconn.query(query.c_str()) == false)
        {
-        // FAIL() << "FAIL AT QUERY\n" << query;
+        FAIL() << "FAIL AT QUERY\n" << query;
        }
      }
      fs.close();
@@ -62,7 +62,7 @@ protected:
        }
        if(hldb_inst.m_dbconn.query(query.c_str()) == false)
        {
-        // FAIL() << "FAIL AT QUERY\n" << query;
+         FAIL() << "FAIL AT QUERY\n" << query;
        }
      }
    }
