@@ -51,7 +51,6 @@ namespace app::dbaccess {
     if (!this->connected)
       return;
 
-    mysql_close(this->connection.get());
     this->connection = nullptr;
     this->connected = false;
   }
