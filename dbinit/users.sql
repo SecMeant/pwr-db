@@ -1,20 +1,20 @@
-CREATE USER 'loprio'@'localhost' IDENTIFIED BY 'bazydanych19';
-GRANT USAGE ON *.* TO 'loprio'@'localhost';
-REVOKE SELECT, ALTER, CREATE, DELETE, DROP, INSERT, INDEX, REFERENCES, UPDATE  ON TABLE *.* FROM 'loprio'@'localhost';
-GRANT SELECT, SHOW VIEW  ON TABLE `biuro_podrozy`.`credentials` TO 'loprio'@'localhost';
-FLUSH PRIVILEGES;
+create user 'loprio'@'localhost' identified by 'bazydanych19';
+grant usage on *.* to 'loprio'@'localhost';
+revoke select, alter, create, delete, drop, insert, index, references, update  on table *.* from 'loprio'@'localhost';
+grant select, show view  on table `biuro_podrozy`.`credentials` to 'loprio'@'localhost';
+flush privileges;
 
-CREATE USER 'miprio'@'localhost' IDENTIFIED BY 'bazydanych19';
-GRANT USAGE ON *.* TO 'miprio'@'localhost';
-REVOKE SELECT, ALTER, CREATE, DELETE, DROP, INSERT, INDEX, REFERENCES, UPDATE  ON TABLE *.* FROM 'miprio'@'localhost';
-GRANT ALL PRIVILEGES  ON TABLE `biuro_podrozy`.`annual_income` TO 'miprio'@'localhost';
-GRANT ALL PRIVILEGES  ON TABLE  `biuro_podrozy`.`category` TO 'miprio'@'localhost';
-GRANT ALL PRIVILEGES  ON TABLE  `biuro_podrozy`.`customers` TO 'miprio'@'localhost';
-GRANT ALL PRIVILEGES  ON TABLE  `biuro_podrozy`.`offers` TO 'miprio'@'localhost';
-GRANT ALL PRIVILEGES  ON TABLE  `biuro_podrozy`.`tour` TO 'miprio'@'localhost';
-FLUSH PRIVILEGES;
+create user 'miprio'@'localhost' identified by 'bazydanych19';
+grant usage on *.* to 'miprio'@'localhost';
+revoke select, alter, create, delete, drop, insert, index, references, update  on table *.* from 'miprio'@'localhost';
+grant all privileges  on table `biuro_podrozy`.`annual_income` to 'miprio'@'localhost';
+grant all privileges  on table  `biuro_podrozy`.`category` to 'miprio'@'localhost';
+grant all privileges  on table  `biuro_podrozy`.`customers` to 'miprio'@'localhost';
+grant all privileges  on table  `biuro_podrozy`.`offers` to 'miprio'@'localhost';
+grant all privileges  on table  `biuro_podrozy`.`tour` to 'miprio'@'localhost';
+flush privileges;
 
-CREATE USER 'hiprio'@'localhost' IDENTIFIED BY 'bazydanych19';
-GRANT USAGE ON *.* TO 'hiprio'@'localhost';
-GRANT ALL PRIVILEGES  ON TABLE `biuro_podrozy`.* TO 'hiprio'@'localhost';
-FLUSH PRIVILEGES;
+create user 'hiprio'@'localhost' identified by 'bazydanych19';
+grant usage on *.* to 'hiprio'@'localhost';
+grant all privileges  on table `biuro_podrozy`.* to 'hiprio'@'localhost';
+flush privileges;

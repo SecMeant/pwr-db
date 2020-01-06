@@ -1,8 +1,20 @@
 #pragma once
-
+#pragma once
 #include "privilege.h"
 #include <string>
 #include "../date.h"
+
+namespace app::dbaccess
+{
+  enum class tour_state : int
+  {
+    UNFINSHED =0,
+    FINISHED =1,
+    RESIGNED =2,
+    INVALID =-1,
+    ANY =-2
+  };
+}
 
 namespace app {
 
@@ -21,6 +33,9 @@ namespace app {
   template<>
   inline dbaccess::date_t INVALID<dbaccess::date_t> = dbaccess::str2epoch("01.01.70");
 
+  template<>
+  inline dbaccess::tour_state INVALID<dbaccess::tour_state> = dbaccess::tour_state::INVALID;
+
   template<typename T>
   inline T ANY;
 
@@ -32,6 +47,9 @@ namespace app {
 
   template<>
   inline dbaccess::date_t ANY<dbaccess::date_t> = dbaccess::str2epoch("02.01.70");
+
+  template<>
+  inline dbaccess::tour_state ANY<dbaccess::tour_state> = dbaccess::tour_state::ANY;
 
 } // namespace app
 

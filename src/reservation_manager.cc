@@ -49,7 +49,7 @@ namespace app::logic
                                       bool extra_meals)
     {
       tour_t  tour;
-
+      // trigger in databesd should autmaticly decrease ticket count
       if(o.ticket_count < ticket_count)
         return tour;
 
@@ -61,7 +61,7 @@ namespace app::logic
       if(extra_meals)
         final_debt += ticket_count*o.extra_meals_cost;
 
-      sql::set_any(tour.id); //ANY<int>;
+      sql::set_any(tour.id);
       tour.debt = final_debt;
       tour.insurance = insurance;
       tour.extra_meals =extra_meals;

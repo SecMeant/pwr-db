@@ -22,7 +22,7 @@ namespace app::dbaccess
         tour.debt = atoi(row[1]);
         tour.insurance = atoi(row[2]);
         tour.extra_meals = atoi(row[3]);
-        tour.finished = atoi(row[4]);
+        tour.state = static_cast<tour_state>(atoi(row[4]));
         tour.reserved_tickets = atoi(row[5]);
         tour.customersid = atoi(row[6]);
         tour.employeesid = atoi(row[7]);
@@ -59,7 +59,7 @@ namespace app::dbaccess
         tour.debt = atoi(row[1]);
         tour.insurance = atoi(row[2]);
         tour.extra_meals = atoi(row[3]);
-        tour.finished = atoi(row[4]);
+        tour.state = static_cast<tour_state>(atoi(row[4]));
         tour.reserved_tickets = atoi(row[5]);
         tour.customersid = atoi(row[6]);
         tour.employeesid = atoi(row[7]);
@@ -84,7 +84,7 @@ namespace app::dbaccess
       tour.debt = atoi(row[1]);
       tour.insurance = atoi(row[2]);
       tour.extra_meals = atoi(row[3]);
-      tour.finished = atoi(row[4]);
+      tour.state = static_cast<tour_state>(atoi(row[4]));
       tour.reserved_tickets = atoi(row[5]);
       tour.customersid = atoi(row[6]);
       tour.employeesid = atoi(row[7]);
@@ -94,8 +94,8 @@ namespace app::dbaccess
 
     void tour_manager::add(const tour_t &entity) noexcept
     {
-      std::string command = "INSERT INTO tour (CustomerId, employeeid, offerid, insurance, extra_meals, debt, finished, reserved_tickets)  VALUES ({}, {}, {}, {}, {}, {}, {}, {})";
-      command = fmt::format(command, entity.customersid,entity.employeesid,entity.offerid, entity.insurance,entity.extra_meals,entity.debt,entity.finished,entity.reserved_tickets);
+      std::string command = "INSERT INTO tour (CustomerId, employeeid, offerid, insurance, extra_meals, debt, state, reserved_tickets)  VALUES ({}, {}, {}, {}, {}, {}, {}, {})";
+      command = fmt::format(command, entity.customersid,entity.employeesid,entity.offerid, entity.insurance,entity.extra_meals,entity.debt,entity.state,entity.reserved_tickets);
 
       auto* db_conn = this->parent()->get_dbconn();
       db_conn->query_res(command);
@@ -172,13 +172,13 @@ namespace app::dbaccess
         params << fmt::format(" extra_meals = {} ", entity.extra_meals);
       }
 
-      if(!sql::any(entity.finished))
+      if(!sql::any(entity.state))
       {
         if(concat)
           params << fmt::format(" {} ",separator);
         else
           concat = true;
-        params << fmt::format(" finished = {} ", entity.finished);
+        params << fmt::format(" state = {} ", entity.state);
       }
 
       if(!sql::any(entity.customersid))

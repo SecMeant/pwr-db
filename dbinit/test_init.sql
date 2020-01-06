@@ -1,87 +1,87 @@
-DROP TABLE IF EXISTS tour;
-DROP TABLE IF EXISTS customers;
-DROP TABLE IF EXISTS credentials;
-DROP TABLE IF EXISTS employees;
-DROP TABLE IF EXISTS offers;
-DROP TABLE IF EXISTS annual_income;
-DROP TABLE IF EXISTS category;
+drop table if exists tour;
+drop table if exists customers;
+drop table if exists credentials;
+drop table if exists employees;
+drop table if exists offers;
+drop table if exists annual_income;
+drop table if exists category;
 
-CREATE TABLE biuro_podrozy_test.tour (
-  Id               int(10) NOT NULL AUTO_INCREMENT,
-  Debt             int(10) NOT NULL,
-  Insurance        int(1),
-  Extra_meals      int(1),
-  Finished         int(1) NOT NULL,
-  Reserved_tickets int(10) NOT NULL,
-  CustomerId       int(10),
-  EmployeeId       int(10),
-  OfferId          int(10),
-  PRIMARY KEY (Id));
+create table biuro_podrozy_test.tour (
+  id               int(10) not null auto_increment,
+  debt             int(10) not null,
+  insurance        int(1),
+  extra_meals      int(1),
+  state         int(1) not null,
+  reserved_tickets int(10) not null,
+  customerid       int(10),
+  employeeid       int(10),
+  offerid          int(10),
+  primary key (id));
 
-CREATE TABLE biuro_podrozy_test.credentials (
-  id           int(10)     NOT NULL AUTO_INCREMENT,
-  login        varchar(50) NOT NULL,
-  pass_hash    varchar(64) NOT NULL,
-  privilege    INT(1)      NOT NULL,
-  EmployeeId   INT(10)     NOT NULL,
-  UNIQUE (EmployeeId),
-  PRIMARY KEY (id));
+create table biuro_podrozy_test.credentials (
+  id           int(10)     not null auto_increment,
+  login        varchar(50) not null,
+  pass_hash    varchar(64) not null,
+  privilege    int(1)      not null,
+  employeeid   int(10)     not null,
+  unique (employeeid),
+  primary key (id));
 
-CREATE TABLE biuro_podrozy_test.employees (
-  Id           int(10) NOT NULL AUTO_INCREMENT,
-  Name         varchar(50) NOT NULL,
-  Surname      varchar(50) NOT NULL,
-  Hire_date    date NOT NULL,
-  Salary       int(10) NOT NULL,
-  Email        varchar(50) NOT NULL,
-  Phone_number varchar(12) NOT NULL,
-  PRIMARY KEY (Id));
+create table biuro_podrozy_test.employees (
+  id           int(10) not null auto_increment,
+  name         varchar(50) not null,
+  surname      varchar(50) not null,
+  hire_date    date not null,
+  salary       int(10) not null,
+  email        varchar(50) not null,
+  phone_number varchar(12) not null,
+  primary key (id));
 
-CREATE TABLE biuro_podrozy_test.customers (
-  Id      int(10) NOT NULL AUTO_INCREMENT,
-  Pesel   bigint(12) NOT NULL,
-  Name    varchar(50) NOT NULL,
-  Surname varchar(50) NOT NULL,
-  Email   varchar(50) NOT NULL,
-  PRIMARY KEY (Id));
+create table biuro_podrozy_test.customers (
+  id      int(10) not null auto_increment,
+  pesel   bigint(12) not null,
+  name    varchar(50) not null,
+  surname varchar(50) not null,
+  email   varchar(50) not null,
+  primary key (id));
 
-CREATE TABLE biuro_podrozy_test.category (
-  Id   int(10) NOT NULL AUTO_INCREMENT,
-  Name varchar(50) NOT NULL,
-  PRIMARY KEY (Id));
+create table biuro_podrozy_test.category (
+  id   int(10) not null auto_increment,
+  name varchar(50) not null,
+  primary key (id));
 
-CREATE TABLE biuro_podrozy_test.offers (
-  Id               int(10) NOT NULL AUTO_INCREMENT,
-  Name             varchar(50) NOT NULL,
-  Country          varchar(50) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
-  City             varchar(40) NOT NULL,
-  Tickets_count    int(10)     NOT NULL,
-  Date_begin       date        NOT NULL,
-  Date_end         date        NOT NULL,
-  Price            int(10)     NOT NULL,
-  CategoryId       int(10)     NOT NULL,
-  Insurance_cost   int(10),
-  Extra_meals_cost int(10),
-  PRIMARY KEY (Id));
+create table biuro_podrozy_test.offers (
+  id               int(10) not null auto_increment,
+  name             varchar(50) not null,
+  country          varchar(50) character set utf8 collate utf8_polish_ci not null,
+  city             varchar(40) not null,
+  tickets_count    int(10)     not null,
+  date_begin       date        not null,
+  date_end         date        not null,
+  price            int(10)     not null,
+  categoryid       int(10)     not null,
+  insurance_cost   int(10),
+  extra_meals_cost int(10),
+  primary key (id));
 
-CREATE TABLE biuro_podrozy_test.annual_income (
-  Id int(10) NOT NULL AUTO_INCREMENT,
-  Year int(4) NOT NULL,
-  Balance int(13) NOT NULL,
-  PRIMARY KEY (Id));
+create table biuro_podrozy_test.annual_income (
+  id int(10) not null auto_increment,
+  year int(4) not null,
+  balance int(13) not null,
+  primary key (id));
 
-ALTER TABLE biuro_podrozy_test.tour ADD CONSTRAINT FKtour997364 FOREIGN KEY (CustomerId) REFERENCES biuro_podrozy_test.customers (Id);
-ALTER TABLE biuro_podrozy_test.tour ADD CONSTRAINT FKtour557083 FOREIGN KEY (EmployeeId) REFERENCES biuro_podrozy_test.employees (Id);
-ALTER TABLE biuro_podrozy_test.tour ADD CONSTRAINT FKtour774357 FOREIGN KEY (OfferId) REFERENCES biuro_podrozy_test.offers (Id);
-ALTER TABLE biuro_podrozy_test.offers ADD CONSTRAINT FKoffers229222 FOREIGN KEY (CategoryId) REFERENCES biuro_podrozy_test.category (Id);
-ALTER TABLE biuro_podrozy_test.credentials
-  ADD CONSTRAINT FK_credentials_employees FOREIGN KEY (`EmployeeId`) REFERENCES biuro_podrozy_test.employees (`Id`);
+alter table biuro_podrozy_test.tour add constraint fktour997364 foreign key (customerid) references biuro_podrozy_test.customers (id);
+alter table biuro_podrozy_test.tour add constraint fktour557083 foreign key (employeeid) references biuro_podrozy_test.employees (id);
+alter table biuro_podrozy_test.tour add constraint fktour774357 foreign key (offerid) references biuro_podrozy_test.offers (id);
+alter table biuro_podrozy_test.offers add constraint fkoffers229222 foreign key (categoryid) references biuro_podrozy_test.category (id);
+alter table biuro_podrozy_test.credentials
+  add constraint fk_credentials_employees foreign key (`employeeid`) references biuro_podrozy_test.employees (`id`);
 
-INSERT INTO
+insert into
 biuro_podrozy_test.category
-  (NAME)
-VALUES
-  ('Last minute'),
-  ('Sightseeing tour'),
-  ('Cruise'),
-  ('Facultative trips');
+  (name)
+values
+  ('last minute'),
+  ('sightseeing tour'),
+  ('cruise'),
+  ('facultative trips');

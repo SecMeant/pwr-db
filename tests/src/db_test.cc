@@ -415,7 +415,7 @@ TEST_F(HldbTest, tourManagerTest){
   tour.debt =4000;
   tour.insurance = 0;
   tour.extra_meals =1;
-  tour.finished = 0;
+  tour.state =static_cast<tour_state>(0);
   tour.reserved_tickets =6;
   tour.customersid = 1;
   tour.employeesid = 1;
@@ -425,7 +425,7 @@ TEST_F(HldbTest, tourManagerTest){
   tour.debt =6000;
   tour.insurance = 1;
   tour.extra_meals =0;
-  tour.finished = 0;
+  tour.state =static_cast<tour_state>(0);
   tour.reserved_tickets =4;
   tour.customersid = 1;
   tour.employeesid = 1;
@@ -435,7 +435,7 @@ TEST_F(HldbTest, tourManagerTest){
   tour.debt =2000;
   tour.insurance = 1;
   tour.extra_meals =1;
-  tour.finished = 0;
+  tour.state =static_cast<tour_state>(0);
   tour.reserved_tickets =5;
   tour.customersid = 1;
   tour.employeesid = 1;
@@ -445,7 +445,7 @@ TEST_F(HldbTest, tourManagerTest){
   tour.debt =2000;
   tour.insurance = 1;
   tour.extra_meals =1;
-  tour.finished = 0;
+  tour.state =static_cast<tour_state>(0);
   tour.reserved_tickets =5;
   tour.customersid = 1;
   tour.employeesid = 1;
@@ -455,7 +455,7 @@ TEST_F(HldbTest, tourManagerTest){
   tour.debt =2000;
   tour.insurance = 1;
   tour.extra_meals =1;
-  tour.finished = 0;
+  tour.state =static_cast<tour_state>(0);
   tour.reserved_tickets =5;
   tour.customersid = 1;
   tour.employeesid = 1;
@@ -466,7 +466,7 @@ TEST_F(HldbTest, tourManagerTest){
 
   app::sql::set_any(tour.insurance);
   app::sql::set_any(tour.extra_meals);
-  app::sql::set_any(tour.finished);
+  app::sql::set_any(tour.state);
   app::sql::set_any(tour.customersid);
   app::sql::set_any(tour.employeesid);
   app::sql::set_any(tour.offerid);
@@ -487,7 +487,7 @@ TEST_F(HldbTest, tourManagerTest){
   tour.debt =2000;
   app::sql::set_any(tour.insurance);
   app::sql::set_any(tour.extra_meals);
-  app::sql::set_any(tour.finished);
+  app::sql::set_any(tour.state);
   app::sql::set_any(tour.customersid);
   app::sql::set_any(tour.employeesid);
   app::sql::set_any(tour.offerid);
@@ -499,7 +499,7 @@ TEST_F(HldbTest, tourManagerTest){
   app::sql::set_any(tour.id);
   app::sql::set_any(tour.insurance);
   app::sql::set_any(tour.extra_meals);
-  app::sql::set_any(tour.finished);
+  app::sql::set_any(tour.state);
   app::sql::set_any(tour.customersid);
   app::sql::set_any(tour.employeesid);
   app::sql::set_any(tour.offerid);
@@ -514,7 +514,7 @@ TEST_F(HldbTest, tourManagerTest){
   tour.debt =1234567;
   tour.insurance = 0;
   tour.extra_meals =1;
-  tour.finished = 0;
+  tour.state = static_cast<tour_state>(0);
   tour.reserved_tickets =12;
   tour.customersid = 1;
   tour.employeesid = 1;
