@@ -80,4 +80,12 @@ TEST_F(HldbTest, SessionManagerTest) {
     EXPECT_EQ(hldb_inst.m_session.state(), state_t::logedin);
     EXPECT_EQ(hldb_inst.m_session.privilege(), cred.priv);
   }
+
+  EXPECT_FALSE(hldb_inst.m_session.authenticate("asdf", "qwer"));
+  EXPECT_EQ(hldb_inst.m_session.state(), state_t::logedout);
+
+  auto &cred = credentials[0];
+  EXPECT_TRUE(hldb_inst.m_session.authenticate(cred.username, cred.password));
+  EXPECT_EQ(hldb_inst.m_session.state(), state_t::logedin);
+  EXPECT_EQ(hldb_inst.m_session.privilege(), cred.priv);
 }
