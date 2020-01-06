@@ -1,22 +1,54 @@
 #pragma once
 
 #include "privilege.h"
-
-#define VALIDATABLE_BY(type, field)                                       \
-  type field = INVALID_ID<type>;                                          \
-  inline bool valid() const { return field != INVALID_ID<type>; }
+#include <string>
+#include "../date.h"
 
 namespace app {
+
   template<typename T>
-  static constexpr T INVALID_ID;
+  inline T INVALID;
 
   template<>
-  constexpr int INVALID_ID<int> = -1;
+  inline int INVALID<int> = -1;
 
   template<>
-  constexpr const char *INVALID_ID<const char *> = "";
+  inline logic::privilege_level INVALID<logic::privilege_level> = logic::privilege_level::none;
 
   template<>
-  constexpr logic::privilege_level INVALID_ID<logic::privilege_level> =
-    logic::privilege_level::none;
+  inline std::string INVALID<std::string> = "";
+
+  template<>
+  inline dbaccess::date_t INVALID<dbaccess::date_t> = dbaccess::str2epoch("01.01.70");
+
+  template<typename T>
+  inline T ANY;
+
+  template<>
+  inline int ANY<int> = -2;
+
+  template<>
+  inline std::string ANY<std::string> = "@";
+
+  template<>
+  inline dbaccess::date_t ANY<dbaccess::date_t> = dbaccess::str2epoch("02.01.70");
+
 } // namespace app
+
+#define VALIDATABLE_BY(type, field)                                    \
+  type field = INVALID<type>;                                          \
+  inline bool valid() const { return sql::valid(field); }
+
+namespace app::sql {
+  template<typename T>
+  constexpr bool valid(const T& t)
+  { return t != INVALID<T>; }
+
+  template<typename T>
+  constexpr void set_any(T& t)
+  { t = ANY<T>; }
+
+  template<typename T>
+  constexpr bool any(const T& t)
+  { return t == ANY<T>; }
+}

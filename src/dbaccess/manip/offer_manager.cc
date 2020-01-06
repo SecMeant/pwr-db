@@ -128,7 +128,7 @@ namespace app::dbaccess
       std::stringstream command;
       command << "DELETE from offers WHERE";
 
-      if(entity.id != UNWANTED_DECIMAL_PARAM)
+      if(!sql::any(entity.id))
         command << fmt::format(" id = {}", entity.id);
       else{
         auto params = glue_params(entity, " and ");
@@ -153,13 +153,13 @@ namespace app::dbaccess
     {
       std::stringstream params;
       bool concat = false;
-      if(entity.name != UNWANTED_STR_PARAM)
+      if(!sql::any(entity.name))
       {
         params << fmt::format(" name = \'{}\' ", entity.name);
         concat =true;
       }
 
-      if(entity.country != UNWANTED_STR_PARAM)
+      if(!sql::any(entity.country))
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -168,9 +168,9 @@ namespace app::dbaccess
         params << fmt::format(" country = \'{}\' ", entity.country);
       }
 
-      auto date = str2base_str(epoch2str(entity.date_begin));
-      if(date != INVALID_DATE)
+      if(!sql::any(entity.date_begin))
       {
+        auto date = str2base_str(epoch2str(entity.date_begin));
         if(concat)
           params << fmt::format(" {} ",separator);
         else
@@ -178,9 +178,9 @@ namespace app::dbaccess
         params << fmt::format(" date_begin = STR_TO_DATE(\'{}\',\'%d.%m.%y\') ", date);
       }
 
-      date = str2base_str(epoch2str(entity.date_end));
-      if(date != INVALID_DATE)
+      if(!sql::any(entity.date_end))
       {
+        auto date = str2base_str(epoch2str(entity.date_end));
         if(concat)
           params << fmt::format(" {} ",separator);
         else
@@ -188,7 +188,7 @@ namespace app::dbaccess
         params << fmt::format(" date_end = STR_TO_DATE(\'{}\',\'%d.%m.%y\') ", date);
       }
 
-      if(entity.price != UNWANTED_DECIMAL_PARAM)
+      if(!sql::any(entity.price))
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -197,7 +197,7 @@ namespace app::dbaccess
         params << fmt::format(" price = {} ", entity.price);
       }
 
-      if(entity.insurance_cost != UNWANTED_DECIMAL_PARAM)
+      if(!sql::any(entity.insurance_cost))
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -206,7 +206,7 @@ namespace app::dbaccess
         params << fmt::format(" insurance_cost = {} ", entity.insurance_cost);
       }
 
-      if(entity.extra_meals_cost != UNWANTED_DECIMAL_PARAM)
+      if(!sql::any(entity.extra_meals_cost))
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -215,7 +215,7 @@ namespace app::dbaccess
         params << fmt::format(" extra_meals_cost = {} ", entity.extra_meals_cost);
       }
 
-      if(entity.categoryid != UNWANTED_DECIMAL_PARAM)
+      if(!sql::any(entity.categoryid))
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -224,7 +224,7 @@ namespace app::dbaccess
         params << fmt::format(" categoryid = {} ", entity.categoryid);
       }
 
-      if(entity.tickets_count != UNWANTED_DECIMAL_PARAM)
+      if(!sql::any(entity.tickets_count))
       {
         if(concat)
           params << fmt::format(" {} ",separator);

@@ -42,7 +42,6 @@ namespace app::dbaccess
         return data;
 
       command << params;
-
       auto* db_conn = this->parent()->get_dbconn();
       auto res = db_conn->query_res(command.str());
       if(res == nullptr)
@@ -107,13 +106,13 @@ namespace app::dbaccess
     {
       std::stringstream command;
       command << "DELETE from customers WHERE";
-      if(entity.id != UNWANTED_DECIMAL_PARAM)
+      if(!sql::any(entity.id))
         command << fmt::format(" id = {}", entity.id);
       else{
         auto params = glue_params(entity, " and ");
-
         if(params == "")
           return;
+
         command << params;
       }
       auto* db_conn = this->parent()->get_dbconn();
@@ -131,13 +130,13 @@ namespace app::dbaccess
     {
       std::stringstream params;
       bool concat = false;
-      if(entity.name != UNWANTED_STR_PARAM)
+      if(!sql::any(entity.name))
       {
         params << fmt::format(" name = \'{}\' ", entity.name);
         concat =true;
       }
 
-      if(entity.surname != UNWANTED_STR_PARAM)
+      if(!sql::any(entity.surname))
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -146,7 +145,7 @@ namespace app::dbaccess
         params << fmt::format(" surname = \'{}\' ", entity.surname);
       }
 
-      if(entity.email != UNWANTED_STR_PARAM)
+      if(!sql::any(entity.email))
       {
         if(concat)
           params << fmt::format(" {} ",separator);
@@ -155,7 +154,7 @@ namespace app::dbaccess
         params << fmt::format(" email = \'{}\' ", entity.email);
       }
 
-      if(entity.pesel != UNWANTED_STR_PARAM)
+      if(!sql::any(entity.pesel))
       {
         if(concat)
           params << fmt::format(" {} ",separator);

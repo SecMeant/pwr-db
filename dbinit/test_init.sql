@@ -1,10 +1,10 @@
 DROP TABLE IF EXISTS tour;
+DROP TABLE IF EXISTS customers;
 DROP TABLE IF EXISTS credentials;
 DROP TABLE IF EXISTS employees;
-DROP TABLE IF EXISTS customers;
-DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS offers;
 DROP TABLE IF EXISTS annual_income;
+DROP TABLE IF EXISTS category;
 
 CREATE TABLE biuro_podrozy_test.tour (
   Id               int(10) NOT NULL AUTO_INCREMENT,

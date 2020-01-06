@@ -10,11 +10,17 @@ namespace app::logic
   public:
     reservation_manager();
     ~reservation_manager();
-    void reserve_tour(dbaccess::offer_t&, dbaccess::customer_t&);
+    void reserve_tour(int off_id, int cus_id, int ticket_count);
     void resign(dbaccess::tour_t&);
     void modify(dbaccess::tour_t&);
   private:
     hldb*
     parent() noexcept;
-  };
+     bool reserve(dbaccess::offer_t& o,
+                  dbaccess::customer_t &c,
+                  dbaccess::employee_t &e,
+                  int ticket_count,
+                  bool insurance,
+                  bool extra_meals);
+   };
 }
