@@ -8,8 +8,8 @@ namespace app::logic
   class reservation_manager
   {
   public:
-    reservation_manager();
-    ~reservation_manager();
+    reservation_manager()=default;
+    ~reservation_manager()=default;
     void reserve_tour(int off_id, int cus_id, int ticket_count);
     void resign(int tour_id);
     void modify(int tour_id);
