@@ -108,14 +108,14 @@ namespace app::logic {
         return false;
     }
 
-    auto auth_status = dbconn.authenticate(*username, *password);
-
-    if (!auth_status)
-      return false;
-
     this->m_session = this->parent()->get_employees_like(empid.get());
 
     if (!this->m_session.valid())
+      return false;
+
+    auto auth_status = dbconn.authenticate(*username, *password);
+
+    if (!auth_status)
       return false;
 
     this->m_state = state_t::logedin;
@@ -151,7 +151,8 @@ namespace app::logic {
   {
     auto& dbconn = this->parent()->m_dbconn;
 
-    return true;
+    return dbconn.authenticate(dbaccess::defaults::DB_USERNAME_LOPRIO,
+                               dbaccess::defaults::DB_PASSWORD_LOPRIO);
   }
 
 
