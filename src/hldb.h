@@ -39,7 +39,7 @@ namespace app::logic {
     virtual void modify_offer(const dbaccess::offer_t&)=0;
     virtual void modify_employee(const dbaccess::employee_t&)=0;
     virtual void modify_tour(const dbaccess::tour_t&)=0;
-    virtual const employee_t& get_logged_user()=0;
+    virtual const dbaccess::employee_t& get_logged_user()=0;
   };
 
   class hldb : public hldb_i
@@ -80,6 +80,6 @@ namespace app::logic {
     void modify_employee(const dbaccess::employee_t&);
     void modify_tour(const dbaccess::tour_t&);
 
-    const employee_t& get_logged_user();
+    const dbaccess::employee_t& get_logged_user();
   };
 }

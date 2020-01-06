@@ -14,4 +14,4 @@ add_executable(bdgui
     main.cpp
 )
 
-target_link_libraries(bdgui Qt5::Widgets useless)
+target_link_libraries(bdgui Qt5::Widgets ${TARGET_LIB_NAME})

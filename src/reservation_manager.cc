@@ -1,6 +1,7 @@
 #include "reservation_manager.h"
 #include "hldb.h"
 
+using namespace app::dbaccess;
 namespace app::logic
 {
     void reservation_manager::reserve_tour(offer_t& o, customer_t& c)

@@ -1,22 +1,13 @@
 #pragma once
 #include "entity_manipulator.h"
-#include "../tour.h"
+#include "dbaccess/table/tour.h"
 #include <string>
 
 namespace app::dbaccess
 {
   class data_access_manager;
 
-  class tour_manager_i : public entity_manipulator<tour_t>
-  {
-  public:
-    virtual std::vector<tour_t> get_all() noexcept = 0;
-    virtual std::vector<tour_t> get_like(const tour_t &entity) noexcept = 0;
-    virtual tour_t get(int id) noexcept = 0;
-    virtual void add(const tour_t &entity) noexcept = 0;
-    virtual void modify(const tour_t &entity) noexcept = 0;
-    virtual void remove(const tour_t &entity) noexcept = 0;
-  };
+  using tour_manager_i = entity_manipulator<tour_t>;
 
   class tour_manager : public tour_manager_i
   {

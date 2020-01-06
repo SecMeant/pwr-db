@@ -1,14 +1,13 @@
 #pragma once
 #include "entity_manipulator.h"
-#include "../customer.h"
+#include "dbaccess/table/customer.h"
 
 
 namespace app::dbaccess
 {
   class data_access_manager;
 
- using customer_manager_i = entity_manipulator<customer_t>;
-
+  using customer_manager_i = entity_manipulator<customer_t>;
 
   class customer_manager : public customer_manager_i
   {

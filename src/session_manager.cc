@@ -10,12 +10,36 @@
 
 namespace app::logic {
 
+  class employee_id
+  {
+  public:
+    using id_type = int;
+    static constexpr id_type INVALID_ID = -1;
+
+    employee_id()
+    : m_id(INVALID_ID) {}
+
+    employee_id(int id)
+    : m_id(id) {}
+
+    inline bool
+    valid() const noexcept
+    { return this->m_id != INVALID_ID; }
+
+    inline auto
+    get() const noexcept
+    { return this->m_id; }
+
+  private:
+    id_type m_id;
+  };
+
   static dbaccess::credentials_t
   get_users_hash(dbaccess::db_connection &conn, const std::string &username)
   {
     //TODO use data manipulator
     constexpr auto query_template =
-      "SELECT pass_hash, privilege from credentials where login = \"{}\"";
+      "SELECT pass_hash, privilege, employeeid from credentials where login = \"{}\"";
 
     auto res = conn.query_res(fmt::format(query_template, username));
 
@@ -28,23 +52,25 @@ namespace app::logic {
     creds.login = username;
     creds.pass_hash = row[0];
     creds.privilege = static_cast<logic::privilege_level>(atoi(row[1]));
+    creds.employeeid = atoi(row[2]);
     return creds;
   }
 
-  static bool
+  static employee_id
   auth_(dbaccess::db_connection &dbconn, dbaccess::credentials_t &creds) noexcept
   {
     auto stored_creds = get_users_hash(dbconn, creds.login);
 
     if (!stored_creds.valid())
-      return false;
+      return {};
 
-    auto ret = stored_creds.pass_hash == creds.pass_hash;
+    auto hash_match = stored_creds.pass_hash == creds.pass_hash;
 
-    if (ret)
-      creds.privilege = stored_creds.privilege;
+    if (!hash_match)
+      return {};
 
-    return ret;
+    creds.privilege = stored_creds.privilege;
+    return employee_id(creds.employeeid);
   }
 
   bool
@@ -57,7 +83,8 @@ namespace app::logic {
     if (!this->low_priv_auth())
       return false;
 
-    if (!auth_(dbconn, creds))
+    auto empid = auth_(dbconn, creds);
+    if (!empid.valid())
       return false;
 
     std::string *username;
@@ -84,6 +111,11 @@ namespace app::logic {
     auto auth_status = dbconn.authenticate(*username, *password);
 
     if (!auth_status)
+      return false;
+
+    this->m_session = this->parent()->get_employees_like(empid.get());
+
+    if (!this->m_session.valid())
       return false;
 
     this->m_state = state_t::logedin;

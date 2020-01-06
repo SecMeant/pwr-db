@@ -1,9 +1,11 @@
 #pragma once
 
+#include "dbaccess/table/valid.h"
+
 namespace app::dbaccess {
 struct tour_t
 {
-  int id;
+  VALIDATABLE_BY(int, id)
   int debt;
   int insurance;
   int extra_meals;

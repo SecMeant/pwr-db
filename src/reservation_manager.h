@@ -1,6 +1,6 @@
-#include "dbaccess/tour.h"
-#include "dbaccess/offer.h"
-#include "dbaccess/customer.h"
+#include "dbaccess/table/tour.h"
+#include "dbaccess/table/offer.h"
+#include "dbaccess/table/customer.h"
 
 namespace app::logic
 {
@@ -10,11 +10,11 @@ namespace app::logic
   public:
     reservation_manager();
     ~reservation_manager();
-    void reserve_tour(offer_t&, customer_t&);
-    void resign(tour_t&);
-    void modify(tour_t&);
+    void reserve_tour(dbaccess::offer_t&, dbaccess::customer_t&);
+    void resign(dbaccess::tour_t&);
+    void modify(dbaccess::tour_t&);
   private:
-    logic::hldb*
+    hldb*
     parent() noexcept;
   };
 }
