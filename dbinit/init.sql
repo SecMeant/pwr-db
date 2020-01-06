@@ -1,8 +1,3 @@
-DROP USER 'root'@'localhost';
-CREATE USER 'root'@'localhost' IDENTIFIED BY 'alamakota';
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost';
-FLUSH PRIVILEGES;
-
 CREATE USER 'loprio'@'localhost' IDENTIFIED BY 'bazydanych19';
 GRANT USAGE ON *.* TO 'loprio'@'localhost';
 REVOKE SELECT, ALTER, CREATE, DELETE, DROP, INSERT, INDEX, REFERENCES, UPDATE  ON TABLE *.* FROM 'loprio'@'localhost';
