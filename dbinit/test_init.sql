@@ -19,10 +19,13 @@ CREATE TABLE biuro_podrozy_test.tour (
   PRIMARY KEY (Id));
 
 CREATE TABLE biuro_podrozy_test.credentials (
-  login      varchar(50) NOT NULL,
-  pass_hash varchar(64) NOT NULL,
-  account_type   INT(1) NOT NULL,
-  PRIMARY KEY (login));
+  id           int(10)     NOT NULL AUTO_INCREMENT,
+  login        varchar(50) NOT NULL,
+  pass_hash    varchar(64) NOT NULL,
+  privilege    INT(1)      NOT NULL,
+  EmployeeId   INT(10)     NOT NULL,
+  UNIQUE (EmployeeId),
+  PRIMARY KEY (id));
 
 CREATE TABLE biuro_podrozy_test.employees (
   Id           int(10) NOT NULL AUTO_INCREMENT,
@@ -71,6 +74,8 @@ ALTER TABLE biuro_podrozy_test.tour ADD CONSTRAINT FKtour997364 FOREIGN KEY (Cus
 ALTER TABLE biuro_podrozy_test.tour ADD CONSTRAINT FKtour557083 FOREIGN KEY (EmployeeId) REFERENCES biuro_podrozy_test.employees (Id);
 ALTER TABLE biuro_podrozy_test.tour ADD CONSTRAINT FKtour774357 FOREIGN KEY (OfferId) REFERENCES biuro_podrozy_test.offers (Id);
 ALTER TABLE biuro_podrozy_test.offers ADD CONSTRAINT FKoffers229222 FOREIGN KEY (CategoryId) REFERENCES biuro_podrozy_test.category (Id);
+ALTER TABLE biuro_podrozy_test.credentials
+  ADD CONSTRAINT FK_credentials_employees FOREIGN KEY (`EmployeeId`) REFERENCES biuro_podrozy_test.employees (`Id`);
 
 INSERT INTO
 biuro_podrozy_test.category

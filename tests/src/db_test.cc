@@ -317,7 +317,7 @@ TEST_F(HldbTest, OfferManagerTest){
   hldb_inst.add_offer(offer);
 
   offers = hldb_inst.get_offers_like(offer);
-  EXPECT_EQ(offers.size(), 2)<< "INCORRECT offer COUNT";
+  ASSERT_EQ(offers.size(), 2)<< "INCORRECT offer COUNT";
   offer = offers[0];
   offer = hldb_inst.get_offers_like(offer.id);
   EXPECT_NE(offer.id, 0)<< "INCORRECT offer ID";

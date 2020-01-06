@@ -4,6 +4,7 @@
 #include <fmt/format.h>
 #include <iomanip>
 #include <iostream>
+#include "manip/entity_manipulator.h"
 using std::chrono::duration;
 constexpr int TIME_SINCE_EPOCH_BASE =1900;
 constexpr int SEC_TO_MS =1000;

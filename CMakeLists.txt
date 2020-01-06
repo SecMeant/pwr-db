@@ -28,6 +28,7 @@ if(${GTESTS_ENABLED})
   add_subdirectory(tests)
 endif()
 
+add_subdirectory(gui/bdg)
 
 target_link_libraries(${TARGET_NAME} ${libfmt} ${libmysqlclient})
 target_link_libraries(app ${TARGET_NAME})

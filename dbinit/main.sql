@@ -1,7 +1,7 @@
 drop database IF EXISTS biuro_podrozy;
 create database IF NOT EXISTS biuro_podrozy
-	character set = 'utf8'
-	COLLATE = 'utf8_polish_ci';
+  character set = 'utf8'
+  COLLATE = 'utf8_polish_ci';
 SET character_set_server = 'utf8';
 SET collation_server = 'utf8_polish_ci';
 
@@ -21,10 +21,13 @@ CREATE TABLE biuro_podrozy.tour (
   PRIMARY KEY (Id));
 
 CREATE TABLE biuro_podrozy.credentials (
-  login      varchar(50) NOT NULL,
-  pass_hash varchar(64) NOT NULL,
-  account_type   INT(1) NOT NULL,
-  PRIMARY KEY (login));
+  id           int(10)     NOT NULL AUTO_INCREMENT,
+  login        varchar(50) NOT NULL,
+  pass_hash    varchar(64) NOT NULL,
+  privilege    INT(1)      NOT NULL,
+  EmployeeId   INT(10)     NOT NULL,
+  UNIQUE (EmployeeId),
+  PRIMARY KEY (id));
 
 CREATE TABLE biuro_podrozy.employees (
   Id           int(10) NOT NULL AUTO_INCREMENT,
@@ -73,6 +76,9 @@ ALTER TABLE biuro_podrozy.tour ADD CONSTRAINT FKtour997364 FOREIGN KEY (Customer
 ALTER TABLE biuro_podrozy.tour ADD CONSTRAINT FKtour557083 FOREIGN KEY (EmployeeId) REFERENCES biuro_podrozy.employees (Id);
 ALTER TABLE biuro_podrozy.tour ADD CONSTRAINT FKtour774357 FOREIGN KEY (OfferId) REFERENCES biuro_podrozy.offers (Id);
 ALTER TABLE biuro_podrozy.offers ADD CONSTRAINT FKoffers229222 FOREIGN KEY (CategoryId) REFERENCES biuro_podrozy.category (Id);
+ALTER TABLE biuro_podrozy.credentials
+  ADD CONSTRAINT FK_credentials_employees FOREIGN KEY (`EmployeeId`) REFERENCES biuro_podrozy.employees (`Id`);
+
 
 INSERT INTO
 biuro_podrozy.category
@@ -82,15 +88,6 @@ VALUES
   ('Sightseeing tour'),
   ('Cruise'),
   ('Facultative trips');
-
-INSERT INTO
-biuro_podrozy.credentials
-  (LOGIN,  PASS_HASH,  ACCOUNT_TYPE)
-VALUES
-  ("mamanger_1", '5FD924625F6AB16A19CC9807C7C506AE1813490E4BA675F843D5A10E0BAACDB8',1),
-  ("employee_1", 'A63AB36162A4F4EE6622CCD787B0A048C26B93ACFC05C6B1843659B253C3C00B',0),
-  ("employee_2", 'C1B5F0EAC826B829526F13B182808F34515826D4F1F2F9DB4173568718A995E1',0),
-  ("employee_3", 'F64AEEF4AE2075114506128EE0E944353022AD959F3E69E5738D13DC560E351B',0);
 
 
 INSERT INTO biuro_podrozy.annual_income
@@ -443,6 +440,17 @@ INSERT INTO biuro_podrozy.employees
 ('Steve','Bonder',STR_TO_DATE('19.04.09','%d.%m.%y'),4870,'sbonder7s@weather.com','874-767-1075'),
 ('Cal','Creelman',STR_TO_DATE('14.07.07','%d.%m.%y'),2503,'ccreelman7t@cnn.com','780-100-5024'),
 ('Marice','Butterley',STR_TO_DATE('03.06.08','%d.%m.%y'),3640,'mbutterley7u@wordpress.org','967-833-6443');
+
+
+INSERT INTO
+biuro_podrozy.credentials
+  (LOGIN,  PASS_HASH,  privilege, employeeid)
+VALUES
+  ("mamanger_1", '5FD924625F6AB16A19CC9807C7C506AE1813490E4BA675F843D5A10E0BAACDB8',1,1),
+  ("employee_1", 'A63AB36162A4F4EE6622CCD787B0A048C26B93ACFC05C6B1843659B253C3C00B',0,2),
+  ("employee_2", 'C1B5F0EAC826B829526F13B182808F34515826D4F1F2F9DB4173568718A995E1',0,3),
+  ("employee_3", 'F64AEEF4AE2075114506128EE0E944353022AD959F3E69E5738D13DC560E351B',0,4);
+
 
 INSERT INTO biuro_podrozy.customers
   (PESEL,NAME,SURNAME,EMAIL)

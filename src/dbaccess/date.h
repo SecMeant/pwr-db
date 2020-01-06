@@ -6,7 +6,6 @@ namespace app::dbaccess {
 
 using tb = std::chrono::milliseconds;
 using date_t = std::chrono::time_point<std::chrono::system_clock, tb>;
-constexpr const char* INVALID_DATE="01.01.70";
 date_t str2epoch(const char* date);
 std::string epoch2str(const date_t&);
 std::string str2base_str(std::string &s);

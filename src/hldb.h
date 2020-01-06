@@ -77,6 +77,4 @@ namespace app::logic {
     void modify_employee(const dbaccess::employee_t&);
     void modify_tour(const dbaccess::tour_t&);
   };
-
-
 }
