@@ -14,13 +14,14 @@ using namespace app::dbaccess;
 using namespace app::dbaccess::defaults;
 
 
-constexpr const char* DB_SCRIPT_INIT_PATH = "../dbinit/test_init.sql";
+constexpr const char* DB_SCRIPT_INIT_PATH = "../dbinit/base_init.sql";
+constexpr const char* DB_SCRIPT_DEP_PATH = "../dbinit/managers_dep_test.sql";
 constexpr const char* DB_DATABASE_TEST = "biuro_podrozy_test";
-class HldbTest : public ::testing::Test
+class DatabaseManagersTest : public ::testing::Test
 {
 protected:
-   HldbTest()=default;
-   virtual ~HldbTest()=default;
+   DatabaseManagersTest()=default;
+   virtual ~DatabaseManagersTest()=default;
    void SetUp() override
    {
      hldb_inst.m_dbconn = db_connection(
@@ -34,25 +35,38 @@ protected:
 
      if (!fs.is_open())
      {
-       FAIL() << "FAIL AT READING FILE\n";
+       FAIL() << "FAIL AT READING BASE FILE\n";
      }
      std::string query;
      while (std::getline(fs, query, ';'))
      {
-      if (query ==""){
-        continue;
-      }
-      hldb_inst.m_dbconn.query_res(query.c_str());
+       if (query ==""){
+         continue;
+       }
+       hldb_inst.m_dbconn.query_res(query.c_str());
+     }
+     fs.close();
+     fs.open(DB_SCRIPT_DEP_PATH, std::fstream::in | std::fstream::out);
+
+     if (!fs.is_open())
+     {
+       FAIL() << "FAIL AT READING DEP FILE\n";
+     }
+     while (std::getline(fs, query, ';'))
+     {
+       if (query ==""){
+         continue;
+       }
+       hldb_inst.m_dbconn.query_res(query.c_str());
      }
    }
    hldb hldb_inst;
-
 };
 
-TEST_F(HldbTest, CostomerManagerTest){
+TEST_F(DatabaseManagersTest, CostomerManagerTest){
   auto customers = hldb_inst.get_all_customers();
   EXPECT_EQ(customers.size(), 0)<< "INCORRECT CUSTOMERS COUNT";
-  customer_t  customer;
+  customer_t customer;
   customer.name ="Mario_1";
   customer.surname ="Bros_1";
   customer.email ="Mario_1.bros@op.pl";
@@ -73,9 +87,6 @@ TEST_F(HldbTest, CostomerManagerTest){
   customer.email ="Mario_4.bros@op.pl";
   customer.pesel ="444444444444";
   hldb_inst.add_customer(customer);
-  customers = hldb_inst.get_all_customers();
-  EXPECT_EQ(customers.size(), 4)<< "INCORRECT CUSTOMERS COUNT";
-
   customer.name ="Mario_4";
   customer.surname ="Bros_4";
   customer.email ="Mario_4.bros@op.pl";
@@ -88,7 +99,6 @@ TEST_F(HldbTest, CostomerManagerTest){
   customer.email ="Mario_4.bros@op.pl";
   customer.pesel ="444444444444";
   hldb_inst.add_customer(customer);
-
   customers = hldb_inst.get_customers_like(customer);
   ASSERT_EQ(customers.size(), 3)<< "INCORRECT CUSTOMERS COUNT";
   customer = customers[0];
@@ -100,7 +110,7 @@ TEST_F(HldbTest, CostomerManagerTest){
   customers = hldb_inst.get_customers_like(customer);
   EXPECT_EQ(customers.size(), 2)<< "INCORRECT CUSTOMERS COUNT";
 
-  customer.id = UNWANTED_DECIMAL_PARAM;
+  app::sql::set_any(customer.id);
   hldb_inst.rmeove_customer(customer);
   customers = hldb_inst.get_customers_like(customer);
   EXPECT_EQ(customers.size(), 0)<< "INCORRECT CUSTOMERS COUNT";
@@ -116,7 +126,7 @@ TEST_F(HldbTest, CostomerManagerTest){
 }
 
 
-TEST_F(HldbTest, EmployeeManagerTest){
+TEST_F(DatabaseManagersTest, EmployeeManagerTest){
   auto employees = hldb_inst.get_all_employees();
   EXPECT_EQ(employees.size(), 0)<< "INCORRECT EMPLOYEES COUNT";
   employee_t  employee;
@@ -164,20 +174,20 @@ TEST_F(HldbTest, EmployeeManagerTest){
 
   employee.name ="worker_3"; // search by name
   employee.surname ="id_3";// search by surname
-  employee.hire_date =str2epoch(INVALID_DATE); //search param
-  employee.salary = UNWANTED_DECIMAL_PARAM; // don't search by salary
-  employee.email =UNWANTED_STR_PARAM; // dont search by salary
-  employee.phone_number =UNWANTED_STR_PARAM;// dont search by salary
+  app::sql::set_any(employee.hire_date); //search param
+  app::sql::set_any(employee.salary); // don't search by salary
+  app::sql::set_any(employee.email); // dont search by salary
+  app::sql::set_any(employee.phone_number);// dont search by salary
 
   employees = hldb_inst.get_employees_like(employee);
   EXPECT_EQ(employees.size(), 3)<< "INCORRECT employee COUNT";
 
-  employee.name =UNWANTED_STR_PARAM; // don't search by name
-  employee.surname =UNWANTED_STR_PARAM;// don't search by surname
+  app::sql::set_any(employee.name); // don't search by name
+  app::sql::set_any(employee.surname);// don't search by surname
   employee.hire_date =str2epoch("01.10.2013"); //search param
-  employee.salary = UNWANTED_DECIMAL_PARAM; // don't search by salary
-  employee.email =UNWANTED_STR_PARAM;// dont search by salary
-  employee.phone_number =UNWANTED_STR_PARAM;// dont search by salary
+  app::sql::set_any(employee.salary); // don't search by salary
+  app::sql::set_any(employee.email);// dont search by salary
+  app::sql::set_any(employee.phone_number);// dont search by salary
 
   employees = hldb_inst.get_employees_like(employee);
   ASSERT_EQ(employees.size(), 2)<< "INCORRECT employee COUNT";
@@ -191,20 +201,20 @@ TEST_F(HldbTest, EmployeeManagerTest){
   employee.id = 3;
   employee.name ="worker_3"; // search by name
   employee.surname ="id_3";// search by surname
-  employee.hire_date =str2epoch(INVALID_DATE); //search param
-  employee.salary = UNWANTED_DECIMAL_PARAM; // don't search by salary
-  employee.email =UNWANTED_STR_PARAM; // dont search by salary
-  employee.phone_number =UNWANTED_STR_PARAM;// dont search by salary
+  app::sql::set_any(employee.hire_date); //search param
+  app::sql::set_any(employee.salary); // don't search by salary
+  app::sql::set_any(employee.email);// dont search by salary
+  app::sql::set_any(employee.phone_number);// dont search by salary
   employees = hldb_inst.get_employees_like(employee);
   EXPECT_EQ(employees.size(), 2)<< "INCORRECT employee COUNT";
 
-  employee.id = UNWANTED_DECIMAL_PARAM;
+  app::sql::set_any(employee.id);
   employee.name ="worker_3"; // search by name
   employee.surname ="id_3";// search by surname
-  employee.hire_date =str2epoch(INVALID_DATE); //search param
-  employee.salary = UNWANTED_DECIMAL_PARAM; // don't search by salary
-  employee.email =UNWANTED_STR_PARAM; // dont search by salary
-  employee.phone_number =UNWANTED_STR_PARAM;// dont search by salary
+  app::sql::set_any(employee.hire_date); //search param
+  app::sql::set_any(employee.salary); // don't search by salary
+  app::sql::set_any(employee.email);// dont search by salary
+  app::sql::set_any(employee.phone_number);// dont search by salary
   // don't look on id, remove all employees speified py params
   hldb_inst.rmeove_employee(employee);
   employees = hldb_inst.get_employees_like(employee);
@@ -224,7 +234,7 @@ TEST_F(HldbTest, EmployeeManagerTest){
 }
 
 
-TEST_F(HldbTest, OfferManagerTest){
+TEST_F(DatabaseManagersTest, OfferManagerTest){
   auto offers = hldb_inst.get_all_offers();
   EXPECT_EQ(offers.size(), 0)<< "INCORRECT offerS COUNT";
   offer_t  offer;
@@ -293,31 +303,32 @@ TEST_F(HldbTest, OfferManagerTest){
   offer.name ="WONDERFUL TRIP3";
   offer.country ="UKRAINE";
   offer.city ="KIJOW";
-  offer.tickets_count = UNWANTED_DECIMAL_PARAM;
-  offer.date_begin =str2epoch(INVALID_DATE);
-  offer.date_end =str2epoch(INVALID_DATE);
-  offer.price = UNWANTED_DECIMAL_PARAM;
-  offer.categoryid = UNWANTED_DECIMAL_PARAM;
-  offer.insurance_cost =UNWANTED_DECIMAL_PARAM;
-  offer.extra_meals_cost =UNWANTED_DECIMAL_PARAM;
+  app::sql::set_any(offer.tickets_count);
+  app::sql::set_any(offer.date_begin);
+  app::sql::set_any(offer.date_end);
+  app::sql::set_any(offer.price);
+  app::sql::set_any(offer.categoryid);
+  app::sql::set_any(offer.insurance_cost);
+  app::sql::set_any(offer.extra_meals_cost);
 
   offers = hldb_inst.get_offers_like(offer);
   EXPECT_EQ(offers.size(), 3)<< "INCORRECT offer COUNT";
 
-   offer.name =UNWANTED_STR_PARAM;
-  offer.country =UNWANTED_STR_PARAM;
-  offer.city =UNWANTED_STR_PARAM;
-  offer.tickets_count = UNWANTED_DECIMAL_PARAM;
+  app::sql::set_any(offer.name);
+  app::sql::set_any(offer.country);
+  app::sql::set_any(offer.city);
+  app::sql::set_any(offer.tickets_count);
+  app::sql::set_any(offer.date_end);
+  app::sql::set_any(offer.price);
+  app::sql::set_any(offer.categoryid);
+  app::sql::set_any(offer.insurance_cost);
+  app::sql::set_any(offer.extra_meals_cost);
   offer.date_begin = str2epoch("01.10.2021");
-  offer.date_end =str2epoch(INVALID_DATE);
-  offer.price = UNWANTED_DECIMAL_PARAM;
-  offer.categoryid = UNWANTED_DECIMAL_PARAM;
-  offer.insurance_cost =UNWANTED_DECIMAL_PARAM;
-  offer.extra_meals_cost =UNWANTED_DECIMAL_PARAM;
   hldb_inst.add_offer(offer);
 
   offers = hldb_inst.get_offers_like(offer);
-  EXPECT_EQ(offers.size(), 2)<< "INCORRECT offer COUNT";
+  ASSERT_EQ(offers.size(), 2)<< "INCORRECT offer COUNT";
+
   offer = offers[0];
   offer = hldb_inst.get_offers_like(offer.id);
   EXPECT_NE(offer.id, 0)<< "INCORRECT offer ID";
@@ -329,27 +340,27 @@ TEST_F(HldbTest, OfferManagerTest){
   offer.name ="WONDERFUL TRIP3";
   offer.country ="UKRAINE";
   offer.city ="KIJOW";
-  offer.tickets_count = UNWANTED_DECIMAL_PARAM;
-  offer.date_begin =str2epoch(INVALID_DATE);
-  offer.date_end =str2epoch(INVALID_DATE);
-  offer.price = UNWANTED_DECIMAL_PARAM;
-  offer.categoryid = UNWANTED_DECIMAL_PARAM;
-  offer.insurance_cost =UNWANTED_DECIMAL_PARAM;
-  offer.extra_meals_cost =UNWANTED_DECIMAL_PARAM;
+  app::sql::set_any(offer.tickets_count);
+  app::sql::set_any(offer.date_begin);
+  app::sql::set_any(offer.date_end);
+  app::sql::set_any(offer.price);
+  app::sql::set_any(offer.categoryid);
+  app::sql::set_any(offer.insurance_cost);
+  app::sql::set_any(offer.extra_meals_cost);
   offers = hldb_inst.get_offers_like(offer);
   EXPECT_EQ(offers.size(), 2)<< "INCORRECT offer COUNT";
 
-  offer.id = UNWANTED_DECIMAL_PARAM;
+  app::sql::set_any(offer.id);
   offer.name ="WONDERFUL TRIP3";
   offer.country ="UKRAINE";
   offer.city ="KIJOW";
-  offer.tickets_count = UNWANTED_DECIMAL_PARAM;
-  offer.date_begin =str2epoch(INVALID_DATE);
-  offer.date_end =str2epoch(INVALID_DATE);
-  offer.price = UNWANTED_DECIMAL_PARAM;
-  offer.categoryid = UNWANTED_DECIMAL_PARAM;
-  offer.insurance_cost =UNWANTED_DECIMAL_PARAM;
-  offer.extra_meals_cost =UNWANTED_DECIMAL_PARAM;
+  app::sql::set_any(offer.tickets_count);
+  app::sql::set_any(offer.date_begin);
+  app::sql::set_any(offer.date_end);
+  app::sql::set_any(offer.price);
+  app::sql::set_any(offer.categoryid);
+  app::sql::set_any(offer.insurance_cost);
+  app::sql::set_any(offer.extra_meals_cost);
   // // don't look on id, remove all offers speified py params
   hldb_inst.rmeove_offer(offer);
   offers = hldb_inst.get_offers_like(offer);
@@ -374,7 +385,7 @@ TEST_F(HldbTest, OfferManagerTest){
 }
 
 
-TEST_F(HldbTest, tourManagerTest){
+TEST_F(DatabaseManagersTest, tourManagerTest){
 
   offer_t offer;
   offer.name ="WONDERFUL_TRIP1";
@@ -418,7 +429,7 @@ TEST_F(HldbTest, tourManagerTest){
   tour.debt =4000;
   tour.insurance = 0;
   tour.extra_meals =1;
-  tour.finished = 0;
+  tour.state =static_cast<tour_state>(0);
   tour.reserved_tickets =6;
   tour.customersid = 1;
   tour.employeesid = 1;
@@ -428,7 +439,7 @@ TEST_F(HldbTest, tourManagerTest){
   tour.debt =6000;
   tour.insurance = 1;
   tour.extra_meals =0;
-  tour.finished = 0;
+  tour.state =static_cast<tour_state>(0);
   tour.reserved_tickets =4;
   tour.customersid = 1;
   tour.employeesid = 1;
@@ -438,7 +449,7 @@ TEST_F(HldbTest, tourManagerTest){
   tour.debt =2000;
   tour.insurance = 1;
   tour.extra_meals =1;
-  tour.finished = 0;
+  tour.state =static_cast<tour_state>(0);
   tour.reserved_tickets =5;
   tour.customersid = 1;
   tour.employeesid = 1;
@@ -448,7 +459,7 @@ TEST_F(HldbTest, tourManagerTest){
   tour.debt =2000;
   tour.insurance = 1;
   tour.extra_meals =1;
-  tour.finished = 0;
+  tour.state =static_cast<tour_state>(0);
   tour.reserved_tickets =5;
   tour.customersid = 1;
   tour.employeesid = 1;
@@ -458,7 +469,7 @@ TEST_F(HldbTest, tourManagerTest){
   tour.debt =2000;
   tour.insurance = 1;
   tour.extra_meals =1;
-  tour.finished = 0;
+  tour.state =static_cast<tour_state>(0);
   tour.reserved_tickets =5;
   tour.customersid = 1;
   tour.employeesid = 1;
@@ -467,14 +478,14 @@ TEST_F(HldbTest, tourManagerTest){
   tours = hldb_inst.get_all_tours();
   EXPECT_EQ(tours.size(), 5)<< "INCORRECT tour COUNT";
 
+  app::sql::set_any(tour.insurance);
+  app::sql::set_any(tour.extra_meals);
+  app::sql::set_any(tour.state);
+  app::sql::set_any(tour.customersid);
+  app::sql::set_any(tour.employeesid);
+  app::sql::set_any(tour.offerid);
   tour.debt =2000;
-  tour.insurance = UNWANTED_DECIMAL_PARAM;
-  tour.extra_meals =UNWANTED_DECIMAL_PARAM;
-  tour.finished = UNWANTED_DECIMAL_PARAM;
   tour.reserved_tickets =5;
-  tour.customersid = UNWANTED_DECIMAL_PARAM;
-  tour.employeesid = UNWANTED_DECIMAL_PARAM;
-  tour.offerid = UNWANTED_DECIMAL_PARAM;
 
   tours = hldb_inst.get_tours_like(tour);
   EXPECT_EQ(tours.size(), 3)<< "INCORRECT tour COUNT";
@@ -488,26 +499,26 @@ TEST_F(HldbTest, tourManagerTest){
   hldb_inst.rmeove_tour(tour);
   // // check if tour has been deleted
   tour.debt =2000;
-  tour.insurance = UNWANTED_DECIMAL_PARAM;
-  tour.extra_meals =UNWANTED_DECIMAL_PARAM;
-  tour.finished = UNWANTED_DECIMAL_PARAM;
+  app::sql::set_any(tour.insurance);
+  app::sql::set_any(tour.extra_meals);
+  app::sql::set_any(tour.state);
+  app::sql::set_any(tour.customersid);
+  app::sql::set_any(tour.employeesid);
+  app::sql::set_any(tour.offerid);
   tour.reserved_tickets =5;
-  tour.customersid = UNWANTED_DECIMAL_PARAM;
-  tour.employeesid = UNWANTED_DECIMAL_PARAM;
-  tour.offerid = UNWANTED_DECIMAL_PARAM;
 
   tours = hldb_inst.get_tours_like(tour);
   EXPECT_EQ(tours.size(), 2)<< "INCORRECT tour COUNT";
 
-  tour.id = UNWANTED_DECIMAL_PARAM;
+  app::sql::set_any(tour.id);
+  app::sql::set_any(tour.insurance);
+  app::sql::set_any(tour.extra_meals);
+  app::sql::set_any(tour.state);
+  app::sql::set_any(tour.customersid);
+  app::sql::set_any(tour.employeesid);
+  app::sql::set_any(tour.offerid);
   tour.debt =2000;
-  tour.insurance = UNWANTED_DECIMAL_PARAM;
-  tour.extra_meals =UNWANTED_DECIMAL_PARAM;
-  tour.finished = UNWANTED_DECIMAL_PARAM;
   tour.reserved_tickets =5;
-  tour.customersid = UNWANTED_DECIMAL_PARAM;
-  tour.employeesid = UNWANTED_DECIMAL_PARAM;
-  tour.offerid = UNWANTED_DECIMAL_PARAM;
   //don't look on id, remove all tours speified py params
   hldb_inst.rmeove_tour(tour);
   tours = hldb_inst.get_tours_like(tour);
@@ -517,7 +528,7 @@ TEST_F(HldbTest, tourManagerTest){
   tour.debt =1234567;
   tour.insurance = 0;
   tour.extra_meals =1;
-  tour.finished = 0;
+  tour.state = static_cast<tour_state>(0);
   tour.reserved_tickets =12;
   tour.customersid = 1;
   tour.employeesid = 1;

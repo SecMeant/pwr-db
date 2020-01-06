@@ -122,5 +122,9 @@ namespace app::logic
   {
     db_access_manager.m_tour_manager.modify(inst);
   }
+  const employee_t& hldb::get_logged_user()
+  {
+    return m_session.current();
+  }
 
 }

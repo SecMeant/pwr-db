@@ -8,7 +8,6 @@ namespace app::dbaccess
   class data_access_manager;
 
   using tour_manager_i = entity_manipulator<tour_t>;
-
   class tour_manager : public tour_manager_i
   {
   public:

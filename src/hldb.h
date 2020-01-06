@@ -2,6 +2,7 @@
 
 #include "dbaccess/db_connection.h"
 #include "session_manager.h"
+#include "reservation_manager.h"
 #include "dbaccess/data_access_manager.h"
 
 namespace app::logic {
@@ -38,6 +39,7 @@ namespace app::logic {
     virtual void modify_offer(const dbaccess::offer_t&)=0;
     virtual void modify_employee(const dbaccess::employee_t&)=0;
     virtual void modify_tour(const dbaccess::tour_t&)=0;
+    virtual const dbaccess::employee_t& get_logged_user()=0;
   };
 
   class hldb : public hldb_i
@@ -45,6 +47,7 @@ namespace app::logic {
   public:
     dbaccess::db_connection m_dbconn;
     session_manager m_session;
+    session_manager res_manager;
     dbaccess::data_access_manager db_access_manager;
 
     std::vector<dbaccess::customer_t> get_all_customers();
@@ -76,7 +79,7 @@ namespace app::logic {
     void modify_offer(const dbaccess::offer_t&);
     void modify_employee(const dbaccess::employee_t&);
     void modify_tour(const dbaccess::tour_t&);
+
+    const dbaccess::employee_t& get_logged_user();
   };
-
-
 }
