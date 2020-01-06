@@ -71,7 +71,7 @@ protected:
    std::string employee_pass = "a63ab36162a4f4ee6622ccd787b0a048c26b93acfc05c6b1843659b253c3c00b";
 };
 
-TEST_F(MainLogicTest, ReservationManager)
+TEST_F(MainLogicTest, ReservationManagerReserve)
 {
   customer_t customer;
   customer.name ="ardella";
@@ -84,10 +84,37 @@ TEST_F(MainLogicTest, ReservationManager)
   customer = c[0];
   ASSERT_TRUE(customer.valid());
 
+  offer_t offer;
+  offer.name ="wycieczka 1";
+  offer.country ="tokio";
+  offer.city ="japonia";
+  app::sql::set_any(offer.id);
+  app::sql::set_any(offer.tickets_count);
+  app::sql::set_any(offer.date_begin);
+  app::sql::set_any(offer.date_end);
+  app::sql::set_any(offer.price);
+  app::sql::set_any(offer.categoryid);
+  app::sql::set_any(offer.insurance_cost);
+  app::sql::set_any(offer.extra_meals_cost);
+
+  auto o = hldb_inst.get_offers_like(offer);
+  ASSERT_NE(o.size(), 0)<< "INCORRECT offer COUNT";
+  offer = o[0];
+  ASSERT_TRUE(offer.valid());
+
   credentials_t cred;
   app::sql::set_any(cred.id);
   cred.login = employee_log;
   cred.pass_hash = employee_pass;
   hldb_inst.m_session.authenticate(cred);
   ASSERT_EQ(hldb_inst.m_session.state(),state_t::logedin);
+
+  int tickets_count =10;
+  int tc_copy = offer.tickets_count;
+  hldb_inst.res_manager.reserve_tour(offer.id,customer.id,tickets_count,0,1);
+  auto tours = hldb_inst.get_all_tours();
+  EXPECT_EQ(tours.size(), 1)<< "Tour hasn't been reserved";
+  offer = hldb_inst.get_offers_like(offer.id);
+  EXPECT_EQ(offer.tickets_count,tc_copy+tickets_count) << "Offer has incorrect ticket number";
+
 }
