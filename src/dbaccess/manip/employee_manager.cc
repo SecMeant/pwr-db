@@ -152,6 +152,7 @@ namespace app::dbaccess
           concat = true;
         params << fmt::format(" surname = \'{}\' ", entity.surname);
       }
+
       auto date = str2base_str(epoch2str(entity.hire_date));
       if(date != INVALID_DATE)
       {
