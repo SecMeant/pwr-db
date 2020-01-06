@@ -4,8 +4,7 @@
 #include <limits>
 
 constexpr const char * UNWANTED_STR_PARAM = "";
-
-constexpr const int UNWANTED_DECIMAL_PARAM = std::numeric_limits<int>::max();
+constexpr int UNWANTED_DECIMAL_PARAM = -1;
 
 namespace app::dbaccess {
   template <typename T>

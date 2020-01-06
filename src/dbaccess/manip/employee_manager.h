@@ -1,6 +1,6 @@
 #pragma once
 #include "entity_manipulator.h"
-#include "../employee.h"
+#include "dbaccess/table/employee.h"
 
 
 namespace app::dbaccess

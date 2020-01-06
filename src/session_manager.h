@@ -1,8 +1,8 @@
 #pragma once
 
 #include "privilege.h"
-#include "dbaccess/credentials.h"
-#include "dbaccess/employee.h"
+#include "dbaccess/table/credentials.h"
+#include "dbaccess/table/employee.h"
 #include "dbaccess/db_session.h"
 
 namespace app::logic {
@@ -26,6 +26,10 @@ namespace app::logic {
     state() const noexcept
     { return this->m_state; }
 
+    inline const auto&
+    current() const noexcept
+    { return this->m_session; }
+
   private:
     hldb*
     parent() noexcept;
@@ -36,6 +40,7 @@ namespace app::logic {
 
     state_t m_state;
     privilege_level m_privilege;
+    dbaccess::employee_t m_session;
   };
 
 }

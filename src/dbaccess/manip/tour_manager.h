@@ -1,6 +1,6 @@
 #pragma once
 #include "entity_manipulator.h"
-#include "../tour.h"
+#include "dbaccess/table/tour.h"
 #include <string>
 
 namespace app::dbaccess
