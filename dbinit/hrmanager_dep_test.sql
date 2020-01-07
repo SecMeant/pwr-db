@@ -20,4 +20,10 @@ values
   -- hash of password : passwd3
   ("employee_2", '4B6BB75317F7D15EB8926F76DF7ABCDE276E80DA',1,3),
   -- hash of password : passwd4
-  ("employee_3", '072774747BD9E7D0E2EE9DBCAFAECD74D1620816',1,4);
+  ("employee_3", '072774747BD9E7D0E2EE9DBCAFAECD74D1620816',1,4),
+  -- hash of password : passwd5
+  ("employee_4", '1B1C08CEC0008453C416CD44C9F2F26620A32BAD',1,5),
+  -- hash of password : passwd6
+  ("employee_5", '2659E3433796E0C2CAAD12AC757C4025A3CA0F57',1,6),
+  -- hash of password : passwd7
+  ("employee_6", 'C366F6925EF642C978AC952C0FB3B39B75DA8807',1,7);

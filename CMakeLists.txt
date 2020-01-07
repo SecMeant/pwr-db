@@ -27,6 +27,7 @@ src/hr_manager.cc
 src/dbaccess/date.cc
 src/dbaccess/data_access_manager.cc
 src/dbaccess/manip/customer_manipulator.cc
+src/dbaccess/manip/credentials_manipulator.cc
 src/dbaccess/manip/employee_manipulator.cc
 src/dbaccess/manip/tour_manipulator.cc
 src/dbaccess/manip/offer_manipulator.cc

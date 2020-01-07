@@ -37,4 +37,10 @@ namespace app::dbaccess
   {
     return &m_tour_manipulator;
   }
+
+  const credentials_manipulator_i*
+  data_access_manager::get_credentials_manipulator()
+  {
+    return &m_credentials_manipulator;
+  }
 }

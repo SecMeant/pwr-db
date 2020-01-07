@@ -42,6 +42,12 @@ namespace app::logic
     return manip->get_like(inst);
   }
 
+  std::vector<credentials_t> hldb::get_credentials_like(const credentials_t& creds)
+  {
+    const auto manip = db_access_manager.get_credentials_manipulator();
+    return manip->get_like(creds);
+  }
+
   std::vector<offer_t> hldb::get_offers_like(const offer_t& inst)
   {
     const auto manip =db_access_manager.get_offer_manipulator();
