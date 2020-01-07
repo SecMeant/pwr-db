@@ -108,9 +108,36 @@ TEST_F(MainLogicTest, ReservationManagerReserve)
   int tickets_count =10;
   int tc_copy = offer.tickets_count;
   hldb_inst.res_manager.reserve_tour(offer.id,customer.id,tickets_count,0,1);
-  auto tours = hldb_inst.get_all_tours();
-  EXPECT_EQ(tours.size(), 1)<< "Tour hasn't been reserved";
+  tour_t tour;
+  app::sql::set_any(tour.id);
+  app::sql::set_any(tour.state);
+  app::sql::set_any(tour.employeesid);
+  app::sql::set_any(tour.debt);
+  tour.extra_meals = 1;
+  tour.insurance = 0;
+  tour.customersid = customer.id;
+  tour.offerid = offer.id;
+  tour.reserved_tickets =tickets_count;
+  auto tours = hldb_inst.get_tours_like(tour);
+  ASSERT_GE(tours.size(), 1)<< "Tour hasn't been reserved";
   offer = hldb_inst.get_offers_like(offer.id);
-
   EXPECT_EQ(offer.tickets_count+tickets_count,tc_copy) << "Offer has incorrect ticket number";
+  // reserve 5 more tickets
+  tickets_count = 15;
+  tour = tours[0];
+  tour.reserved_tickets = tickets_count;
+  hldb_inst.res_manager.modify(tour);
+  offer = hldb_inst.get_offers_like(offer.id);
+  EXPECT_EQ(offer.tickets_count+tickets_count,tc_copy) << "Offer has incorrect ticket number";
+  // resign from 10 tickets
+  tickets_count = 5;
+  tour = tours[0];
+  tour.reserved_tickets = tickets_count;
+  hldb_inst.res_manager.modify(tour);
+  offer = hldb_inst.get_offers_like(offer.id);
+  EXPECT_EQ(offer.tickets_count+tickets_count,tc_copy) << "Offer has incorrect ticket number";
+
+  hldb_inst.res_manager.resign(tour.id);
+  offer = hldb_inst.get_offers_like(offer.id);
+  EXPECT_EQ(offer.tickets_count,tc_copy) << "Offer has incorrect ticket number";
 }

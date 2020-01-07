@@ -53,7 +53,7 @@ namespace app::logic
         auto o = hldb->get_offers_like(t2.offerid);
         if(!o.valid())
           return false;
-        o.tickets_count += ticket_diff;
+        o.tickets_count -= ticket_diff;
         hldb->modify_offer(o);
       }
       hldb->modify_tour(t1);
