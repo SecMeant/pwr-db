@@ -8,36 +8,33 @@ namespace app::dbaccess
   {
   }
 
-  logic::hldb*
+  logic::hldb_i*
   data_access_manager::parent() noexcept
   {
     return container_of(this, logic::hldb, db_access_manager);
   }
 
-  db_connection_i* data_access_manager::get_dbconn()
-  {
-    return &this->parent()->m_dbconn;
-  }
-  const customer_manipulator&
+  const customer_manipulator_i*
   data_access_manager::get_customer_manipulator()
   {
-    return m_customer_manipulator;
+    return &m_customer_manipulator;
   }
-  const employee_manipulator&
+
+  const employee_manipulator_i*
   data_access_manager::get_employee_manipulator()
   {
-    return m_employee_manipulator;
+    return &m_employee_manipulator;
   }
 
-  const offer_manipulator&
+  const offer_manipulator_i*
   data_access_manager::get_offer_manipulator()
   {
-    return m_offer_manipulator;
+    return &m_offer_manipulator;
   }
 
-  const tour_manipulator&
+  const tour_manipulator_i*
   data_access_manager::get_tour_manipulator()
   {
-    return m_tour_manipulator;
+    return &m_tour_manipulator;
   }
 }

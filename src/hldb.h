@@ -43,8 +43,10 @@ namespace app::logic {
     virtual bool authenticate(std::string_view, std::string_view)=0;
     virtual bool make_reservation(int off_id, int cus_id, int ticket_count, bool insurance, bool extra_meals)=0;
     virtual bool drop_reservation(int id)=0;
-    virtual bool modify_reservation(dbaccess::tour_t &t1)=0;
+    virtual bool modify_reservation(const dbaccess::tour_t &t1)=0;
     virtual const dbaccess::employee_t& get_logged_user()=0;
+    virtual bool raw_query(const std::string &t1)=0;
+    virtual dbaccess::mysql_res_t raw_query_res(const std::string &t1)=0;
     virtual ~hldb_i()=default;
   };
 
@@ -52,6 +54,7 @@ namespace app::logic {
   {
   public:
     hldb()=default;
+
     hldb(const std::string &database_name);
     dbaccess::db_connection m_dbconn;
     session_manager m_session;
@@ -91,7 +94,9 @@ namespace app::logic {
     bool authenticate(std::string_view, std::string_view);
     bool make_reservation(int off_id, int cus_id, int ticket_count, bool insurance, bool extra_meals);
     bool drop_reservation(int id);
-    bool modify_reservation(dbaccess::tour_t &t1);
+    bool modify_reservation(const dbaccess::tour_t &t1);
+    bool raw_query(const std::string &t1);
+    dbaccess::mysql_res_t raw_query_res(const std::string &t1);
     const dbaccess::employee_t& get_logged_user();
   };
 }

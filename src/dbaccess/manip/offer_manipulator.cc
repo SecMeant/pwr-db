@@ -2,15 +2,15 @@
 #include "../../reflect.h"
 #include "../data_access_manager.h"
 #include <sstream>
-
+#include "hldb.h"
  #include <fmt/format.h>
 namespace app::dbaccess
 {
     std::vector<offer_t> offer_manipulator::get_all()const noexcept
     {
 
-      auto* db_conn = this->parent()->get_dbconn();
-      auto res = db_conn->query_res("SELECT id,name,country,city,tickets_count,DATE_FORMAT(date_begin,'%d.%m.%Y'),DATE_FORMAT(date_end,'%d.%m.%Y'),price,categoryid,insurance_cost,extra_meals_cost from offers");
+      auto* hldb_impl = this->parent()->parent();
+      auto res = hldb_impl->raw_query_res("SELECT id,name,country,city,tickets_count,DATE_FORMAT(date_begin,'%d.%m.%Y'),DATE_FORMAT(date_end,'%d.%m.%Y'),price,categoryid,insurance_cost,extra_meals_cost from offers");
 
       offer_t offer;
       std::vector<offer_t> data{};
@@ -50,8 +50,8 @@ namespace app::dbaccess
       command << params;
 
 
-      auto* db_conn = this->parent()->get_dbconn();
-      auto res = db_conn->query_res(command.str());
+      auto* hldb_impl = this->parent()->parent();
+      auto res = hldb_impl->raw_query_res(command.str());
       if(res == nullptr)
         return data;
 
@@ -76,9 +76,9 @@ namespace app::dbaccess
 
     offer_t offer_manipulator::get(int id)const noexcept
     {
-      auto* db_conn = this->parent()->get_dbconn();
+      auto* hldb_impl = this->parent()->parent();
       auto command = fmt::format("SELECT id,name,country,city,tickets_count,DATE_FORMAT(date_begin,'%d.%m.%Y'),DATE_FORMAT(date_end,'%d.%m.%Y'),price,categoryid,insurance_cost,extra_meals_cost from offers WHERE id = {}", id);
-      auto res = db_conn->query_res(command);
+      auto res = hldb_impl->raw_query_res(command);
       offer_t offer;
       if (!res || mysql_num_rows(res.get()) != 1)
        return offer;
@@ -103,8 +103,8 @@ namespace app::dbaccess
       std::string command = "INSERT INTO offers (name,country,city, date_begin, date_end, price, insurance_cost, extra_meals_cost, categoryid, tickets_count) VALUES (\'{}\', \'{}\', \'{}\', STR_TO_DATE(\'{}\',\'%d.%m.%y\'), STR_TO_DATE(\'{}\',\'%d.%m.%y\'), {}, {}, {}, {}, {})";
       command = fmt::format(command, entity.name, entity.country,entity.city,str2base_str(epoch2str(entity.date_begin)),str2base_str(epoch2str(entity.date_end)),  entity.price, entity.insurance_cost,entity.extra_meals_cost, entity.categoryid, entity.tickets_count);
 
-      auto* db_conn = this->parent()->get_dbconn();
-      return !db_conn->query(command);
+      auto* hldb_impl = this->parent()->parent();
+      return !hldb_impl->raw_query(command);
     }
 
     bool offer_manipulator::modify(const offer_t &entity)const noexcept
@@ -119,15 +119,15 @@ namespace app::dbaccess
       command << params;
       command << fmt::format("WHERE id = {}", entity.id);
 
-      auto* db_conn = this->parent()->get_dbconn();
-      return !db_conn->query(command.str());
+      auto* hldb_impl = this->parent()->parent();
+      return !hldb_impl->raw_query(command.str());
     }
 
     bool offer_manipulator::remove(int id)const noexcept
     {
       std::string command =fmt::format("DELETE from offers WHERE id = {}",id);
-      auto* db_conn = this->parent()->get_dbconn();
-      return !db_conn->query(command);
+      auto* hldb_impl = this->parent()->parent();
+      return !hldb_impl->raw_query(command);
     }
 
     data_access_manager*

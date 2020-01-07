@@ -14,146 +14,146 @@ namespace app::logic
 
   std::vector<customer_t> hldb::get_all_customers()
   {
-    const auto& manip = db_access_manager.get_customer_manipulator();
-    return manip.get_all();
+    const auto manip = db_access_manager.get_customer_manipulator();
+    return manip->get_all();
   }
 
   std::vector<offer_t> hldb::get_all_offers()
   {
-    const auto& manip =db_access_manager.get_offer_manipulator();
-    return manip.get_all();
+    const auto manip =db_access_manager.get_offer_manipulator();
+    return manip->get_all();
   }
 
   std::vector<employee_t> hldb::get_all_employees()
   {
-    const auto& manip = db_access_manager.get_employee_manipulator();
-    return manip.get_all();
+    const auto manip = db_access_manager.get_employee_manipulator();
+    return manip->get_all();
   }
 
   std::vector<tour_t> hldb::get_all_tours()
   {
-    const auto& manip =db_access_manager.get_tour_manipulator();
-    return manip.get_all();
+    const auto manip =db_access_manager.get_tour_manipulator();
+    return manip->get_all();
   }
 
   std::vector<customer_t> hldb::get_customers_like(const customer_t& inst)
   {
-    const auto& manip = db_access_manager.get_customer_manipulator();
-    return manip.get_like(inst);
+    const auto manip = db_access_manager.get_customer_manipulator();
+    return manip->get_like(inst);
   }
 
   std::vector<offer_t> hldb::get_offers_like(const offer_t& inst)
   {
-    const auto& manip =db_access_manager.get_offer_manipulator();
-    return manip.get_like(inst);
+    const auto manip =db_access_manager.get_offer_manipulator();
+    return manip->get_like(inst);
   }
 
   std::vector<employee_t> hldb::get_employees_like(const employee_t& inst)
   {
-    const auto& manip = db_access_manager.get_employee_manipulator();
-    return manip.get_like(inst);
+    const auto manip = db_access_manager.get_employee_manipulator();
+    return manip->get_like(inst);
   }
 
   std::vector<tour_t> hldb::get_tours_like(const tour_t& inst)
   {
-    const auto& manip =db_access_manager.get_tour_manipulator();
-    return manip.get_like(inst);
+    const auto manip =db_access_manager.get_tour_manipulator();
+    return manip->get_like(inst);
   }
 
   customer_t hldb::get_customers_like(int id)
   {
-    const auto& manip = db_access_manager.get_customer_manipulator();
-    return manip.get(id);
+    const auto manip = db_access_manager.get_customer_manipulator();
+    return manip->get(id);
   }
 
   offer_t hldb::get_offers_like(int id)
   {
-    const auto& manip =db_access_manager.get_offer_manipulator();
-    return manip.get(id);
+    const auto manip =db_access_manager.get_offer_manipulator();
+    return manip->get(id);
   }
 
   employee_t hldb::get_employees_like(int id)
   {
-    const auto& manip = db_access_manager.get_employee_manipulator();
-    return manip.get(id);
+    const auto manip = db_access_manager.get_employee_manipulator();
+    return manip->get(id);
   }
 
   tour_t hldb::get_tours_like(int id)
   {
-    const auto& manip =db_access_manager.get_tour_manipulator();
-    return manip.get(id);
+    const auto manip =db_access_manager.get_tour_manipulator();
+    return manip->get(id);
   }
 
   bool hldb::add_customer(const customer_t& inst)
   {
-    const auto& manip = db_access_manager.get_customer_manipulator();
-    return manip.add(inst);
+    const auto manip = db_access_manager.get_customer_manipulator();
+    return manip->add(inst);
   }
 
   bool hldb::add_offer(const offer_t& inst)
   {
-    const auto& manip =db_access_manager.get_offer_manipulator();
-   return manip.add(inst);
+    const auto manip =db_access_manager.get_offer_manipulator();
+   return manip->add(inst);
   }
 
   bool hldb::add_employee(const employee_t& inst)
   {
-    const auto& manip = db_access_manager.get_employee_manipulator();
-   return manip.add(inst);
+    const auto manip = db_access_manager.get_employee_manipulator();
+   return manip->add(inst);
   }
 
   bool hldb::add_tour(const tour_t& inst)
   {
-    const auto& manip =db_access_manager.get_tour_manipulator();
-   return manip.add(inst);
+    const auto manip =db_access_manager.get_tour_manipulator();
+   return manip->add(inst);
   }
 
   bool hldb::remove_customer(int id)
   {
-    const auto& manip = db_access_manager.get_customer_manipulator();
-    return manip.remove(id);
+    const auto manip = db_access_manager.get_customer_manipulator();
+    return manip->remove(id);
   }
 
   bool hldb::remove_offer(int id)
   {
-    const auto& manip =db_access_manager.get_offer_manipulator();
-   return manip.remove(id);
+    const auto manip =db_access_manager.get_offer_manipulator();
+   return manip->remove(id);
   }
 
   bool hldb::remove_employee(int id)
   {
-    const auto& manip = db_access_manager.get_employee_manipulator();
-   return manip.remove(id);
+    const auto manip = db_access_manager.get_employee_manipulator();
+   return manip->remove(id);
   }
 
   bool hldb::remove_tour(int id)
   {
-    const auto& manip =db_access_manager.get_tour_manipulator();
-   return manip.remove(id);
+    const auto manip =db_access_manager.get_tour_manipulator();
+   return manip->remove(id);
   }
 
   bool hldb::modify_customer(const customer_t& inst)
   {
-    const auto& manip = db_access_manager.get_customer_manipulator();
-    return manip.modify(inst);
+    const auto manip = db_access_manager.get_customer_manipulator();
+    return manip->modify(inst);
   }
 
   bool hldb::modify_offer(const offer_t& inst)
   {
-    const auto& manip =db_access_manager.get_offer_manipulator();
-   return manip.modify(inst);
+    const auto manip =db_access_manager.get_offer_manipulator();
+   return manip->modify(inst);
   }
 
   bool hldb::modify_employee(const employee_t& inst)
   {
-    const auto& manip = db_access_manager.get_employee_manipulator();
-   return manip.modify(inst);
+    const auto manip = db_access_manager.get_employee_manipulator();
+   return manip->modify(inst);
   }
 
   bool hldb::modify_tour(const tour_t& inst)
   {
-    const auto& manip =db_access_manager.get_tour_manipulator();
-   return manip.modify(inst);
+    const auto manip =db_access_manager.get_tour_manipulator();
+   return manip->modify(inst);
   }
 
   const employee_t& hldb::get_logged_user()
@@ -175,8 +175,18 @@ namespace app::logic
     return res_manager.resign(id);
   }
 
-  bool hldb::modify_reservation(dbaccess::tour_t &t1)
+  bool hldb::modify_reservation(const dbaccess::tour_t &t1)
   {
     return res_manager.modify(t1);
+  }
+
+  bool hldb::raw_query(const std::string &t1)
+  {
+    return m_dbconn.query(t1);
+  }
+
+  mysql_res_t hldb::raw_query_res(const std::string &t1)
+  {
+    return m_dbconn.query_res(t1);
   }
 }

@@ -14,7 +14,7 @@ namespace app::logic
     ~reservation_manager()=default;
     bool reserve_tour(int off_id, int cus_id, int ticket_count, bool insurance, bool extra_meals);
     bool resign(int tour_id);
-    bool modify(dbaccess::tour_t &t1);
+    bool modify(const dbaccess::tour_t &t1);
   private:
     hldb*
     parent() noexcept;

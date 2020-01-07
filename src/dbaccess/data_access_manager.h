@@ -4,40 +4,42 @@
 #include "manip/offer_manipulator.h"
 #include "manip/tour_manipulator.h"
 #include "db_connection.h"
-
+#include <memory>
 namespace app::logic
 {
-  class hldb;
+  class hldb_i;
 }
 
 namespace app::dbaccess
 {
   class data_access_manager
   {
-
-  public:
+    friend data_access_manager* customer_manipulator::parent()const noexcept;
+    friend data_access_manager* employee_manipulator::parent()const noexcept;
+    friend data_access_manager* offer_manipulator::parent()const noexcept;
+    friend data_access_manager* tour_manipulator::parent()const noexcept;
     customer_manipulator m_customer_manipulator;
     employee_manipulator m_employee_manipulator;
     offer_manipulator m_offer_manipulator;
     tour_manipulator m_tour_manipulator;
+  public:
     data_access_manager();
     ~data_access_manager()=default;
 
-    const customer_manipulator&
+    const customer_manipulator_i*
     get_customer_manipulator();
 
-    const employee_manipulator&
+    const employee_manipulator_i*
     get_employee_manipulator();
 
-    const offer_manipulator&
+    const offer_manipulator_i*
     get_offer_manipulator();
 
-    const tour_manipulator&
+    const tour_manipulator_i*
     get_tour_manipulator();
 
-    db_connection_i* get_dbconn();
-  private:
-    logic::hldb*
+    logic::hldb_i*
     parent() noexcept;
+
   };
 }

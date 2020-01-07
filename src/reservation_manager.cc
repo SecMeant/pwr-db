@@ -41,7 +41,7 @@ namespace app::logic
       return true;
     }
 
-    bool reservation_manager::modify(tour_t &t1)
+    bool reservation_manager::modify(const tour_t &t1)
     {
       auto hldb = parent();
       auto t2 = hldb->get_tours_like(t1.id);

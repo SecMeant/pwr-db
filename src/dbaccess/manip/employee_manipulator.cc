@@ -3,13 +3,14 @@
 #include "../data_access_manager.h"
 #include <sstream>
  #include <fmt/format.h>
+#include "hldb.h"
 namespace app::dbaccess
 {
     std::vector<employee_t> employee_manipulator::get_all()const noexcept
     {
 
-      auto* db_conn = this->parent()->get_dbconn();
-      auto res = db_conn->query_res("SELECT id,name,surname,DATE_FORMAT(hire_date,'%d.%m.%Y'),salary,email,phone_number from employees");
+      auto* hldb_impl = this->parent()->parent();
+      auto res = hldb_impl->raw_query_res("SELECT id,name,surname,DATE_FORMAT(hire_date,'%d.%m.%Y'),salary,email,phone_number from employees");
 
       employee_t employee;
       std::vector<employee_t> data{};
@@ -44,8 +45,8 @@ namespace app::dbaccess
         return data;
       command << params;
 
-      auto* db_conn = this->parent()->get_dbconn();
-      auto res = db_conn->query_res(command.str());
+      auto* hldb_impl = this->parent()->parent();
+      auto res = hldb_impl->raw_query_res(command.str());
       if(res == nullptr)
         return data;
 
@@ -67,9 +68,9 @@ namespace app::dbaccess
 
     employee_t employee_manipulator::get(int id)const noexcept
     {
-      auto* db_conn = this->parent()->get_dbconn();
+      auto* hldb_impl = this->parent()->parent();
       auto command = fmt::format("SELECT id,name,surname,DATE_FORMAT(hire_date,'%d.%m.%Y'),salary,email,phone_number from employees WHERE id = {}", id);
-      auto res = db_conn->query_res(command);
+      auto res = hldb_impl->raw_query_res(command);
       employee_t employee;
       if (!res || mysql_num_rows(res.get()) != 1)
        return employee;
@@ -89,8 +90,8 @@ namespace app::dbaccess
     {
       std::string command = "INSERT INTO employees (name,surname,hire_date, salary, email, phone_number) VALUES (\'{}\', \'{}\', STR_TO_DATE(\'{}\',\'%d.%m.%y\'), {}, \'{}\', \'{}\')";
       command = fmt::format(command, entity.name, entity.surname,str2base_str(epoch2str(entity.hire_date)), entity.salary, entity.email,entity.phone_number);
-      auto* db_conn = this->parent()->get_dbconn();
-      return !db_conn->query(command);
+      auto* hldb_impl = this->parent()->parent();
+      return !hldb_impl->raw_query(command);
     }
 
     bool employee_manipulator::modify(const employee_t &entity)const noexcept
@@ -105,15 +106,15 @@ namespace app::dbaccess
       command << params;
       command << fmt::format("WHERE id = {}", entity.id);
 
-      auto* db_conn = this->parent()->get_dbconn();
-      return !db_conn->query(command.str());
+      auto* hldb_impl = this->parent()->parent();
+      return !hldb_impl->raw_query(command.str());
     }
 
     bool employee_manipulator::remove(int id)const noexcept
     {
       std::string command =fmt::format("DELETE from employees WHERE id = {}",id);
-      auto* db_conn = this->parent()->get_dbconn();
-      return !db_conn->query(command);
+      auto* hldb_impl = this->parent()->parent();
+      return !hldb_impl->raw_query(command);
     }
 
     data_access_manager*

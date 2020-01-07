@@ -21,9 +21,9 @@ namespace app::dbaccess
     bool modify(const tour_t &entity)const noexcept override;
     bool remove(int id)const noexcept override;
 
-  private:
     data_access_manager*
     parent()const noexcept;
+  private:
     std::string
     glue_params(const tour_t &entity, std::string separator)const noexcept;
 

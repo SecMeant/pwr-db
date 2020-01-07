@@ -3,13 +3,14 @@
 #include "../data_access_manager.h"
 #include <sstream>
  #include <fmt/format.h>
+#include "hldb.h"
 namespace app::dbaccess
 {
     std::vector<tour_t> tour_manipulator::get_all()const noexcept
     {
 
-      auto* db_conn = this->parent()->get_dbconn();
-      auto res = db_conn->query_res("SELECT * from tour");
+      auto* hldb_impl = this->parent()->parent();
+      auto res = hldb_impl->raw_query_res("SELECT * from tour");
 
       tour_t tour;
       std::vector<tour_t> data{};
@@ -47,8 +48,8 @@ namespace app::dbaccess
       command << params;
 
 
-      auto* db_conn = this->parent()->get_dbconn();
-      auto res = db_conn->query_res(command.str());
+      auto* hldb_impl = this->parent()->parent();
+      auto res = hldb_impl->raw_query_res(command.str());
       if(res == nullptr)
         return data;
 
@@ -72,9 +73,9 @@ namespace app::dbaccess
 
     tour_t tour_manipulator::get(int id)const noexcept
     {
-      auto* db_conn = this->parent()->get_dbconn();
       auto command = fmt::format("SELECT * from tour WHERE id = {}", id);
-      auto res = db_conn->query_res(command);
+      auto* hldb_impl = this->parent()->parent();
+      auto res = hldb_impl->raw_query_res(command);
       tour_t tour;
       if (!res || mysql_num_rows(res.get()) != 1)
        return tour;
@@ -96,8 +97,8 @@ namespace app::dbaccess
     {
       std::string command = "INSERT INTO tour (CustomerId, employeeid, offerid, insurance, extra_meals, debt, state, reserved_tickets)  VALUES ({}, {}, {}, {}, {}, {}, {}, {})";
       command = fmt::format(command, entity.customersid,entity.employeesid,entity.offerid, entity.insurance,entity.extra_meals,entity.debt,entity.state,entity.reserved_tickets);
-      auto* db_conn = this->parent()->get_dbconn();
-      return !db_conn->query_res(command);
+      auto* hldb_impl = this->parent()->parent();
+      return !hldb_impl->raw_query(command);
     }
 
     bool tour_manipulator::modify(const tour_t &entity)const noexcept
@@ -112,15 +113,15 @@ namespace app::dbaccess
       command << params;
       command << fmt::format("WHERE id = {}", entity.id);
 
-      auto* db_conn = this->parent()->get_dbconn();
-      return !db_conn->query_res(command.str());
+      auto* hldb_impl = this->parent()->parent();
+      return !hldb_impl->raw_query(command.str());
     }
 
     bool tour_manipulator::remove(int id)const noexcept
     {
       std::string command =fmt::format("DELETE from tour WHERE id = {}",id);
-      auto* db_conn = this->parent()->get_dbconn();
-      return !db_conn->query(command);
+      auto* hldb_impl = this->parent()->parent();
+      return !hldb_impl->raw_query(command);
     }
 
     data_access_manager*
