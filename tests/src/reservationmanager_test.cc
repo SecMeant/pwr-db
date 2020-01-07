@@ -1,6 +1,4 @@
 #include "hldb.h"
-#include "dbaccess/db_connection.h"
-#include "dbaccess/db_defaults.h"
 #include "dbaccess/date.h"
 
 #include <gtest/gtest.h>
@@ -11,8 +9,6 @@
 using namespace std;
 using namespace app::logic;
 using namespace app::dbaccess;
-using namespace app::dbaccess::defaults;
-
 
 constexpr const char* DB_SCRIPT_INIT_PATH = "../dbinit/base_init.sql";
 constexpr const char* DB_SCRIPT_DEP_PATH = "../dbinit/logic_dep_test.sql";
@@ -24,8 +20,6 @@ protected:
    virtual ~MainLogicTest()=default;
    void SetUp() override
    {
-     hldb_inst.m_dbconn = db_connection(
-       DB_HOSTNAME, DB_DATABASE_TEST, DB_PORT_NO, { DB_USERNAME, DB_PASSWORD });
      if(!hldb_inst.m_dbconn)
      {
         FAIL() << "CAN\'T CONNECT AS SUPERUSER\n";
@@ -66,7 +60,7 @@ protected:
        }
      }
    }
-   hldb hldb_inst;
+   hldb hldb_inst{DB_DATABASE_TEST};
    std::string employee_log = "employee_1";
    std::string employee_pass = "alamakota";
 };
@@ -107,7 +101,7 @@ TEST_F(MainLogicTest, ReservationManagerReserve)
 
   int tickets_count =10;
   int tc_copy = offer.tickets_count;
-  hldb_inst.res_manager.reserve_tour(offer.id,customer.id,tickets_count,0,1);
+  hldb_inst.make_reservation(offer.id,customer.id,tickets_count,0,1);
   tour_t tour;
   app::sql::set_any(tour.id);
   app::sql::set_any(tour.state);
@@ -126,18 +120,18 @@ TEST_F(MainLogicTest, ReservationManagerReserve)
   tickets_count = 15;
   tour = tours[0];
   tour.reserved_tickets = tickets_count;
-  hldb_inst.res_manager.modify(tour);
+  hldb_inst.modify_reservation(tour);
   offer = hldb_inst.get_offers_like(offer.id);
   EXPECT_EQ(offer.tickets_count+tickets_count,tc_copy) << "Offer has incorrect ticket number";
   // resign from 10 tickets
   tickets_count = 5;
   tour = tours[0];
   tour.reserved_tickets = tickets_count;
-  hldb_inst.res_manager.modify(tour);
+  hldb_inst.modify_reservation(tour);
   offer = hldb_inst.get_offers_like(offer.id);
   EXPECT_EQ(offer.tickets_count+tickets_count,tc_copy) << "Offer has incorrect ticket number";
 
-  hldb_inst.res_manager.resign(tour.id);
+  hldb_inst.drop_reservation(tour.id);
   offer = hldb_inst.get_offers_like(offer.id);
   EXPECT_EQ(offer.tickets_count,tc_copy) << "Offer has incorrect ticket number";
 }

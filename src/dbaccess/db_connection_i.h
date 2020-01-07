@@ -20,5 +20,6 @@ namespace app::dbaccess {
 
     virtual void
     close() noexcept = 0;
+    virtual ~db_connection_i()=default;
   };
 } // namespace app::dbaccess

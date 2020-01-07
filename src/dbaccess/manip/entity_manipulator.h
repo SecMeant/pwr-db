@@ -18,5 +18,6 @@ namespace app::dbaccess {
     virtual bool add(const T &entity) noexcept = 0;
     virtual bool modify(const T &entity) noexcept = 0;
     virtual bool remove(int id) noexcept = 0;
+    virtual ~entity_manipulator()=default;
   };
 }

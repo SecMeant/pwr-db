@@ -23,6 +23,28 @@ namespace app::dbaccess
     data_access_manager();
     ~data_access_manager()=default;
 
+    const customer_manager&
+    get_customer_manipulator()
+    {
+      return this->m_customer_manager;
+    }
+    const employee_manager&
+    get_employee_manipulator()
+    {
+      return this->m_employee_manager;
+    }
+
+    const offer_manager&
+    get_offer_manipulator()
+    {
+      return this->m_offer_manager;
+    }
+
+    const tour_manager&
+    get_tour_manipulator()
+    {
+      return this->m_tour_manager;
+    }
     db_connection_i* get_dbconn();
   private:
     logic::hldb*

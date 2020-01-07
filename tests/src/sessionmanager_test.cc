@@ -1,6 +1,4 @@
 #include "hldb.h"
-#include "dbaccess/db_connection.h"
-#include "dbaccess/db_defaults.h"
 #include "dbaccess/date.h"
 
 #include <gtest/gtest.h>
@@ -11,8 +9,6 @@
 using namespace std;
 using namespace app::logic;
 using namespace app::dbaccess;
-using namespace app::dbaccess::defaults;
-
 
 const char* DB_SCRIPT_INIT_PATH = "../dbinit/base_init.sql";
 const char* DB_DEP_SCRIPT_INIT_PATH = "../dbinit/sessionmanager_dep_test.sql";
@@ -32,6 +28,11 @@ protected:
   void
   execute_sql(const char * filename)
   {
+    if(!hldb_inst.m_dbconn)
+    {
+       FAIL() << "CAN\'T CONNECT AS SUPERUSER\n";
+    }
+
     std::ifstream fs(filename, std::fstream::in);
 
     if (!fs.is_open())
@@ -50,8 +51,6 @@ protected:
 
   void SetUp() override
   {
-    hldb_inst.m_dbconn = db_connection(
-        DB_HOSTNAME, DB_DATABASE_TEST, DB_PORT_NO, { DB_USERNAME, DB_PASSWORD});
     if(!hldb_inst.m_dbconn)
     {
       FAIL() << "CAN\'T CONNECT AS SUPERUSER\n";
@@ -68,7 +67,7 @@ protected:
     };
   }
 
-  hldb hldb_inst;
+  hldb hldb_inst{DB_DATABASE_TEST};
   std::vector<creds> credentials;
 };
 
