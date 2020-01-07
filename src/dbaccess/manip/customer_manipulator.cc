@@ -1,11 +1,11 @@
-#include "customer_manager.h"
+#include "customer_manipulator.h"
 #include "../../reflect.h"
 #include "../data_access_manager.h"
 #include <sstream>
  #include <fmt/format.h>
 namespace app::dbaccess
 {
-    std::vector<customer_t> customer_manager::get_all() noexcept
+    std::vector<customer_t> customer_manipulator::get_all() noexcept
     {
 
       auto* db_conn = this->parent()->get_dbconn();
@@ -28,7 +28,7 @@ namespace app::dbaccess
       return data;
     }
 
-    std::vector<customer_t> customer_manager::get_like(const customer_t &entity) noexcept
+    std::vector<customer_t> customer_manipulator::get_like(const customer_t &entity) noexcept
     {
       std::stringstream command;
       command << "SELECT * from customers WHERE";
@@ -61,7 +61,7 @@ namespace app::dbaccess
       return data;
     }
 
-    customer_t customer_manager::get(int id) noexcept
+    customer_t customer_manipulator::get(int id) noexcept
     {
       auto* db_conn = this->parent()->get_dbconn();
       auto command = fmt::format("SELECT * from customers WHERE id = {}", id);
@@ -78,7 +78,7 @@ namespace app::dbaccess
       return customer;
     }
 
-    bool customer_manager::add(const customer_t &entity) noexcept
+    bool customer_manipulator::add(const customer_t &entity) noexcept
     {
       std::string command = "INSERT INTO customers  (name,surname,email,pesel) VALUES (\'{}\', \'{}\', \'{}\', {});";
       command = fmt::format(command, entity.name, entity.surname, entity.email, entity.pesel);
@@ -86,7 +86,7 @@ namespace app::dbaccess
       return !db_conn->query(command);
     }
 
-    bool customer_manager::modify(const customer_t &entity) noexcept
+    bool customer_manipulator::modify(const customer_t &entity) noexcept
     {
       std::stringstream command;
       command << "UPDATE customers SET";
@@ -102,7 +102,7 @@ namespace app::dbaccess
       return !db_conn->query(command.str());
     }
 
-    bool customer_manager::remove(int id) noexcept
+    bool customer_manipulator::remove(int id) noexcept
     {
       std::string command =fmt::format("DELETE from customers WHERE id = {}",id);
       auto* db_conn = this->parent()->get_dbconn();
@@ -110,13 +110,13 @@ namespace app::dbaccess
     }
 
     data_access_manager*
-    customer_manager::parent() noexcept
+    customer_manipulator::parent() noexcept
     {
-      return container_of(this, data_access_manager, m_customer_manager);
+      return container_of(this, data_access_manager, m_customer_manipulator);
     }
 
     std::string
-    customer_manager::glue_params(const customer_t &entity, std::string separator) noexcept
+    customer_manipulator::glue_params(const customer_t &entity, std::string separator) noexcept
     {
       std::stringstream params;
       bool concat = false;

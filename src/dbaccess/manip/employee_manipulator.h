@@ -7,13 +7,13 @@ namespace app::dbaccess
 {
   class data_access_manager;
 
-  using employee_manager_i = entity_manipulator<employee_t>;
+  using employee_manipulator_i = entity_manipulator<employee_t>;
 
-  class employee_manager : public employee_manager_i
+  class employee_manipulator : public employee_manipulator_i
   {
   public:
-    employee_manager() =default;
-    ~employee_manager() =default;
+    employee_manipulator() =default;
+    ~employee_manipulator() =default;
 
     std::vector<employee_t> get_all() noexcept override;
     std::vector<employee_t> get_like(const employee_t &entity) noexcept override;

@@ -1,11 +1,11 @@
-#include "tour_manager.h"
+#include "tour_manipulator.h"
 #include "../../reflect.h"
 #include "../data_access_manager.h"
 #include <sstream>
  #include <fmt/format.h>
 namespace app::dbaccess
 {
-    std::vector<tour_t> tour_manager::get_all() noexcept
+    std::vector<tour_t> tour_manipulator::get_all() noexcept
     {
 
       auto* db_conn = this->parent()->get_dbconn();
@@ -32,7 +32,7 @@ namespace app::dbaccess
       return data;
     }
 
-    std::vector<tour_t> tour_manager::get_like(const tour_t &entity) noexcept
+    std::vector<tour_t> tour_manipulator::get_like(const tour_t &entity) noexcept
     {
       std::stringstream command;
       command << "SELECT * from tour WHERE";
@@ -70,7 +70,7 @@ namespace app::dbaccess
       return data;
     }
 
-    tour_t tour_manager::get(int id) noexcept
+    tour_t tour_manipulator::get(int id) noexcept
     {
       auto* db_conn = this->parent()->get_dbconn();
       auto command = fmt::format("SELECT * from tour WHERE id = {}", id);
@@ -92,7 +92,7 @@ namespace app::dbaccess
       return tour;
     }
 
-    bool tour_manager::add(const tour_t &entity) noexcept
+    bool tour_manipulator::add(const tour_t &entity) noexcept
     {
       std::string command = "INSERT INTO tour (CustomerId, employeeid, offerid, insurance, extra_meals, debt, state, reserved_tickets)  VALUES ({}, {}, {}, {}, {}, {}, {}, {})";
       command = fmt::format(command, entity.customersid,entity.employeesid,entity.offerid, entity.insurance,entity.extra_meals,entity.debt,entity.state,entity.reserved_tickets);
@@ -100,7 +100,7 @@ namespace app::dbaccess
       return !db_conn->query_res(command);
     }
 
-    bool tour_manager::modify(const tour_t &entity) noexcept
+    bool tour_manipulator::modify(const tour_t &entity) noexcept
     {
       std::stringstream command;
       command << "UPDATE tour SET";
@@ -116,7 +116,7 @@ namespace app::dbaccess
       return !db_conn->query_res(command.str());
     }
 
-    bool tour_manager::remove(int id) noexcept
+    bool tour_manipulator::remove(int id) noexcept
     {
       std::string command =fmt::format("DELETE from tour WHERE id = {}",id);
       auto* db_conn = this->parent()->get_dbconn();
@@ -124,13 +124,13 @@ namespace app::dbaccess
     }
 
     data_access_manager*
-    tour_manager::parent() noexcept
+    tour_manipulator::parent() noexcept
     {
-      return container_of(this, data_access_manager, m_tour_manager);
+      return container_of(this, data_access_manager, m_tour_manipulator);
     }
 
     std::string
-    tour_manager::glue_params(const tour_t &entity, std::string separator) noexcept
+    tour_manipulator::glue_params(const tour_t &entity, std::string separator) noexcept
     {
       std::stringstream params;
       bool concat = false;

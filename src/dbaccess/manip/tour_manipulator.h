@@ -7,12 +7,12 @@ namespace app::dbaccess
 {
   class data_access_manager;
 
-  using tour_manager_i = entity_manipulator<tour_t>;
-  class tour_manager : public tour_manager_i
+  using tour_manipulator_i = entity_manipulator<tour_t>;
+  class tour_manipulator : public tour_manipulator_i
   {
   public:
-    tour_manager() =default;
-    ~tour_manager() =default;
+    tour_manipulator() =default;
+    ~tour_manipulator() =default;
 
     std::vector<tour_t> get_all() noexcept override;
     std::vector<tour_t> get_like(const tour_t &entity) noexcept override;

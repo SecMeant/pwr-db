@@ -1,8 +1,8 @@
 #pragma once
-#include "manip/customer_manager.h"
-#include "manip/employee_manager.h"
-#include "manip/offer_manager.h"
-#include "manip/tour_manager.h"
+#include "manip/customer_manipulator.h"
+#include "manip/employee_manipulator.h"
+#include "manip/offer_manipulator.h"
+#include "manip/tour_manipulator.h"
 #include "db_connection.h"
 
 namespace app::logic
@@ -16,10 +16,10 @@ namespace app::dbaccess
   {
 
   public:
-    customer_manager m_customer_manager;
-    employee_manager m_employee_manager;
-    offer_manager m_offer_manager;
-    tour_manager m_tour_manager;
+    customer_manipulator m_customer_manipulator;
+    employee_manipulator m_employee_manipulator;
+    offer_manipulator m_offer_manipulator;
+    tour_manipulator m_tour_manipulator;
     data_access_manager();
     ~data_access_manager()=default;
 

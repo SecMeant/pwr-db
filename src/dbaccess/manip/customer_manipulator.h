@@ -7,13 +7,13 @@ namespace app::dbaccess
 {
   class data_access_manager;
 
-  using customer_manager_i = entity_manipulator<customer_t>;
+  using customer_manipulator_i = entity_manipulator<customer_t>;
 
-  class customer_manager : public customer_manager_i
+  class customer_manipulator : public customer_manipulator_i
   {
   public:
-    customer_manager() =default;
-    ~customer_manager() =default;
+    customer_manipulator() =default;
+    ~customer_manipulator() =default;
 
     std::vector<customer_t> get_all() noexcept override;
     std::vector<customer_t> get_like(const customer_t &entity) noexcept override;

@@ -1,4 +1,4 @@
-#include "offer_manager.h"
+#include "offer_manipulator.h"
 #include "../../reflect.h"
 #include "../data_access_manager.h"
 #include <sstream>
@@ -6,7 +6,7 @@
  #include <fmt/format.h>
 namespace app::dbaccess
 {
-    std::vector<offer_t> offer_manager::get_all() noexcept
+    std::vector<offer_t> offer_manipulator::get_all() noexcept
     {
 
       auto* db_conn = this->parent()->get_dbconn();
@@ -35,7 +35,7 @@ namespace app::dbaccess
       return data;
     }
 
-    std::vector<offer_t> offer_manager::get_like(const offer_t &entity) noexcept
+    std::vector<offer_t> offer_manipulator::get_like(const offer_t &entity) noexcept
     {
       std::stringstream command;
       command << "SELECT id,name,country,city,tickets_count,DATE_FORMAT(date_begin,'%d.%m.%Y'),DATE_FORMAT(date_end,'%d.%m.%Y'),price,categoryid,insurance_cost,extra_meals_cost from offers WHERE";
@@ -74,7 +74,7 @@ namespace app::dbaccess
       return data;
     }
 
-    offer_t offer_manager::get(int id) noexcept
+    offer_t offer_manipulator::get(int id) noexcept
     {
       auto* db_conn = this->parent()->get_dbconn();
       auto command = fmt::format("SELECT id,name,country,city,tickets_count,DATE_FORMAT(date_begin,'%d.%m.%Y'),DATE_FORMAT(date_end,'%d.%m.%Y'),price,categoryid,insurance_cost,extra_meals_cost from offers WHERE id = {}", id);
@@ -98,7 +98,7 @@ namespace app::dbaccess
       return offer;
     }
 
-    bool offer_manager::add(const offer_t &entity) noexcept
+    bool offer_manipulator::add(const offer_t &entity) noexcept
     {
       std::string command = "INSERT INTO offers (name,country,city, date_begin, date_end, price, insurance_cost, extra_meals_cost, categoryid, tickets_count) VALUES (\'{}\', \'{}\', \'{}\', STR_TO_DATE(\'{}\',\'%d.%m.%y\'), STR_TO_DATE(\'{}\',\'%d.%m.%y\'), {}, {}, {}, {}, {})";
       command = fmt::format(command, entity.name, entity.country,entity.city,str2base_str(epoch2str(entity.date_begin)),str2base_str(epoch2str(entity.date_end)),  entity.price, entity.insurance_cost,entity.extra_meals_cost, entity.categoryid, entity.tickets_count);
@@ -107,7 +107,7 @@ namespace app::dbaccess
       return !db_conn->query(command);
     }
 
-    bool offer_manager::modify(const offer_t &entity) noexcept
+    bool offer_manipulator::modify(const offer_t &entity) noexcept
     {
       std::stringstream command;
       command << "UPDATE offers SET";
@@ -123,7 +123,7 @@ namespace app::dbaccess
       return !db_conn->query(command.str());
     }
 
-    bool offer_manager::remove(int id) noexcept
+    bool offer_manipulator::remove(int id) noexcept
     {
       std::string command =fmt::format("DELETE from offers WHERE id = {}",id);
       auto* db_conn = this->parent()->get_dbconn();
@@ -131,13 +131,13 @@ namespace app::dbaccess
     }
 
     data_access_manager*
-    offer_manager::parent() noexcept
+    offer_manipulator::parent() noexcept
     {
-      return container_of(this, data_access_manager, m_offer_manager);
+      return container_of(this, data_access_manager, m_offer_manipulator);
     }
 
     std::string
-    offer_manager::glue_params(const offer_t &entity, std::string separator) noexcept
+    offer_manipulator::glue_params(const offer_t &entity, std::string separator) noexcept
     {
       std::stringstream params;
       bool concat = false;

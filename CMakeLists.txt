@@ -26,10 +26,10 @@ src/reservation_manager.cc
 src/hr_manager.cc
 src/dbaccess/date.cc
 src/dbaccess/data_access_manager.cc
-src/dbaccess/manip/customer_manager.cc
-src/dbaccess/manip/employee_manager.cc
-src/dbaccess/manip/tour_manager.cc
-src/dbaccess/manip/offer_manager.cc
+src/dbaccess/manip/customer_manipulator.cc
+src/dbaccess/manip/employee_manipulator.cc
+src/dbaccess/manip/tour_manipulator.cc
+src/dbaccess/manip/offer_manipulator.cc
 src/dbaccess/db_connection.cc
 src/hldb.cc
 )
