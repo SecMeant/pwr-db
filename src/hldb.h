@@ -3,6 +3,7 @@
 #include "dbaccess/db_connection.h"
 #include "session_manager.h"
 #include "reservation_manager.h"
+#include "hr_manager.h"
 #include "dbaccess/data_access_manager.h"
 
 namespace app::logic {
@@ -55,6 +56,7 @@ namespace app::logic {
     dbaccess::db_connection m_dbconn;
     session_manager m_session;
     reservation_manager res_manager;
+    hr_manager m_hr;
     dbaccess::data_access_manager db_access_manager;
 
     std::vector<dbaccess::customer_t> get_all_customers();

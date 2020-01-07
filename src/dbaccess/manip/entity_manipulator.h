@@ -12,12 +12,12 @@ namespace app::dbaccess {
   class entity_manipulator
   {
   public:
-    virtual std::vector<T> get_all() noexcept = 0;
-    virtual std::vector<T> get_like(const T &entity) noexcept = 0;
-    virtual T get(int id) noexcept = 0;
-    virtual bool add(const T &entity) noexcept = 0;
-    virtual bool modify(const T &entity) noexcept = 0;
-    virtual bool remove(int id) noexcept = 0;
+    virtual std::vector<T> get_all()const noexcept = 0;
+    virtual std::vector<T> get_like(const T &entity)const noexcept = 0;
+    virtual T get(int id)const noexcept = 0;
+    virtual bool add(const T &entity)const noexcept = 0;
+    virtual bool modify(const T &entity)const noexcept = 0;
+    virtual bool remove(int id)const noexcept = 0;
     virtual ~entity_manipulator()=default;
   };
 }

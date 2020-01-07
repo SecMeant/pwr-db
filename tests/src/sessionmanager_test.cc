@@ -13,11 +13,11 @@ using namespace app::dbaccess;
 const char* DB_SCRIPT_INIT_PATH = "../dbinit/base_init.sql";
 const char* DB_DEP_SCRIPT_INIT_PATH = "../dbinit/sessionmanager_dep_test.sql";
 const char* DB_DATABASE_TEST = "biuro_podrozy_test";
-class HldbTest : public ::testing::Test
+class SessionManagerTest : public ::testing::Test
 {
 protected:
-  HldbTest()=default;
-  virtual ~HldbTest()=default;
+  SessionManagerTest()=default;
+  virtual ~SessionManagerTest()=default;
 
   struct creds
   {
@@ -71,7 +71,7 @@ protected:
   std::vector<creds> credentials;
 };
 
-TEST_F(HldbTest, SessionManagerTest) {
+TEST_F(SessionManagerTest, AuthTest) {
   ASSERT_TRUE(credentials.size() > 0);
 
   for (auto &cred : credentials) {

@@ -1,11 +1,11 @@
-#include "employee_manager.h"
+#include "employee_manipulator.h"
 #include "../../reflect.h"
 #include "../data_access_manager.h"
 #include <sstream>
  #include <fmt/format.h>
 namespace app::dbaccess
 {
-    std::vector<employee_t> employee_manager::get_all() noexcept
+    std::vector<employee_t> employee_manipulator::get_all()const noexcept
     {
 
       auto* db_conn = this->parent()->get_dbconn();
@@ -30,7 +30,7 @@ namespace app::dbaccess
       return data;
     }
 
-    std::vector<employee_t> employee_manager::get_like(const employee_t &entity) noexcept
+    std::vector<employee_t> employee_manipulator::get_like(const employee_t &entity)const noexcept
     {
       std::stringstream command;
       command << "SELECT id,name,surname,DATE_FORMAT(hire_date,'%d.%m.%Y'),salary,email,phone_number from employees WHERE";
@@ -65,7 +65,7 @@ namespace app::dbaccess
       return data;
     }
 
-    employee_t employee_manager::get(int id) noexcept
+    employee_t employee_manipulator::get(int id)const noexcept
     {
       auto* db_conn = this->parent()->get_dbconn();
       auto command = fmt::format("SELECT id,name,surname,DATE_FORMAT(hire_date,'%d.%m.%Y'),salary,email,phone_number from employees WHERE id = {}", id);
@@ -85,7 +85,7 @@ namespace app::dbaccess
       return employee;
     }
 
-    bool employee_manager::add(const employee_t &entity) noexcept
+    bool employee_manipulator::add(const employee_t &entity)const noexcept
     {
       std::string command = "INSERT INTO employees (name,surname,hire_date, salary, email, phone_number) VALUES (\'{}\', \'{}\', STR_TO_DATE(\'{}\',\'%d.%m.%y\'), {}, \'{}\', \'{}\')";
       command = fmt::format(command, entity.name, entity.surname,str2base_str(epoch2str(entity.hire_date)), entity.salary, entity.email,entity.phone_number);
@@ -93,7 +93,7 @@ namespace app::dbaccess
       return !db_conn->query(command);
     }
 
-    bool employee_manager::modify(const employee_t &entity) noexcept
+    bool employee_manipulator::modify(const employee_t &entity)const noexcept
     {
       std::stringstream command;
       command << "UPDATE employees SET";
@@ -109,7 +109,7 @@ namespace app::dbaccess
       return !db_conn->query(command.str());
     }
 
-    bool employee_manager::remove(int id) noexcept
+    bool employee_manipulator::remove(int id)const noexcept
     {
       std::string command =fmt::format("DELETE from employees WHERE id = {}",id);
       auto* db_conn = this->parent()->get_dbconn();
@@ -117,13 +117,13 @@ namespace app::dbaccess
     }
 
     data_access_manager*
-    employee_manager::parent() noexcept
+    employee_manipulator::parent()const noexcept
     {
-      return container_of(this, data_access_manager, m_employee_manager);
+      return container_of(this, data_access_manager, m_employee_manipulator);
     }
 
     std::string
-    employee_manager::glue_params(const employee_t &entity, std::string separator) noexcept
+    employee_manipulator::glue_params(const employee_t &entity, std::string separator)const noexcept
     {
       std::stringstream params;
       bool concat = false;
