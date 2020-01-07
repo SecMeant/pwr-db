@@ -43,7 +43,10 @@ protected:
        if (query ==""){
          continue;
        }
-       hldb_inst.m_dbconn.query_res(query.c_str());
+       if(hldb_inst.m_dbconn.query(query.c_str()) == false)
+       {
+        FAIL() << "FAIL AT QUERY\n" << query;
+       }
      }
      fs.close();
      fs.open(DB_SCRIPT_DEP_PATH, std::fstream::in | std::fstream::out);
@@ -57,7 +60,10 @@ protected:
        if (query ==""){
          continue;
        }
-       hldb_inst.m_dbconn.query_res(query.c_str());
+       if(hldb_inst.m_dbconn.query(query.c_str()) == false)
+       {
+         FAIL() << "FAIL AT QUERY\n" << query;
+       }
      }
    }
    hldb hldb_inst;

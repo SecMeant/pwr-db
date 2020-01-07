@@ -1,13 +1,13 @@
 #pragma once
 
 #include "../date.h"
-
+#include "dbaccess/table/valid.h"
 #include <string>
 
 namespace app::dbaccess {
 struct offer_t
 {
-  int id;
+  VALIDATABLE_BY(int, id);
   std::string name;
   std::string country;
   std::string city;

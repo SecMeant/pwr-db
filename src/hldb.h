@@ -47,7 +47,7 @@ namespace app::logic {
   public:
     dbaccess::db_connection m_dbconn;
     session_manager m_session;
-    session_manager res_manager;
+    reservation_manager res_manager;
     dbaccess::data_access_manager db_access_manager;
 
     std::vector<dbaccess::customer_t> get_all_customers();

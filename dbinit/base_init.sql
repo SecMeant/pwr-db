@@ -75,4 +75,4 @@ alter table biuro_podrozy_test.tour add constraint fktour557083 foreign key (emp
 alter table biuro_podrozy_test.tour add constraint fktour774357 foreign key (offerid) references biuro_podrozy_test.offers (id);
 alter table biuro_podrozy_test.offers add constraint fkoffers229222 foreign key (categoryid) references biuro_podrozy_test.category (id);
 alter table biuro_podrozy_test.credentials
-  add constraint fk_credentials_employees foreign key (`employeeid`) references biuro_podrozy_test.employees (`id`);
+  add constraint fk_credentials_employees foreign key (employeeid) references biuro_podrozy_test.employees (id);
