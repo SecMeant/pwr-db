@@ -118,7 +118,7 @@ namespace app::dbaccess
 
     bool tour_manager::remove(int id) noexcept
     {
-      std::string command =fmt::format("DELETE from customers WHERE id = {}",id);
+      std::string command =fmt::format("DELETE from tour WHERE id = {}",id);
       auto* db_conn = this->parent()->get_dbconn();
       return !db_conn->query(command);
     }

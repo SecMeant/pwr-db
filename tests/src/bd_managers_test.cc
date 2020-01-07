@@ -91,35 +91,37 @@ TEST_F(DatabaseManagersTest, CostomerManagerTest){
   customer.name ="Mario_4";
   customer.surname ="Bros_4";
   customer.email ="Mario_4.bros@op.pl";
-  customer.pesel ="444444444444";
+  customer.pesel ="444444444445";
   hldb_inst.add_customer(customer);
   customer.name ="Mario_4";
   customer.surname ="Bros_4";
   customer.email ="Mario_4.bros@op.pl";
-  customer.pesel ="444444444444";
+  customer.pesel ="444444444446";
   hldb_inst.add_customer(customer);
   customers = hldb_inst.get_all_customers();
   EXPECT_EQ(customers.size(), 5)<< "INCORRECT CUSTOMERS COUNT";
   customer.name ="Mario_4";
   customer.surname ="Bros_4";
-  customer.email ="Mario_4.bros@op.pl";
-  customer.pesel ="444444444444";
+  customer.email ="Mario_47.bros@op.pl";
+  customer.pesel ="444444444447";
   hldb_inst.add_customer(customer);
+  app::sql::set_any(customer.pesel);
+  app::sql::set_any(customer.email);
   customers = hldb_inst.get_customers_like(customer);
   ASSERT_EQ(customers.size(), 3)<< "INCORRECT CUSTOMERS COUNT";
   customer = customers[0];
 
   customer = hldb_inst.get_customers_like(customer.id);
   EXPECT_NE(customer.id, 0)<< "INCORRECT CUSTOMERS ID";
+  hldb_inst.remove_customer(customer.id);
+  customer = hldb_inst.get_customers_like(customer.id);
+  EXPECT_EQ(customer.id, app::INVALID<int>)<< "INCORRECT CUSTOMERS COUNT";
 
-  // hldb_inst.remove_customer(customer);
+  customer.name ="Mario_1";
+  customer.surname ="Bros_1";
+  app::sql::set_any(customer.email);
+  app::sql::set_any(customer.pesel);
   customers = hldb_inst.get_customers_like(customer);
-  EXPECT_EQ(customers.size(), 2)<< "INCORRECT CUSTOMERS COUNT";
-
-  app::sql::set_any(customer.id);
-  // hldb_inst.remove_customer(customer);
-  customers = hldb_inst.get_customers_like(customer);
-  EXPECT_EQ(customers.size(), 0)<< "INCORRECT CUSTOMERS COUNT";
 
   customer.id = 1;
   customer.name ="Mario_M";
@@ -164,16 +166,16 @@ TEST_F(DatabaseManagersTest, EmployeeManagerTest){
   employee.surname ="id_3";
   employee.hire_date =str2epoch("01.10.2013");
   employee.salary = 4000;
-  employee.email ="worker_3.bros@op.pl";
-  employee.phone_number ="997998993";
+  employee.email ="worker_32.bros@op.pl";
+  employee.phone_number ="297998993";
   hldb_inst.add_employee(employee);
 
   employee.name ="worker_3";
   employee.surname ="id_3";
   employee.hire_date =str2epoch("01.10.2013");
   employee.salary = 4000;
-  employee.email ="worker_3.bros@op.pl";
-  employee.phone_number ="997998993";
+  employee.email ="worker_33.bros@op.pl";
+  employee.phone_number ="397998993";
   hldb_inst.add_employee(employee);
   employees = hldb_inst.get_all_employees();
   EXPECT_EQ(employees.size(), 5)<< "INCORRECT employee COUNT";
@@ -201,34 +203,25 @@ TEST_F(DatabaseManagersTest, EmployeeManagerTest){
   employee = employees[0];
   employee = hldb_inst.get_employees_like(employee.id);
   EXPECT_NE(employee.id, 0)<< "INCORRECT employee ID";
-  employee.id = 4;
   // remove employee with specified id
-  // hldb_inst.remove_employee(employee);
-  employee.id = 3;
-  employee.name ="worker_3"; // search by name
-  employee.surname ="id_3";// search by surname
-  app::sql::set_any(employee.hire_date); //search param
-  app::sql::set_any(employee.salary); // don't search by salary
-  app::sql::set_any(employee.email);// dont search by salary
-  app::sql::set_any(employee.phone_number);// dont search by salary
-  employees = hldb_inst.get_employees_like(employee);
-  EXPECT_EQ(employees.size(), 2)<< "INCORRECT employee COUNT";
+  employee.id = 4;
+  hldb_inst.remove_employee(employee.id);
+  employee = hldb_inst.get_employees_like(employee.id);
+  EXPECT_EQ(employee.id, app::INVALID<int>)<< "INCORRECT employee COUNT";
 
   app::sql::set_any(employee.id);
-  employee.name ="worker_3"; // search by name
-  employee.surname ="id_3";// search by surname
+  employee.name ="worker_1"; // search by name
+  employee.surname ="id_1";// search by surname
   app::sql::set_any(employee.hire_date); //search param
   app::sql::set_any(employee.salary); // don't search by salary
   app::sql::set_any(employee.email);// dont search by salary
   app::sql::set_any(employee.phone_number);// dont search by salary
-  // don't look on id, remove all employees speified py params
-  // hldb_inst.remove_employee(employee);
   employees = hldb_inst.get_employees_like(employee);
-  EXPECT_EQ(employees.size(), 0)<< "INCORRECT employee COUNT";
-
-  employee.id = 1;
-  employee.name ="worker_1";
-  employee.surname ="id_1";
+  ASSERT_NE(employees.size(), 0)<< "INCORRECT employee COUNT";
+  employee = employees[0]; // get id from here
+  // fill new data
+  employee.name ="worker_1_mod";
+  employee.surname ="id_1_mod";
   employee.hire_date =str2epoch("02.03.2011");
   employee.salary = 3500;
   employee.email ="worker_3.bros@op.pl";
@@ -330,7 +323,6 @@ TEST_F(DatabaseManagersTest, OfferManagerTest){
   app::sql::set_any(offer.insurance_cost);
   app::sql::set_any(offer.extra_meals_cost);
   offer.date_begin = str2epoch("01.10.2021");
-  hldb_inst.add_offer(offer);
 
   offers = hldb_inst.get_offers_like(offer);
   ASSERT_EQ(offers.size(), 2)<< "INCORRECT offer COUNT";
@@ -339,13 +331,16 @@ TEST_F(DatabaseManagersTest, OfferManagerTest){
   offer = hldb_inst.get_offers_like(offer.id);
   EXPECT_NE(offer.id, 0)<< "INCORRECT offer ID";
 
-  offer.id = 4;
   // remove offer with specified id
-  // hldb_inst.remove_offer(offer);
+  hldb_inst.remove_offer(offer.id);
   // check if offer has been deleted
-  offer.name ="WONDERFUL TRIP3";
-  offer.country ="UKRAINE";
-  offer.city ="KIJOW";
+  offer = hldb_inst.get_offers_like(offer.id);
+  EXPECT_EQ(offer.id, app::INVALID<int>)<< "INCORRECT offer COUNT";
+
+
+  offer.name ="WONDERFUL TRIP1";
+  offer.country ="POLAND";
+  offer.city ="WROCLAW";
   app::sql::set_any(offer.tickets_count);
   app::sql::set_any(offer.date_begin);
   app::sql::set_any(offer.date_end);
@@ -354,25 +349,9 @@ TEST_F(DatabaseManagersTest, OfferManagerTest){
   app::sql::set_any(offer.insurance_cost);
   app::sql::set_any(offer.extra_meals_cost);
   offers = hldb_inst.get_offers_like(offer);
-  EXPECT_EQ(offers.size(), 2)<< "INCORRECT offer COUNT";
-
-  app::sql::set_any(offer.id);
-  offer.name ="WONDERFUL TRIP3";
-  offer.country ="UKRAINE";
-  offer.city ="KIJOW";
-  app::sql::set_any(offer.tickets_count);
-  app::sql::set_any(offer.date_begin);
-  app::sql::set_any(offer.date_end);
-  app::sql::set_any(offer.price);
-  app::sql::set_any(offer.categoryid);
-  app::sql::set_any(offer.insurance_cost);
-  app::sql::set_any(offer.extra_meals_cost);
-  // // don't look on id, remove all offers speified py params
-  // hldb_inst.remove_offer(offer);
-  offers = hldb_inst.get_offers_like(offer);
-  EXPECT_EQ(offers.size(), 0)<< "INCORRECT offer COUNT";
-
-  offer.id = 1;
+  ASSERT_NE(offers.size(), 0)<< "INCORRECT offer COUNT";
+  // modify first offer
+  offer = offers[0];
   offer.name ="WONDERFUL_TRI213";
   offer.country ="GRENLAND";
   offer.city ="HMMMMMM";
@@ -500,21 +479,12 @@ TEST_F(DatabaseManagersTest, tourManagerTest){
   tour = hldb_inst.get_tours_like(tour.id);
   EXPECT_NE(tour.id, 0)<< "INCORRECT tour ID";
 
-  tour.id = 4;
   // remove tour with specified id
-  // hldb_inst.remove_tour(tour);
+  tour.id = 4;
+  hldb_inst.remove_tour(tour.id);
   // // check if tour has been deleted
-  tour.debt =2000;
-  app::sql::set_any(tour.insurance);
-  app::sql::set_any(tour.extra_meals);
-  app::sql::set_any(tour.state);
-  app::sql::set_any(tour.customersid);
-  app::sql::set_any(tour.employeesid);
-  app::sql::set_any(tour.offerid);
-  tour.reserved_tickets =5;
-
-  tours = hldb_inst.get_tours_like(tour);
-  EXPECT_EQ(tours.size(), 2)<< "INCORRECT tour COUNT";
+  tour = hldb_inst.get_tours_like(tour.id);
+  EXPECT_EQ(tour.id, app::INVALID<int>)<< "DELETING TOUR FAILED";
 
   app::sql::set_any(tour.id);
   app::sql::set_any(tour.insurance);
@@ -525,11 +495,8 @@ TEST_F(DatabaseManagersTest, tourManagerTest){
   app::sql::set_any(tour.offerid);
   tour.debt =2000;
   tour.reserved_tickets =5;
-  //don't look on id, remove all tours speified py params
-  // hldb_inst.remove_tour(tour);
-  tours = hldb_inst.get_tours_like(tour);
-  EXPECT_EQ(tours.size(), 0)<< "INCORRECT tour COUNT";
 
+  // modify first worker
   tour.id = 1;
   tour.debt =1234567;
   tour.insurance = 0;
@@ -539,7 +506,6 @@ TEST_F(DatabaseManagersTest, tourManagerTest){
   tour.customersid = 1;
   tour.employeesid = 1;
   tour.offerid = 1;
-  // modify first worker
   hldb_inst.modify_tour(tour);
   tour = hldb_inst.get_tours_like(tour.id);
   EXPECT_EQ(tour.debt, 1234567)<< "INCORRECT tour debt";

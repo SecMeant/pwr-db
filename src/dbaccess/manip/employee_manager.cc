@@ -111,7 +111,7 @@ namespace app::dbaccess
 
     bool employee_manager::remove(int id) noexcept
     {
-      std::string command =fmt::format("DELETE from customers WHERE id = {}",id);
+      std::string command =fmt::format("DELETE from employees WHERE id = {}",id);
       auto* db_conn = this->parent()->get_dbconn();
       return !db_conn->query(command);
     }

@@ -125,7 +125,7 @@ namespace app::dbaccess
 
     bool offer_manager::remove(int id) noexcept
     {
-      std::string command =fmt::format("DELETE from customers WHERE id = {}",id);
+      std::string command =fmt::format("DELETE from offers WHERE id = {}",id);
       auto* db_conn = this->parent()->get_dbconn();
       return !db_conn->query(command);
     }
