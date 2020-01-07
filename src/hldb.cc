@@ -83,24 +83,24 @@ namespace app::logic
    return db_access_manager.m_tour_manager.add(inst);
   }
 
-  bool hldb::remove_customer(const customer_t& inst)
+  bool hldb::remove_customer(int id)
   {
-   return db_access_manager.m_customer_manager.remove(inst);
+   return db_access_manager.m_customer_manager.remove(id);
   }
 
-  bool hldb::remove_offer(const offer_t& inst)
+  bool hldb::remove_offer(int id)
   {
-   return db_access_manager.m_offer_manager.remove(inst);
+   return db_access_manager.m_offer_manager.remove(id);
   }
 
-  bool hldb::remove_employee(const employee_t& inst)
+  bool hldb::remove_employee(int id)
   {
-   return db_access_manager.m_employee_manager.remove(inst);
+   return db_access_manager.m_employee_manager.remove(id);
   }
 
-  bool hldb::remove_tour(const tour_t& inst)
+  bool hldb::remove_tour(int id)
   {
-   return db_access_manager.m_tour_manager.remove(inst);
+   return db_access_manager.m_tour_manager.remove(id);
   }
 
   bool hldb::modify_customer(const customer_t& inst)

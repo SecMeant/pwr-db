@@ -112,12 +112,12 @@ TEST_F(DatabaseManagersTest, CostomerManagerTest){
   customer = hldb_inst.get_customers_like(customer.id);
   EXPECT_NE(customer.id, 0)<< "INCORRECT CUSTOMERS ID";
 
-  hldb_inst.remove_customer(customer);
+  // hldb_inst.remove_customer(customer);
   customers = hldb_inst.get_customers_like(customer);
   EXPECT_EQ(customers.size(), 2)<< "INCORRECT CUSTOMERS COUNT";
 
   app::sql::set_any(customer.id);
-  hldb_inst.remove_customer(customer);
+  // hldb_inst.remove_customer(customer);
   customers = hldb_inst.get_customers_like(customer);
   EXPECT_EQ(customers.size(), 0)<< "INCORRECT CUSTOMERS COUNT";
 
@@ -203,7 +203,7 @@ TEST_F(DatabaseManagersTest, EmployeeManagerTest){
   EXPECT_NE(employee.id, 0)<< "INCORRECT employee ID";
   employee.id = 4;
   // remove employee with specified id
-  hldb_inst.remove_employee(employee);
+  // hldb_inst.remove_employee(employee);
   employee.id = 3;
   employee.name ="worker_3"; // search by name
   employee.surname ="id_3";// search by surname
@@ -222,7 +222,7 @@ TEST_F(DatabaseManagersTest, EmployeeManagerTest){
   app::sql::set_any(employee.email);// dont search by salary
   app::sql::set_any(employee.phone_number);// dont search by salary
   // don't look on id, remove all employees speified py params
-  hldb_inst.remove_employee(employee);
+  // hldb_inst.remove_employee(employee);
   employees = hldb_inst.get_employees_like(employee);
   EXPECT_EQ(employees.size(), 0)<< "INCORRECT employee COUNT";
 
@@ -341,7 +341,7 @@ TEST_F(DatabaseManagersTest, OfferManagerTest){
 
   offer.id = 4;
   // remove offer with specified id
-  hldb_inst.remove_offer(offer);
+  // hldb_inst.remove_offer(offer);
   // check if offer has been deleted
   offer.name ="WONDERFUL TRIP3";
   offer.country ="UKRAINE";
@@ -368,7 +368,7 @@ TEST_F(DatabaseManagersTest, OfferManagerTest){
   app::sql::set_any(offer.insurance_cost);
   app::sql::set_any(offer.extra_meals_cost);
   // // don't look on id, remove all offers speified py params
-  hldb_inst.remove_offer(offer);
+  // hldb_inst.remove_offer(offer);
   offers = hldb_inst.get_offers_like(offer);
   EXPECT_EQ(offers.size(), 0)<< "INCORRECT offer COUNT";
 
@@ -502,7 +502,7 @@ TEST_F(DatabaseManagersTest, tourManagerTest){
 
   tour.id = 4;
   // remove tour with specified id
-  hldb_inst.remove_tour(tour);
+  // hldb_inst.remove_tour(tour);
   // // check if tour has been deleted
   tour.debt =2000;
   app::sql::set_any(tour.insurance);
@@ -526,7 +526,7 @@ TEST_F(DatabaseManagersTest, tourManagerTest){
   tour.debt =2000;
   tour.reserved_tickets =5;
   //don't look on id, remove all tours speified py params
-  hldb_inst.remove_tour(tour);
+  // hldb_inst.remove_tour(tour);
   tours = hldb_inst.get_tours_like(tour);
   EXPECT_EQ(tours.size(), 0)<< "INCORRECT tour COUNT";
 

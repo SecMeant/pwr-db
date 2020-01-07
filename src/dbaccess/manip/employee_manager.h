@@ -20,7 +20,7 @@ namespace app::dbaccess
     employee_t get(int id) noexcept override;
     bool add(const employee_t &entity) noexcept override;
     bool modify(const employee_t &entity) noexcept override;
-    bool remove(const employee_t &entity) noexcept override;
+    bool remove(int id) noexcept override;
 
   private:
     data_access_manager*

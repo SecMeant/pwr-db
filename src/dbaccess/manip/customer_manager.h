@@ -20,7 +20,7 @@ namespace app::dbaccess
     customer_t get(int id) noexcept override;
     bool add(const customer_t &entity) noexcept override;
     bool modify(const customer_t &entity) noexcept override;
-    bool remove(const customer_t &entity) noexcept override;
+    bool remove(int id) noexcept override;
 
   private:
     data_access_manager*

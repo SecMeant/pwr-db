@@ -17,6 +17,6 @@ namespace app::dbaccess {
     virtual T get(int id) noexcept = 0;
     virtual bool add(const T &entity) noexcept = 0;
     virtual bool modify(const T &entity) noexcept = 0;
-    virtual bool remove(const T &entity) noexcept = 0;
+    virtual bool remove(int id) noexcept = 0;
   };
 }

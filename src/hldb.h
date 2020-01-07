@@ -30,10 +30,10 @@ namespace app::logic {
     virtual bool add_employee(const dbaccess::employee_t&)=0;
     virtual bool add_tour(const dbaccess::tour_t&)=0;
 
-    virtual bool remove_customer(const dbaccess::customer_t&)=0;
-    virtual bool remove_offer(const dbaccess::offer_t&)=0;
-    virtual bool remove_employee(const dbaccess::employee_t&)=0;
-    virtual bool remove_tour(const dbaccess::tour_t&)=0;
+    virtual bool remove_customer(int id)=0;
+    virtual bool remove_offer(int id)=0;
+    virtual bool remove_employee(int id)=0;
+    virtual bool remove_tour(int id)=0;
 
     virtual bool modify_customer(const dbaccess::customer_t&)=0;
     virtual bool modify_offer(const dbaccess::offer_t&)=0;
@@ -70,10 +70,10 @@ namespace app::logic {
     bool add_employee(const dbaccess::employee_t&);
     bool add_tour(const dbaccess::tour_t&);
 
-    bool remove_customer(const dbaccess::customer_t&);
-    bool remove_offer(const dbaccess::offer_t&);
-    bool remove_employee(const dbaccess::employee_t&);
-    bool remove_tour(const dbaccess::tour_t&);
+    bool remove_customer(int id);
+    bool remove_offer(int id);
+    bool remove_employee(int id);
+    bool remove_tour(int id);
 
     bool modify_customer(const dbaccess::customer_t&);
     bool modify_offer(const dbaccess::offer_t&);

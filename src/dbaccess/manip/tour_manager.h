@@ -19,7 +19,7 @@ namespace app::dbaccess
     tour_t get(int id) noexcept override;
     bool add(const tour_t &entity) noexcept override;
     bool modify(const tour_t &entity) noexcept override;
-    bool remove(const tour_t &entity) noexcept override;
+    bool remove(int id) noexcept override;
 
   private:
     data_access_manager*

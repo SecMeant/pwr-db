@@ -116,22 +116,11 @@ namespace app::dbaccess
       return !db_conn->query_res(command.str());
     }
 
-    bool tour_manager::remove(const tour_t &entity) noexcept
+    bool tour_manager::remove(int id) noexcept
     {
-      std::stringstream command;
-      command << "DELETE from tour WHERE";
-
-      if(!sql::any(entity.id))
-        command << fmt::format(" id = {}", entity.id);
-      else{
-        auto params = glue_params(entity, " and ");
-
-        if(params == "")
-          return false;
-        command << params;
-      }
+      std::string command =fmt::format("DELETE from customers WHERE id = {}",id);
       auto* db_conn = this->parent()->get_dbconn();
-      return !db_conn->query_res(command.str());
+      return !db_conn->query(command);
     }
 
     data_access_manager*
