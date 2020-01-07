@@ -92,15 +92,15 @@ namespace app::dbaccess
       return tour;
     }
 
-    void tour_manager::add(const tour_t &entity) noexcept
+    bool tour_manager::add(const tour_t &entity) noexcept
     {
       std::string command = "INSERT INTO tour (CustomerId, employeeid, offerid, insurance, extra_meals, debt, state, reserved_tickets)  VALUES ({}, {}, {}, {}, {}, {}, {}, {})";
       command = fmt::format(command, entity.customersid,entity.employeesid,entity.offerid, entity.insurance,entity.extra_meals,entity.debt,entity.state,entity.reserved_tickets);
       auto* db_conn = this->parent()->get_dbconn();
-      db_conn->query_res(command);
+      return !db_conn->query_res(command);
     }
 
-    void tour_manager::modify(const tour_t &entity) noexcept
+    bool tour_manager::modify(const tour_t &entity) noexcept
     {
       std::stringstream command;
       command << "UPDATE tour SET";
@@ -108,15 +108,15 @@ namespace app::dbaccess
       auto params = glue_params(entity, ", ");
 
       if(params == "")
-        return;
+        return false;
       command << params;
       command << fmt::format("WHERE id = {}", entity.id);
 
       auto* db_conn = this->parent()->get_dbconn();
-      db_conn->query_res(command.str());
+      return !db_conn->query_res(command.str());
     }
 
-    void tour_manager::remove(const tour_t &entity) noexcept
+    bool tour_manager::remove(const tour_t &entity) noexcept
     {
       std::stringstream command;
       command << "DELETE from tour WHERE";
@@ -127,11 +127,11 @@ namespace app::dbaccess
         auto params = glue_params(entity, " and ");
 
         if(params == "")
-          return;
+          return false;
         command << params;
       }
       auto* db_conn = this->parent()->get_dbconn();
-      db_conn->query_res(command.str());
+      return !db_conn->query_res(command.str());
     }
 
     data_access_manager*

@@ -25,20 +25,20 @@ namespace app::logic {
     virtual dbaccess::employee_t get_employees_like(int id)=0;
     virtual dbaccess::tour_t get_tours_like(int id)=0;
 
-    virtual void add_customer(const dbaccess::customer_t&)=0;
-    virtual void add_offer(const dbaccess::offer_t&)=0;
-    virtual void add_employee(const dbaccess::employee_t&)=0;
-    virtual void add_tour(const dbaccess::tour_t&)=0;
+    virtual bool add_customer(const dbaccess::customer_t&)=0;
+    virtual bool add_offer(const dbaccess::offer_t&)=0;
+    virtual bool add_employee(const dbaccess::employee_t&)=0;
+    virtual bool add_tour(const dbaccess::tour_t&)=0;
 
-    virtual void rmeove_customer(const dbaccess::customer_t&)=0;
-    virtual void rmeove_offer(const dbaccess::offer_t&)=0;
-    virtual void rmeove_employee(const dbaccess::employee_t&)=0;
-    virtual void rmeove_tour(const dbaccess::tour_t&)=0;
+    virtual bool remove_customer(const dbaccess::customer_t&)=0;
+    virtual bool remove_offer(const dbaccess::offer_t&)=0;
+    virtual bool remove_employee(const dbaccess::employee_t&)=0;
+    virtual bool remove_tour(const dbaccess::tour_t&)=0;
 
-    virtual void modify_customer(const dbaccess::customer_t&)=0;
-    virtual void modify_offer(const dbaccess::offer_t&)=0;
-    virtual void modify_employee(const dbaccess::employee_t&)=0;
-    virtual void modify_tour(const dbaccess::tour_t&)=0;
+    virtual bool modify_customer(const dbaccess::customer_t&)=0;
+    virtual bool modify_offer(const dbaccess::offer_t&)=0;
+    virtual bool modify_employee(const dbaccess::employee_t&)=0;
+    virtual bool modify_tour(const dbaccess::tour_t&)=0;
     virtual const dbaccess::employee_t& get_logged_user()=0;
   };
 
@@ -65,20 +65,20 @@ namespace app::logic {
     dbaccess::employee_t get_employees_like(int id);
     dbaccess::tour_t get_tours_like(int id);
 
-    void add_customer(const dbaccess::customer_t&);
-    void add_offer(const dbaccess::offer_t&);
-    void add_employee(const dbaccess::employee_t&);
-    void add_tour(const dbaccess::tour_t&);
+    bool add_customer(const dbaccess::customer_t&);
+    bool add_offer(const dbaccess::offer_t&);
+    bool add_employee(const dbaccess::employee_t&);
+    bool add_tour(const dbaccess::tour_t&);
 
-    void rmeove_customer(const dbaccess::customer_t&);
-    void rmeove_offer(const dbaccess::offer_t&);
-    void rmeove_employee(const dbaccess::employee_t&);
-    void rmeove_tour(const dbaccess::tour_t&);
+    bool remove_customer(const dbaccess::customer_t&);
+    bool remove_offer(const dbaccess::offer_t&);
+    bool remove_employee(const dbaccess::employee_t&);
+    bool remove_tour(const dbaccess::tour_t&);
 
-    void modify_customer(const dbaccess::customer_t&);
-    void modify_offer(const dbaccess::offer_t&);
-    void modify_employee(const dbaccess::employee_t&);
-    void modify_tour(const dbaccess::tour_t&);
+    bool modify_customer(const dbaccess::customer_t&);
+    bool modify_offer(const dbaccess::offer_t&);
+    bool modify_employee(const dbaccess::employee_t&);
+    bool modify_tour(const dbaccess::tour_t&);
 
     const dbaccess::employee_t& get_logged_user();
   };

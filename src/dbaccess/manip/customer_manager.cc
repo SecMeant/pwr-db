@@ -78,15 +78,15 @@ namespace app::dbaccess
       return customer;
     }
 
-    void customer_manager::add(const customer_t &entity) noexcept
+    bool customer_manager::add(const customer_t &entity) noexcept
     {
       std::string command = "INSERT INTO customers  (name,surname,email,pesel) VALUES (\'{}\', \'{}\', \'{}\', {});";
       command = fmt::format(command, entity.name, entity.surname, entity.email, entity.pesel);
       auto* db_conn = this->parent()->get_dbconn();
-      db_conn->query_res(command);
+      return !db_conn->query(command);
     }
 
-    void customer_manager::modify(const customer_t &entity) noexcept
+    bool customer_manager::modify(const customer_t &entity) noexcept
     {
       std::stringstream command;
       command << "UPDATE customers SET";
@@ -94,15 +94,15 @@ namespace app::dbaccess
       auto params = glue_params(entity, ", ");
 
       if(params == "")
-        return;
+        return false;
       command << params;
       command << fmt::format("WHERE id = {}", entity.id);
 
       auto* db_conn = this->parent()->get_dbconn();
-      db_conn->query_res(command.str());
+      return !db_conn->query(command.str());
     }
 
-    void customer_manager::remove(const customer_t &entity) noexcept
+    bool customer_manager::remove(const customer_t &entity) noexcept
     {
       std::stringstream command;
       command << "DELETE from customers WHERE";
@@ -111,12 +111,12 @@ namespace app::dbaccess
       else{
         auto params = glue_params(entity, " and ");
         if(params == "")
-          return;
+          return false;
 
         command << params;
       }
       auto* db_conn = this->parent()->get_dbconn();
-      db_conn->query_res(command.str());
+      return !db_conn->query(command.str());
     }
 
     data_access_manager*

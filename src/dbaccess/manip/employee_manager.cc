@@ -85,15 +85,15 @@ namespace app::dbaccess
       return employee;
     }
 
-    void employee_manager::add(const employee_t &entity) noexcept
+    bool employee_manager::add(const employee_t &entity) noexcept
     {
       std::string command = "INSERT INTO employees (name,surname,hire_date, salary, email, phone_number) VALUES (\'{}\', \'{}\', STR_TO_DATE(\'{}\',\'%d.%m.%y\'), {}, \'{}\', \'{}\')";
       command = fmt::format(command, entity.name, entity.surname,str2base_str(epoch2str(entity.hire_date)), entity.salary, entity.email,entity.phone_number);
       auto* db_conn = this->parent()->get_dbconn();
-      db_conn->query_res(command);
+      return !db_conn->query(command);
     }
 
-    void employee_manager::modify(const employee_t &entity) noexcept
+    bool employee_manager::modify(const employee_t &entity) noexcept
     {
       std::stringstream command;
       command << "UPDATE employees SET";
@@ -101,15 +101,15 @@ namespace app::dbaccess
       auto params = glue_params(entity, ", ");
 
       if(params == "")
-        return;
+        return false;
       command << params;
       command << fmt::format("WHERE id = {}", entity.id);
 
       auto* db_conn = this->parent()->get_dbconn();
-      db_conn->query_res(command.str());
+      return !db_conn->query(command.str());
     }
 
-    void employee_manager::remove(const employee_t &entity) noexcept
+    bool employee_manager::remove(const employee_t &entity) noexcept
     {
       std::stringstream command;
       command << "DELETE from employees WHERE";
@@ -120,11 +120,11 @@ namespace app::dbaccess
         auto params = glue_params(entity, " and ");
 
         if(params == "")
-          return;
+          return false;
         command << params;
       }
       auto* db_conn = this->parent()->get_dbconn();
-      db_conn->query_res(command.str());
+      return !db_conn->query_res(command.str());
     }
 
     data_access_manager*

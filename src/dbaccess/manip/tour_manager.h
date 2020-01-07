@@ -17,9 +17,9 @@ namespace app::dbaccess
     std::vector<tour_t> get_all() noexcept override;
     std::vector<tour_t> get_like(const tour_t &entity) noexcept override;
     tour_t get(int id) noexcept override;
-    void add(const tour_t &entity) noexcept override;
-    void modify(const tour_t &entity) noexcept override;
-    void remove(const tour_t &entity) noexcept override;
+    bool add(const tour_t &entity) noexcept override;
+    bool modify(const tour_t &entity) noexcept override;
+    bool remove(const tour_t &entity) noexcept override;
 
   private:
     data_access_manager*

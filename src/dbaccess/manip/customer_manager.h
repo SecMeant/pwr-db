@@ -18,9 +18,9 @@ namespace app::dbaccess
     std::vector<customer_t> get_all() noexcept override;
     std::vector<customer_t> get_like(const customer_t &entity) noexcept override;
     customer_t get(int id) noexcept override;
-    void add(const customer_t &entity) noexcept override;
-    void modify(const customer_t &entity) noexcept override;
-    void remove(const customer_t &entity) noexcept override;
+    bool add(const customer_t &entity) noexcept override;
+    bool modify(const customer_t &entity) noexcept override;
+    bool remove(const customer_t &entity) noexcept override;
 
   private:
     data_access_manager*

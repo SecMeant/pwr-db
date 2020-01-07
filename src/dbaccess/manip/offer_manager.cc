@@ -98,16 +98,16 @@ namespace app::dbaccess
       return offer;
     }
 
-    void offer_manager::add(const offer_t &entity) noexcept
+    bool offer_manager::add(const offer_t &entity) noexcept
     {
       std::string command = "INSERT INTO offers (name,country,city, date_begin, date_end, price, insurance_cost, extra_meals_cost, categoryid, tickets_count) VALUES (\'{}\', \'{}\', \'{}\', STR_TO_DATE(\'{}\',\'%d.%m.%y\'), STR_TO_DATE(\'{}\',\'%d.%m.%y\'), {}, {}, {}, {}, {})";
       command = fmt::format(command, entity.name, entity.country,entity.city,str2base_str(epoch2str(entity.date_begin)),str2base_str(epoch2str(entity.date_end)),  entity.price, entity.insurance_cost,entity.extra_meals_cost, entity.categoryid, entity.tickets_count);
 
       auto* db_conn = this->parent()->get_dbconn();
-      db_conn->query_res(command);
+      return !db_conn->query(command);
     }
 
-    void offer_manager::modify(const offer_t &entity) noexcept
+    bool offer_manager::modify(const offer_t &entity) noexcept
     {
       std::stringstream command;
       command << "UPDATE offers SET";
@@ -115,15 +115,15 @@ namespace app::dbaccess
       auto params = glue_params(entity, ", ");
 
       if(params == "")
-        return;
+        return false;
       command << params;
       command << fmt::format("WHERE id = {}", entity.id);
 
       auto* db_conn = this->parent()->get_dbconn();
-      db_conn->query_res(command.str());
+      return !db_conn->query(command.str());
     }
 
-    void offer_manager::remove(const offer_t &entity) noexcept
+    bool offer_manager::remove(const offer_t &entity) noexcept
     {
       std::stringstream command;
       command << "DELETE from offers WHERE";
@@ -134,12 +134,12 @@ namespace app::dbaccess
         auto params = glue_params(entity, " and ");
 
         if(params == "")
-          return;
+          return false;
         command << params;
       }
 
       auto* db_conn = this->parent()->get_dbconn();
-      db_conn->query_res(command.str());
+      return !db_conn->query(command.str());
     }
 
     data_access_manager*
