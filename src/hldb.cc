@@ -28,6 +28,11 @@ namespace app::logic
     return db_access_manager.m_customer_manipulator.get_like(inst);
   }
 
+  std::vector<credentials_t> hldb::get_credentials_like(const credentials_t& creds)
+  {
+    return db_access_manager.m_credentials_manipulator.get_like(creds);
+  }
+
   std::vector<offer_t> hldb::get_offers_like(const offer_t& inst)
   {
     return db_access_manager.m_offer_manipulator.get_like(inst);

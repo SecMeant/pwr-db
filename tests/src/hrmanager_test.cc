@@ -1,6 +1,7 @@
 #include "hldb.h"
 #include "dbaccess/db_connection.h"
 #include "dbaccess/db_defaults.h"
+#include "dbaccess/table/credentials.h"
 
 #include <gtest/gtest.h>
 #include <fstream>
@@ -90,5 +91,37 @@ TEST_F(HRManagerTest, ModifySalaryDenyTest) {
     auto emp_renewed = hldb_inst.get_employees_like(emp.id);
 
     EXPECT_NE(emp_renewed.salary, new_salary);
+  }
+}
+
+TEST_F(HRManagerTest, PromoteTest) {
+  ASSERT_TRUE(emps.size() > 0);
+  ASSERT_TRUE(hldb_inst.m_session.authenticate("manager_1", "passwd1"));
+
+  for (auto &emp : emps) {
+    constexpr auto new_privilege = privilege_level::high;
+
+    EXPECT_TRUE(hldb_inst.m_hr.promote(emp.id, new_privilege));
+
+    credentials_t creds;
+    app::sql::set_any(creds.id);
+    creds.employeeid = emp.id;
+    app::sql::set_any(creds.login);
+    app::sql::set_any(creds.pass_hash);
+    app::sql::set_any(creds.privilege);
+
+    auto vcreds = hldb_inst.get_credentials_like(creds);
+
+    auto row_cnt = vcreds.size();
+    EXPECT_TRUE(row_cnt == 1);
+
+    if (row_cnt != 1)
+      continue;
+
+    creds = vcreds[0];
+
+    EXPECT_TRUE(creds.valid());
+
+    EXPECT_EQ(creds.privilege, new_privilege);
   }
 }

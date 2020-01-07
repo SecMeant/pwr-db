@@ -17,6 +17,7 @@ namespace app::logic {
     virtual std::vector<dbaccess::tour_t> get_all_tours()=0;
 
     virtual std::vector<dbaccess::customer_t> get_customers_like(const dbaccess::customer_t&)=0;
+    virtual std::vector<dbaccess::credentials_t> get_credentials_like(const dbaccess::credentials_t&)=0;
     virtual std::vector<dbaccess::offer_t> get_offers_like(const dbaccess::offer_t&)=0;
     virtual std::vector<dbaccess::employee_t> get_employees_like(const dbaccess::employee_t&)=0;
     virtual std::vector<dbaccess::tour_t> get_tours_like(const dbaccess::tour_t&)=0;
@@ -53,6 +54,7 @@ namespace app::logic {
     dbaccess::data_access_manager db_access_manager;
 
     std::vector<dbaccess::customer_t> get_all_customers();
+    std::vector<dbaccess::credentials_t> get_credentials_like(const dbaccess::credentials_t&);
     std::vector<dbaccess::offer_t> get_all_offers();
     std::vector<dbaccess::employee_t> get_all_employees();
     std::vector<dbaccess::tour_t> get_all_tours();
