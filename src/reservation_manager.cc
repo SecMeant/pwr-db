@@ -1,6 +1,7 @@
 #include "reservation_manager.h"
 #include "hldb.h"
 #include "reflect.h"
+#include <fmt/format.h>
 using namespace app::dbaccess;
 namespace app::logic
 {
@@ -56,6 +57,14 @@ namespace app::logic
         o.tickets_count -= ticket_diff;
         hldb->modify_offer(o);
       }
+
+      if(t1.insurance != t2.insurance && t1.insurance == 0)
+        if(hldb->raw_query(fmt::format("call resign_from_insurance({})",t1.id)) ==false)
+          return false;
+
+      if(t1.extra_meals != t2.extra_meals && t1.extra_meals == 0)
+        if(hldb->raw_query(fmt::format("call resign_from_extra_meals({})",t1.id)) ==false)
+          return false;
       hldb->modify_tour(t1);
       return true;
     }
@@ -63,7 +72,7 @@ namespace app::logic
     logic::hldb*
     reservation_manager::parent() noexcept
     {
-       return container_of(this, logic::hldb, res_manager);
+       return container_of(this, logic::hldb, m_reservatio_manager);
     }
 
     tour_t reservation_manager::prepare(offer_t& o,

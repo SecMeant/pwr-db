@@ -159,7 +159,42 @@ namespace app::logic
   bool hldb::modify_tour(const tour_t& inst)
   {
     const auto manip =db_access_manager.get_tour_manipulator();
-   return manip->modify(inst);
+    return manip->modify(inst);
+  }
+
+  std::vector<dbaccess::category_t> hldb::get_all_category()
+  {
+    const auto manip =db_access_manager.get_category_manipulator();
+    return manip->get_all();
+  }
+
+  std::vector<dbaccess::category_t> hldb::get_category_like(const dbaccess::category_t&inst)
+  {
+    const auto manip =db_access_manager.get_category_manipulator();
+    return manip->get_like(inst);
+  }
+
+  dbaccess::category_t hldb::get_category_like(int id)
+  {
+    const auto manip =db_access_manager.get_category_manipulator();
+    return manip->get(id);
+  }
+
+  bool hldb::add_category(const dbaccess::category_t&inst)
+  {
+    const auto manip =db_access_manager.get_category_manipulator();
+    return manip->add(inst);
+  }
+  bool hldb::remove_category(int id)
+  {
+    const auto manip =db_access_manager.get_category_manipulator();
+    return manip->remove(id);
+  }
+
+  bool hldb::modify_category(const dbaccess::category_t&inst)
+  {
+    const auto manip =db_access_manager.get_category_manipulator();
+    return manip->modify(inst);
   }
 
   const employee_t& hldb::get_logged_user()
@@ -173,17 +208,17 @@ namespace app::logic
   }
   bool hldb::make_reservation(int off_id, int cus_id, int ticket_count, bool insurance, bool extra_meals)
   {
-    return res_manager.reserve_tour(off_id,cus_id,ticket_count,insurance,extra_meals);
+    return m_reservatio_manager.reserve_tour(off_id,cus_id,ticket_count,insurance,extra_meals);
   }
 
   bool hldb::drop_reservation(int id)
   {
-    return res_manager.resign(id);
+    return m_reservatio_manager.resign(id);
   }
 
   bool hldb::modify_reservation(const dbaccess::tour_t &t1)
   {
-    return res_manager.modify(t1);
+    return m_reservatio_manager.modify(t1);
   }
 
   bool hldb::raw_query(const std::string &t1)
@@ -195,4 +230,5 @@ namespace app::logic
   {
     return m_dbconn.query_res(t1);
   }
+
 }

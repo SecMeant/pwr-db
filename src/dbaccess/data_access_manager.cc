@@ -43,4 +43,10 @@ namespace app::dbaccess
   {
     return &m_credentials_manipulator;
   }
+
+  const category_manipulator_i*
+  data_access_manager::get_category_manipulator()
+  {
+    return &m_category_manipulator;
+  }
 }

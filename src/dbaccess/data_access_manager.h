@@ -4,6 +4,7 @@
 #include "manip/offer_manipulator.h"
 #include "manip/tour_manipulator.h"
 #include "manip/credentials_manipulator.h"
+#include "manip/category_manipulator.h"
 #include "db_connection.h"
 #include <memory>
 namespace app::logic
@@ -19,8 +20,10 @@ namespace app::dbaccess
     friend data_access_manager* employee_manipulator::parent()const noexcept;
     friend data_access_manager* offer_manipulator::parent()const noexcept;
     friend data_access_manager* tour_manipulator::parent()const noexcept;
+    friend data_access_manager* category_manipulator::parent()const noexcept;
     friend data_access_manager* credentials_manipulator::parent()const noexcept;
     customer_manipulator m_customer_manipulator;
+    category_manipulator m_category_manipulator;
     credentials_manipulator m_credentials_manipulator;
     employee_manipulator m_employee_manipulator;
     offer_manipulator m_offer_manipulator;
@@ -43,6 +46,9 @@ namespace app::dbaccess
 
     const credentials_manipulator_i*
     get_credentials_manipulator();
+
+    const category_manipulator_i*
+    get_category_manipulator();
 
     logic::hldb_i*
     parent() noexcept;

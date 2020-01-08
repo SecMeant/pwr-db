@@ -3,6 +3,7 @@
 #include "dbaccess/db_connection.h"
 #include "session_manager.h"
 #include "reservation_manager.h"
+#include "offer_manager.h"
 #include "hr_manager.h"
 #include "dbaccess/data_access_manager.h"
 
@@ -59,40 +60,48 @@ namespace app::logic {
     hldb(const std::string &database_name);
     dbaccess::db_connection m_dbconn;
     session_manager m_session;
-    reservation_manager res_manager;
+    reservation_manager m_reservatio_manager;
+    offer_manager m_offer_manager;
     hr_manager m_hr;
     dbaccess::data_access_manager db_access_manager;
 
     std::vector<dbaccess::customer_t> get_all_customers();
-    std::vector<dbaccess::credentials_t> get_credentials_like(const dbaccess::credentials_t&);
     std::vector<dbaccess::offer_t> get_all_offers();
     std::vector<dbaccess::employee_t> get_all_employees();
     std::vector<dbaccess::tour_t> get_all_tours();
+    std::vector<dbaccess::category_t> get_all_category();
 
+    std::vector<dbaccess::credentials_t> get_credentials_like(const dbaccess::credentials_t&);
     std::vector<dbaccess::customer_t> get_customers_like(const dbaccess::customer_t&);
     std::vector<dbaccess::offer_t> get_offers_like(const dbaccess::offer_t&);
     std::vector<dbaccess::employee_t> get_employees_like(const dbaccess::employee_t&);
     std::vector<dbaccess::tour_t> get_tours_like(const dbaccess::tour_t&);
+    std::vector<dbaccess::category_t> get_category_like(const dbaccess::category_t&);
 
     dbaccess::customer_t get_customers_like(int id);
     dbaccess::offer_t get_offers_like(int id);
     dbaccess::employee_t get_employees_like(int id);
     dbaccess::tour_t get_tours_like(int id);
+    dbaccess::category_t get_category_like(int id);
 
     bool add_customer(const dbaccess::customer_t&);
     bool add_offer(const dbaccess::offer_t&);
     bool add_employee(const dbaccess::employee_t&);
     bool add_tour(const dbaccess::tour_t&);
+    bool add_category(const dbaccess::category_t&);
 
     bool remove_customer(int id);
     bool remove_offer(int id);
     bool remove_employee(int id);
     bool remove_tour(int id);
+    bool remove_category(int id);
 
     bool modify_customer(const dbaccess::customer_t&);
     bool modify_offer(const dbaccess::offer_t&);
     bool modify_employee(const dbaccess::employee_t&);
     bool modify_tour(const dbaccess::tour_t&);
+    bool modify_category(const dbaccess::category_t&);
+
     bool authenticate(std::string_view, std::string_view);
     bool make_reservation(int off_id, int cus_id, int ticket_count, bool insurance, bool extra_meals);
     bool drop_reservation(int id);
