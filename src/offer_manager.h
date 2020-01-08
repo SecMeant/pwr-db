@@ -1,6 +1,7 @@
 #pragma once
 #include "dbaccess/table/category.h"
 #include "dbaccess/table/offer.h"
+#include "dbaccess/table/tour.h"
 #include "dbaccess/date.h"
 #include <string>
 
@@ -24,8 +25,10 @@ namespace app::logic
                       const std::string &cname);
     bool drop_offer(int tour_id);
     bool modify(const dbaccess::offer_t &t1);
+    bool modify_2(const dbaccess::offer_t &t1);
   private:
     hldb*
     parent() noexcept;
+    int callculate_cost_diff(const dbaccess::offer_t &o1, const dbaccess::offer_t &o2, dbaccess::tour_t &t);
    };
 }
