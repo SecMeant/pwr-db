@@ -1,3 +1,12 @@
+create database if not exists biuro_podrozy_test
+  character set = 'utf8'
+  collate = 'utf8_polish_ci';
+set character_set_server = 'utf8';
+set collation_server = 'utf8_polish_ci';
+
+use biuro_podrozy_test;
+set names utf8;
+
 drop table if exists tour;
 drop table if exists customers;
 drop table if exists credentials;
