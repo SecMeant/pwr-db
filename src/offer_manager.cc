@@ -104,7 +104,7 @@ namespace app::logic
                                   offer.extra_meals_cost,
                                   offer.tickets_count,
                                   offer.categoryid));
-    return status;
+      return status;
     }
 
     logic::hldb*

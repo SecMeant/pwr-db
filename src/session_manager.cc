@@ -98,7 +98,8 @@ namespace app::logic {
   bool
   session_manager::authenticate(std::string_view username, std::string_view password) noexcept
   {
-    auto& dbconn = this->parent()->m_dbconn;
+    auto & hdlb=this->parent();
+    auto& dbconn = hdlb->m_dbconn;
     this->m_state = state_t::logedout;
     this->m_privilege = privilege_level::none;
 
@@ -130,7 +131,7 @@ namespace app::logic {
         return false;
     }
 
-    this->m_session = this->parent()->get_employees_like(creds.employeeid);
+    this->m_session = hdlb->get_employees_like(creds.employeeid);
 
     if (!this->m_session.valid())
       return false;
