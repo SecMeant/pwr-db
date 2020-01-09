@@ -65,7 +65,7 @@ namespace app::logic
       if(t1.extra_meals != t2.extra_meals && t1.extra_meals == 0)
         if(hldb->raw_query(fmt::format("call resign_from_extra_meals({})",t1.id)) ==false)
           return false;
-      t1.offerid = t2.offerid;
+
       hldb->modify_tour(t1);
       return true;
     }
