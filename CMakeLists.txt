@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(useless LANGUAGES CXX DESCRIPTION "It's useless")
+project(useless LANGUAGES CXX C DESCRIPTION "It's useless")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -9,6 +9,7 @@ option(BUILD_GUI "Build gui" ON)
 
 find_library(libfmt fmt REQUIRED)
 find_library(libmysqlclient mysqlclient REQUIRED)
+find_library(libcurl curl REQUIRED)
 
 include_directories(src)
 
@@ -52,4 +53,5 @@ if (BUILD_GUI)
   target_link_libraries(${TARGET_NAME} ${TARGET_LIB_NAME})
 endif()
 
-
+add_executable(sendmail src/notify/sendmail.c)
+target_link_libraries(sendmail ${libcurl})
