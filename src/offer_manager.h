@@ -7,11 +7,13 @@
 
 namespace app::logic
 {
-  class hldb;
+  class hldb_i;
   class offer_manager
   {
+    hldb_i *parent;
   public:
     offer_manager()=default;
+    offer_manager(hldb_i*);
     ~offer_manager()=default;
     bool append_offer(const std::string &name,
                       const std::string &country,
@@ -27,8 +29,6 @@ namespace app::logic
     bool modify(const dbaccess::offer_t &t1);
     bool modify_2(const dbaccess::offer_t &t1);
   private:
-    hldb*
-    parent() noexcept;
     int callculate_cost_diff(const dbaccess::offer_t &o1, const dbaccess::offer_t &o2, dbaccess::tour_t &t);
    };
 }

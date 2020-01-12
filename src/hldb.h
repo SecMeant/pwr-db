@@ -49,14 +49,20 @@ namespace app::logic {
     virtual const dbaccess::employee_t& get_logged_user()=0;
     virtual bool raw_query(const std::string &t1)=0;
     virtual dbaccess::mysql_res_t raw_query_res(const std::string &t1)=0;
+    virtual std::vector<dbaccess::category_t> get_all_category()=0;
+    virtual std::vector<dbaccess::category_t> get_category_like(const dbaccess::category_t&)=0;
+    virtual dbaccess::category_t get_category_like(int id)=0;
+    virtual bool add_category(const dbaccess::category_t&)=0;
+    virtual bool remove_category(int id)=0;
+    virtual bool modify_category(const dbaccess::category_t&)=0;
     virtual ~hldb_i()=default;
+
   };
 
   class hldb : public hldb_i
   {
   public:
-    hldb()=default;
-
+    hldb();
     hldb(const std::string &database_name);
     dbaccess::db_connection m_dbconn;
     session_manager m_session;

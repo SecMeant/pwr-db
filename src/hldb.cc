@@ -6,6 +6,11 @@ using namespace app::dbaccess::defaults;
 using namespace app::dbaccess;
 namespace app::logic
 {
+  hldb::hldb()
+    : m_hr(this),
+    m_offer_manager(this),
+    m_reservatio_manager(this)
+  {}
   hldb::hldb(const std::string &database_name)
   {
     m_dbconn = db_connection(

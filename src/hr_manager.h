@@ -3,11 +3,14 @@
 #include "dbaccess/table/employee.h"
 
 namespace app::logic {
-  class hldb;
+  class hldb_i;
 
   class hr_manager
   {
+    hldb_i* parent;
   public:
+    hr_manager()=default;
+    hr_manager(hldb_i*);
     bool
     modify_salary(int employee_id, int new_salary) noexcept;
 
@@ -20,10 +23,6 @@ namespace app::logic {
 
     bool
     fire(int employee_id) noexcept;
-
-  private:
-    hldb*
-    parent() noexcept;
   };
 
 }

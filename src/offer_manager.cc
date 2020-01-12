@@ -5,6 +5,11 @@
 using namespace app::dbaccess;
 namespace app::logic
 {
+    offer_manager::offer_manager(hldb_i*p)
+    {
+     parent = p;
+    }
+
     bool offer_manager::append_offer(const std::string &name,
                                      const std::string &country,
                                      const std::string city,
@@ -16,10 +21,9 @@ namespace app::logic
                                      int ticket_count,
                                      const std::string &cname)
     {
-      auto hldb = parent();
       category_t cat;
       cat.name = cname;
-      auto categories = hldb->get_category_like(cat);
+      auto categories = parent->get_category_like(cat);
       if(categories.size() == 0)
         return false;
       cat = categories[0];
@@ -39,10 +43,9 @@ namespace app::logic
 
     bool offer_manager::drop_offer(int offer_id)
     {
-      auto hldb = parent();
       tour_t tour;
 
-      offer_t offer = hldb->get_offers_like(offer_id);
+      offer_t offer = parent->get_offers_like(offer_id);
       if(!offer.valid())
         return false;
       app::sql::set_any(tour.id);
@@ -54,19 +57,18 @@ namespace app::logic
       app::sql::set_any(tour.debt);
       app::sql::set_any(tour.reserved_tickets);
       tour.offerid = offer_id;
-      auto tours = hldb->get_tours_like(tour);
+      auto tours = parent->get_tours_like(tour);
       for(auto t = tours.begin(); t!= tours.end(); t++)
       {
         auto to_return = callculate_cost_diff(offer,offer,*t);
-        hldb->modify_tour(*t);
+        parent->modify_tour(*t);
       }
       return true;
     }
 
     bool offer_manager::modify(const offer_t &offer_1)
     {
-      auto hldb = parent();
-      offer_t offer_2 = hldb->get_offers_like(offer_1.id);
+      offer_t offer_2 = parent->get_offers_like(offer_1.id);
       if(!offer_2.valid())
         return false;
       tour_t tour;
@@ -79,21 +81,20 @@ namespace app::logic
       app::sql::set_any(tour.debt);
       app::sql::set_any(tour.reserved_tickets);
       tour.offerid = offer_1.id;
-      auto tours = hldb->get_tours_like(tour);
+      auto tours = parent->get_tours_like(tour);
 
       for(auto t = tours.begin(); t!= tours.end(); t++)
       {
         t->debt = callculate_cost_diff(offer_1,offer_2,*t);
-        hldb->modify_tour(*t);
+        parent->modify_tour(*t);
       }
-      hldb->modify_offer(offer_1);
+      parent->modify_offer(offer_1);
       return true;
     }
 
     bool offer_manager::modify_2(const offer_t &offer)
     {
-      auto hldb = parent();
-      bool status =  hldb->raw_query(fmt::format("call modify_offer({},'{}','{}','{}',str_to_date('{}','%d.%m.%y'),str_to_date('{}','%d.%m.%y'),{},{},{},{});",offer.id,
+      bool status =  parent->raw_query(fmt::format("call modify_offer({},'{}','{}','{}',str_to_date('{}','%d.%m.%y'),str_to_date('{}','%d.%m.%y'),{},{},{},{});",offer.id,
                                   offer.name,
                                   offer.country,
                                   offer.city,
@@ -107,12 +108,7 @@ namespace app::logic
       return status;
     }
 
-    logic::hldb*
-    offer_manager::parent() noexcept
-    {
-       return container_of(this, logic::hldb, m_offer_manager);
-    }
-    int callculate_cost_diff(offer_t &o_new, offer_t &o_old, tour_t &t)
+    int offer_manager::callculate_cost_diff(const offer_t &o_new, const offer_t &o_old, tour_t &t)
     {
       int max_old_cost = o_old.price;
       if(t.insurance)
