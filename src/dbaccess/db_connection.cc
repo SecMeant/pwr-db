@@ -28,16 +28,15 @@ namespace app::dbaccess {
   }
 
   bool
-  db_connection::authenticate(const std::string &username,
-                              const std::string &password) noexcept
+  db_connection::authenticate(std::string_view username, std::string_view password) noexcept
   {
     this->close();
 
     this->connection = mysql_conn_t(mysql_init(NULL));
     this->connected = mysql_real_connect(this->connection.get(),
                                          this->hostname.c_str(),
-                                         username.c_str(),
-                                         password.c_str(),
+                                         username.data(),
+                                         password.data(),
                                          this->database.c_str(),
                                          this->port,
                                          nullptr,

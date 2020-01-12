@@ -40,6 +40,11 @@ namespace app::logic {
     id_type m_id;
   };
 
+  session_manager::session_manager(hldb_i*p)
+  : parent(p)
+  {
+  }
+
   std::string
   session_manager::hash(std::string_view s) noexcept
   {

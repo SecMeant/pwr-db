@@ -15,6 +15,8 @@ namespace app::logic {
   class session_manager
   {
   public:
+    session_manager(hldb_i*);
+
     bool
     authenticate(std::string_view username,
                  std::string_view password) noexcept;

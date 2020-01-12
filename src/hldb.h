@@ -42,6 +42,7 @@ namespace app::logic {
     virtual bool modify_offer(const dbaccess::offer_t&)=0;
     virtual bool modify_employee(const dbaccess::employee_t&)=0;
     virtual bool modify_tour(const dbaccess::tour_t&)=0;
+    virtual bool login(std::string_view, std::string_view)=0;
     virtual bool authenticate(std::string_view, std::string_view)=0;
     virtual bool make_reservation(int off_id, int cus_id, int ticket_count, bool insurance, bool extra_meals)=0;
     virtual bool drop_reservation(int id)=0;
@@ -108,6 +109,7 @@ namespace app::logic {
     bool modify_tour(const dbaccess::tour_t&);
     bool modify_category(const dbaccess::category_t&);
 
+    bool login(std::string_view, std::string_view);
     bool authenticate(std::string_view, std::string_view);
     bool make_reservation(int off_id, int cus_id, int ticket_count, bool insurance, bool extra_meals);
     bool drop_reservation(int id);

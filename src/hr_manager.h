@@ -9,7 +9,6 @@ namespace app::logic {
   {
     hldb_i* parent;
   public:
-    hr_manager()=default;
     hr_manager(hldb_i*);
     bool
     modify_salary(int employee_id, int new_salary) noexcept;

@@ -3,6 +3,7 @@
 #include "mysql_types.h"
 
 #include <string>
+#include <string_view>
 
 namespace app::dbaccess {
   class db_connection_i
@@ -15,8 +16,7 @@ namespace app::dbaccess {
     query(const std::string &query_string) noexcept = 0;
 
     virtual bool
-    authenticate(const std::string &username,
-                 const std::string &password) noexcept = 0;
+    authenticate(std::string_view username, std::string_view password) noexcept = 0;
 
     virtual void
     close() noexcept = 0;

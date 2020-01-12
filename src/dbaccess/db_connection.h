@@ -8,6 +8,7 @@
 
 #include <memory>
 #include <string>
+#include <string_view>
 
 namespace app::dbaccess {
 
@@ -47,8 +48,7 @@ namespace app::dbaccess {
     query(const std::string &query_string) noexcept override;
 
     bool
-    authenticate(const std::string &username,
-                 const std::string &password) noexcept override;
+    authenticate(std::string_view username, std::string_view password) noexcept override;
 
     void
     close() noexcept override;

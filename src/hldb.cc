@@ -7,11 +7,17 @@ using namespace app::dbaccess;
 namespace app::logic
 {
   hldb::hldb()
-    : m_hr(this),
-    m_offer_manager(this),
-    m_reservatio_manager(this)
+  : m_hr(this)
+  , m_offer_manager(this)
+  , m_reservatio_manager(this)
+  , m_session(this)
   {}
+
   hldb::hldb(const std::string &database_name)
+  : m_hr(this)
+  , m_offer_manager(this)
+  , m_reservatio_manager(this)
+  , m_session(this)
   {
     m_dbconn = db_connection(
        DB_HOSTNAME, database_name, DB_PORT_NO, { DB_USERNAME, DB_PASSWORD });
@@ -207,10 +213,16 @@ namespace app::logic
     return m_session.current();
   }
 
-  bool hldb::authenticate(std::string_view login, std::string_view pass)
+  bool hldb::login(std::string_view login, std::string_view pass)
   {
     return m_session.authenticate(login, pass);
   }
+
+  bool hldb::authenticate(std::string_view login, std::string_view pass)
+  {
+    return m_dbconn.authenticate(login, pass);
+  }
+
   bool hldb::make_reservation(int off_id, int cus_id, int ticket_count, bool insurance, bool extra_meals)
   {
     return m_reservatio_manager.reserve_tour(off_id,cus_id,ticket_count,insurance,extra_meals);

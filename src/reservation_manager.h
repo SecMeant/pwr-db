@@ -11,7 +11,6 @@ namespace app::logic
   {
     hldb_i *parent;
   public:
-    reservation_manager()=default;
     reservation_manager(hldb_i*);
     ~reservation_manager()=default;
     bool reserve_tour(int off_id, int cus_id, int ticket_count, bool insurance, bool extra_meals);
