@@ -1,86 +1,135 @@
-#include "hldb.h"
 #include "dbaccess/date.h"
+#include "hldb.h"
+#include "hldb_mock.h"
 
-#include <gtest/gtest.h>
-#include <fstream>
-#include <string>
 #include <fmt/format.h>
+#include <fstream>
+#include <gtest/gtest.h>
+#include <string>
 
 using namespace std;
 using namespace app::logic;
 using namespace app::dbaccess;
+using namespace testing;
+using testing::_;
 
-constexpr const char* DB_SCRIPT_INIT_PATH = "../dbinit/base_init.sql";
-constexpr const char* DB_SCRIPT_DEP_PATH = "../dbinit/logic_dep_test.sql";
-constexpr const char* DB_DATABASE_TEST = "biuro_podrozy_test";
-class MainLogicTest : public ::testing::Test
+constexpr const char *DB_SCRIPT_INIT_PATH = "../dbinit/base_init.sql";
+constexpr const char *DB_SCRIPT_DEP_PATH = "../dbinit/logic_dep_test.sql";
+constexpr const char *DB_DATABASE_TEST = "biuro_podrozy_test";
+class ReservationManagerTest : public ::testing::Test
 {
 protected:
-   MainLogicTest()=default;
-   virtual ~MainLogicTest()=default;
-   void SetUp() override
-   {
-     if(!hldb_inst.m_dbconn)
-     {
-        FAIL() << "CAN\'T CONNECT AS SUPERUSER\n";
-     }
+  ReservationManagerTest() = default;
+  virtual ~ReservationManagerTest() = default;
+  void
+  SetUp() override
+  {
+    if (!hldb_inst.m_dbconn) {
+      FAIL() << "CAN\'T CONNECT AS SUPERUSER\n";
+    }
 
-     std::fstream fs(DB_SCRIPT_INIT_PATH, std::fstream::in);
+    std::fstream fs(DB_SCRIPT_INIT_PATH, std::fstream::in);
 
-     if (!fs.is_open())
-     {
-       FAIL() << "FAIL AT READING BASE FILE\n";
-     }
-     std::string query;
-     while (std::getline(fs, query, ';'))
-     {
-       if (query ==""){
-         continue;
-       }
-       if(hldb_inst.m_dbconn.query(query.c_str()) == false)
-       {
+    if (!fs.is_open()) {
+      FAIL() << "FAIL AT READING BASE FILE\n";
+    }
+    std::string query;
+    while (std::getline(fs, query, ';')) {
+      if (query == "") {
+        continue;
+      }
+      if (hldb_inst.m_dbconn.query(query.c_str()) == false) {
         FAIL() << "FAIL AT QUERY\n" << query;
-       }
-     }
-     fs.close();
-     fs.open(DB_SCRIPT_DEP_PATH, std::fstream::in);
+      }
+    }
+    fs.close();
+    fs.open(DB_SCRIPT_DEP_PATH, std::fstream::in);
 
-     if (!fs.is_open())
-     {
-       FAIL() << "FAIL AT READING DEP FILE\n";
-     }
-     while (std::getline(fs, query, ';'))
-     {
-       if (query =="" || query == "\n"){
-         continue;
-       }
-       if(hldb_inst.m_dbconn.query(query.c_str()) == false)
-       {
+    if (!fs.is_open()) {
+      FAIL() << "FAIL AT READING DEP FILE\n";
+    }
+    while (std::getline(fs, query, ';')) {
+      if (query == "" || query == "\n") {
+        continue;
+      }
+      if (hldb_inst.m_dbconn.query(query.c_str()) == false) {
         FAIL() << "FAIL AT QUERY\n" << query;
-       }
-     }
-   }
-   hldb hldb_inst{DB_DATABASE_TEST};
-   std::string employee_log = "employee_1";
-   std::string employee_pass = "alamakota";
+      }
+    }
+
+    offers = hldb_inst.get_all_offers();
+    customers = hldb_inst.get_all_customers();
+    employees = hldb_inst.get_all_employees();
+  }
+
+
+  hldb hldb_inst{ DB_DATABASE_TEST };
+  std::string employee_log = "employee_1";
+  std::string employee_pass = "alamakota";
+  std::vector<offer_t> offers;
+  std::vector<customer_t> customers;
+  std::vector<employee_t> employees;
 };
 
-TEST_F(MainLogicTest, ReservationManagerReserve)
+TEST_F(ReservationManagerTest, ReservationManagerReserveMock)
+{
+  ASSERT_TRUE(offers.size() > 0);
+  ASSERT_TRUE(customers.size() > 0);
+  ASSERT_TRUE(employees.size() > 0);
+
+  hldb_mock hm("asdf");
+  reservation_manager rm(hm);
+
+  auto of = offers[0];
+  EXPECT_CALL(hm, get_offers_like(of.id))
+    .Times(1)
+    .WillOnce(Return(of));
+
+  auto cu = customers[0];
+  EXPECT_CALL(hm, get_customers_like(cu.id))
+    .Times(1)
+    .WillOnce(Return(cu));
+
+  auto emp = employees[0];
+  EXPECT_CALL(hm, get_logged_user())
+    .Times(1)
+    .WillOnce(ReturnRef(emp));
+
+  tour_t tour;
+  EXPECT_CALL(hm, add_tour).WillOnce(SaveArg<0>(&tour));
+
+  int ticket_count = 10;
+  bool insurance = false;
+  bool extra_meals = true;
+  int debt = ticket_count * (of.price + of.extra_meals_cost);
+
+  rm.reserve_tour(of.id, cu.id, ticket_count, insurance, extra_meals);
+
+  ASSERT_TRUE(tour.offerid == of.id);
+  ASSERT_TRUE(tour.customersid == cu.id);
+  ASSERT_TRUE(tour.employeesid == emp.id);
+  ASSERT_TRUE(tour.reserved_tickets == ticket_count);
+  ASSERT_TRUE(tour.insurance == insurance);
+  ASSERT_TRUE(tour.extra_meals == extra_meals);
+  ASSERT_TRUE(tour.debt == debt);
+}
+
+TEST_F(ReservationManagerTest, ReservationManagerReserve)
 {
   customer_t customer;
-  customer.name ="ardella";
-  customer.surname ="reilly";
-  customer.email ="areilly7@icio.us";
+  customer.name = "ardella";
+  customer.surname = "reilly";
+  customer.email = "areilly7@icio.us";
   app::sql::set_any(customer.pesel);
   app::sql::set_any(customer.id);
   auto c = hldb_inst.get_customers_like(customer);
-  ASSERT_NE(c.size(),0) << "CUSTOMER NOT FOUND. SIZE: " << c.size();
+  ASSERT_NE(c.size(), 0) << "CUSTOMER NOT FOUND. SIZE: " << c.size();
   customer = c[0];
   ASSERT_TRUE(customer.valid());
 
   offer_t offer;
-  offer.country ="japonia";
-  offer.city ="tokio";
+  offer.country = "japonia";
+  offer.city = "tokio";
   app::sql::set_any(offer.name);
   app::sql::set_any(offer.id);
   app::sql::set_any(offer.tickets_count);
@@ -92,16 +141,16 @@ TEST_F(MainLogicTest, ReservationManagerReserve)
   app::sql::set_any(offer.extra_meals_cost);
 
   auto o = hldb_inst.get_offers_like(offer);
-  ASSERT_NE(o.size(), 0)<< "INCORRECT offer COUNT";
+  ASSERT_NE(o.size(), 0) << "INCORRECT offer COUNT";
   offer = o[0];
   ASSERT_TRUE(offer.valid());
 
   hldb_inst.m_session.authenticate(employee_log, employee_pass);
-  ASSERT_EQ(hldb_inst.m_session.state(),state_t::logedin);
+  ASSERT_EQ(hldb_inst.m_session.state(), state_t::logedin);
 
-  int tickets_count =10;
+  int tickets_count = 10;
   int tc_copy = offer.tickets_count;
-  hldb_inst.make_reservation(offer.id,customer.id,tickets_count,0,1);
+  hldb_inst.make_reservation(offer.id, customer.id, tickets_count, 0, 1);
   tour_t tour;
   app::sql::set_any(tour.id);
   app::sql::set_any(tour.state);
@@ -111,27 +160,31 @@ TEST_F(MainLogicTest, ReservationManagerReserve)
   tour.insurance = 0;
   tour.customersid = customer.id;
   tour.offerid = offer.id;
-  tour.reserved_tickets =tickets_count;
+  tour.reserved_tickets = tickets_count;
   auto tours = hldb_inst.get_tours_like(tour);
-  ASSERT_GE(tours.size(), 1)<< "Tour hasn't been reserved";
+  ASSERT_GE(tours.size(), 1) << "Tour hasn't been reserved";
   offer = hldb_inst.get_offers_like(offer.id);
-  EXPECT_EQ(offer.tickets_count+tickets_count,tc_copy) << "Offer has incorrect ticket number";
+  EXPECT_EQ(offer.tickets_count + tickets_count, tc_copy)
+    << "Offer has incorrect ticket number";
   // reserve 5 more tickets
   tickets_count = 15;
   tour = tours[0];
   tour.reserved_tickets = tickets_count;
   hldb_inst.modify_reservation(tour);
   offer = hldb_inst.get_offers_like(offer.id);
-  EXPECT_EQ(offer.tickets_count+tickets_count,tc_copy) << "Offer has incorrect ticket number";
+  EXPECT_EQ(offer.tickets_count + tickets_count, tc_copy)
+    << "Offer has incorrect ticket number";
   // resign from 10 tickets
   tickets_count = 5;
   tour = tours[0];
   tour.reserved_tickets = tickets_count;
   hldb_inst.modify_reservation(tour);
   offer = hldb_inst.get_offers_like(offer.id);
-  EXPECT_EQ(offer.tickets_count+tickets_count,tc_copy) << "Offer has incorrect ticket number";
+  EXPECT_EQ(offer.tickets_count + tickets_count, tc_copy)
+    << "Offer has incorrect ticket number";
 
   hldb_inst.drop_reservation(tour.id);
   offer = hldb_inst.get_offers_like(offer.id);
-  EXPECT_EQ(offer.tickets_count,tc_copy) << "Offer has incorrect ticket number";
+  EXPECT_EQ(offer.tickets_count, tc_copy)
+    << "Offer has incorrect ticket number";
 }
