@@ -7,17 +7,17 @@ using namespace app::dbaccess;
 namespace app::logic
 {
   hldb::hldb()
-  : m_hr(this)
-  , m_offer_manager(this)
-  , m_reservatio_manager(this)
-  , m_session(this)
+  : m_hr(*this)
+  , m_offer_manager(*this)
+  , m_reservatio_manager(*this)
+  , m_session(*this)
   {}
 
   hldb::hldb(const std::string &database_name)
-  : m_hr(this)
-  , m_offer_manager(this)
-  , m_reservatio_manager(this)
-  , m_session(this)
+  : m_hr(*this)
+  , m_offer_manager(*this)
+  , m_reservatio_manager(*this)
+  , m_session(*this)
   {
     m_dbconn = db_connection(
        DB_HOSTNAME, database_name, DB_PORT_NO, { DB_USERNAME, DB_PASSWORD });

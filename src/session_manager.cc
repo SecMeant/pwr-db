@@ -40,7 +40,7 @@ namespace app::logic {
     id_type m_id;
   };
 
-  session_manager::session_manager(hldb_i*p)
+  session_manager::session_manager(hldb_i &p)
   : parent(p)
   {
   }
@@ -50,7 +50,7 @@ namespace app::logic {
   {
     constexpr auto query_template = "select password('{}');";
 
-    auto res = this->parent->raw_query_res(fmt::format(query_template, s));
+    auto res = this->parent.raw_query_res(fmt::format(query_template, s));
 
     if (!res)
       return "";
@@ -67,7 +67,7 @@ namespace app::logic {
       "login = \"{}\"";
 
     auto res =
-      this->parent->raw_query_res(fmt::format(query_template, username));
+      this->parent.raw_query_res(fmt::format(query_template, username));
 
     dbaccess::credentials_t creds;
 
@@ -135,13 +135,13 @@ namespace app::logic {
         return false;
     }
 
-    this->m_session = this->parent->get_employees_like(creds.employeeid);
+    this->m_session = this->parent.get_employees_like(creds.employeeid);
 
     if (!this->m_session.valid())
       return false;
 
     auto auth_status =
-      this->parent->authenticate(*dbusername, *dbpassword);
+      this->parent.authenticate(*dbusername, *dbpassword);
 
     if (!auth_status)
       return false;
@@ -163,7 +163,7 @@ namespace app::logic {
     constexpr auto query_template =
       "UPDATE credentials SET privilege = \"{}\" WHERE id = \"{}\"";
 
-    return this->parent->raw_query(
+    return this->parent.raw_query(
       fmt::format(query_template, static_cast<int>(priv), employee.id));
 
     // TODO check if changing privileges of current user, if so update it
@@ -173,7 +173,7 @@ namespace app::logic {
   bool
   session_manager::low_priv_auth() noexcept
   {
-    return this->parent->authenticate(
+    return this->parent.authenticate(
       dbaccess::defaults::DB_USERNAME_LOPRIO,
       dbaccess::defaults::DB_PASSWORD_LOPRIO);
   }

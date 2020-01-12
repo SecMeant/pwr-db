@@ -10,9 +10,9 @@ namespace app::logic
   class hldb_i;
   class offer_manager
   {
-    hldb_i *parent;
+    hldb_i &parent;
   public:
-    offer_manager(hldb_i*);
+    offer_manager(hldb_i&);
     ~offer_manager()=default;
     bool append_offer(const std::string &name,
                       const std::string &country,

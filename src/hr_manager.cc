@@ -6,10 +6,11 @@
 #include <fmt/format.h>
 
 namespace app::logic {
-  hr_manager::hr_manager(hldb_i* p)
+  hr_manager::hr_manager(hldb_i &p)
+  : parent(p)
   {
-    this->parent = p;
   }
+
   bool
   hr_manager::modify_salary(int employee_id, int new_salary) noexcept
   {
@@ -17,7 +18,7 @@ namespace app::logic {
                                     "SET salary = {} "
                                     "WHERE id = {}";
 
-    return this->parent->raw_query(fmt::format(query_template, new_salary, employee_id));
+    return this->parent.raw_query(fmt::format(query_template, new_salary, employee_id));
   }
 
   bool
@@ -27,18 +28,18 @@ namespace app::logic {
                                     "SET privilege = {} "
                                     "WHERE employeeid = {}";
 
-    return this->parent->raw_query(fmt::format(query_template, static_cast<int>(new_priv), employee_id));
+    return this->parent.raw_query(fmt::format(query_template, static_cast<int>(new_priv), employee_id));
   }
 
   bool
   hr_manager::hire(const dbaccess::employee_t &emp) noexcept
   {
-    return this->parent->add_employee(emp);
+    return this->parent.add_employee(emp);
   }
 
   bool
   hr_manager::fire(int employee_id) noexcept
   {
-    return this->parent->remove_employee(employee_id);
+    return this->parent.remove_employee(employee_id);
   }
 }

@@ -15,7 +15,7 @@ namespace app::logic {
   class session_manager
   {
   public:
-    session_manager(hldb_i*);
+    session_manager(hldb_i&);
 
     bool
     authenticate(std::string_view username,
@@ -60,7 +60,7 @@ namespace app::logic {
     state_t m_state;
     privilege_level m_privilege;
     dbaccess::employee_t m_session;
-    hldb_i *parent;
+    hldb_i &parent;
   };
 
 } // namespace app::logic

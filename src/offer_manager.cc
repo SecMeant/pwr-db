@@ -5,9 +5,9 @@
 using namespace app::dbaccess;
 namespace app::logic
 {
-    offer_manager::offer_manager(hldb_i*p)
+    offer_manager::offer_manager(hldb_i &p)
+    : parent(p)
     {
-     parent = p;
     }
 
     bool offer_manager::append_offer(const std::string &name,
@@ -23,7 +23,7 @@ namespace app::logic
     {
       category_t cat;
       cat.name = cname;
-      auto categories = parent->get_category_like(cat);
+      auto categories = parent.get_category_like(cat);
       if(categories.size() == 0)
         return false;
       cat = categories[0];
@@ -45,7 +45,7 @@ namespace app::logic
     {
       tour_t tour;
 
-      offer_t offer = parent->get_offers_like(offer_id);
+      offer_t offer = parent.get_offers_like(offer_id);
       if(!offer.valid())
         return false;
       app::sql::set_any(tour.id);
@@ -57,18 +57,18 @@ namespace app::logic
       app::sql::set_any(tour.debt);
       app::sql::set_any(tour.reserved_tickets);
       tour.offerid = offer_id;
-      auto tours = parent->get_tours_like(tour);
+      auto tours = parent.get_tours_like(tour);
       for(auto t = tours.begin(); t!= tours.end(); t++)
       {
         auto to_return = callculate_cost_diff(offer,offer,*t);
-        parent->modify_tour(*t);
+        parent.modify_tour(*t);
       }
       return true;
     }
 
     bool offer_manager::modify(const offer_t &offer_1)
     {
-      offer_t offer_2 = parent->get_offers_like(offer_1.id);
+      offer_t offer_2 = parent.get_offers_like(offer_1.id);
       if(!offer_2.valid())
         return false;
       tour_t tour;
@@ -81,20 +81,20 @@ namespace app::logic
       app::sql::set_any(tour.debt);
       app::sql::set_any(tour.reserved_tickets);
       tour.offerid = offer_1.id;
-      auto tours = parent->get_tours_like(tour);
+      auto tours = parent.get_tours_like(tour);
 
       for(auto t = tours.begin(); t!= tours.end(); t++)
       {
         t->debt = callculate_cost_diff(offer_1,offer_2,*t);
-        parent->modify_tour(*t);
+        parent.modify_tour(*t);
       }
-      parent->modify_offer(offer_1);
+      parent.modify_offer(offer_1);
       return true;
     }
 
     bool offer_manager::modify_2(const offer_t &offer)
     {
-      bool status =  parent->raw_query(fmt::format("call modify_offer({},'{}','{}','{}',str_to_date('{}','%d.%m.%y'),str_to_date('{}','%d.%m.%y'),{},{},{},{});",offer.id,
+      bool status =  parent.raw_query(fmt::format("call modify_offer({},'{}','{}','{}',str_to_date('{}','%d.%m.%y'),str_to_date('{}','%d.%m.%y'),{},{},{},{});",offer.id,
                                   offer.name,
                                   offer.country,
                                   offer.city,

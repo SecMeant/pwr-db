@@ -9,9 +9,9 @@ namespace app::logic
   class hldb_i;
   class reservation_manager
   {
-    hldb_i *parent;
+    hldb_i &parent;
   public:
-    reservation_manager(hldb_i*);
+    reservation_manager(hldb_i&);
     ~reservation_manager()=default;
     bool reserve_tour(int off_id, int cus_id, int ticket_count, bool insurance, bool extra_meals);
     bool resign(int tour_id);
