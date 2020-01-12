@@ -16,10 +16,11 @@ namespace app::dbaccess {
     query(const std::string &query_string) noexcept = 0;
 
     virtual bool
-    authenticate(std::string_view username, std::string_view password) noexcept = 0;
+    authenticate(std::string_view username,
+                 std::string_view password) noexcept = 0;
 
     virtual void
     close() noexcept = 0;
-    virtual ~db_connection_i()=default;
+    virtual ~db_connection_i() = default;
   };
 } // namespace app::dbaccess

@@ -41,9 +41,8 @@ namespace app::logic {
   };
 
   session_manager::session_manager(hldb_i &p)
-  : parent(p)
-  {
-  }
+    : parent(p)
+  {}
 
   std::string
   session_manager::hash(std::string_view s) noexcept
@@ -140,8 +139,7 @@ namespace app::logic {
     if (!this->m_session.valid())
       return false;
 
-    auto auth_status =
-      this->parent.authenticate(*dbusername, *dbpassword);
+    auto auth_status = this->parent.authenticate(*dbusername, *dbpassword);
 
     if (!auth_status)
       return false;

@@ -1,13 +1,13 @@
+#include "category_manipulator.h"
 #include "../../reflect.h"
 #include "../data_access_manager.h"
-#include "category_manipulator.h"
+#include "hldb.h"
 #include <fmt/format.h>
 #include <sstream>
-#include "hldb.h"
 
 namespace app::dbaccess {
   std::vector<category_t>
-  category_manipulator::get_all()const noexcept
+  category_manipulator::get_all() const noexcept
   {
 
     auto *hldb_inst = this->parent()->parent();
@@ -29,7 +29,7 @@ namespace app::dbaccess {
   }
 
   std::vector<category_t>
-  category_manipulator::get_like(const category_t &entity)const noexcept
+  category_manipulator::get_like(const category_t &entity) const noexcept
   {
     std::stringstream command;
     command << "SELECT id, name, login, pass_hash, privilege "
@@ -60,11 +60,10 @@ namespace app::dbaccess {
   }
 
   category_t
-  category_manipulator::get(int id)const noexcept
+  category_manipulator::get(int id) const noexcept
   {
     auto *hldb_inst = this->parent()->parent();
-    auto command =
-      fmt::format("SELECT * from category WHERE id = {}", id);
+    auto command = fmt::format("SELECT * from category WHERE id = {}", id);
     auto res = hldb_inst->raw_query_res(command);
     category_t category = {};
 
@@ -79,21 +78,19 @@ namespace app::dbaccess {
   }
 
   bool
-  category_manipulator::add(const category_t &entity)const noexcept
+  category_manipulator::add(const category_t &entity) const noexcept
   {
     std::string command = "INSERT INTO category "
                           "(id,name,login,pass_hash) "
                           "VALUES (\'{}\', \'{}\', \'{}\', {});";
 
-    command = fmt::format(command,
-                          entity.id,
-                          entity.name);
+    command = fmt::format(command, entity.id, entity.name);
     auto *hldb_inst = this->parent()->parent();
     return !hldb_inst->raw_query(command);
   }
 
   bool
-  category_manipulator::modify(const category_t &entity)const noexcept
+  category_manipulator::modify(const category_t &entity) const noexcept
   {
     std::stringstream command;
     command << "UPDATE category SET";
@@ -110,7 +107,7 @@ namespace app::dbaccess {
   }
 
   bool
-  category_manipulator::remove(int id)const noexcept
+  category_manipulator::remove(int id) const noexcept
   {
     std::string command =
       fmt::format("DELETE from category WHERE id = {}", id);
@@ -119,15 +116,14 @@ namespace app::dbaccess {
   }
 
   data_access_manager *
-  category_manipulator::parent()const noexcept
+  category_manipulator::parent() const noexcept
   {
-    return container_of(
-      this, data_access_manager, m_category_manipulator);
+    return container_of(this, data_access_manager, m_category_manipulator);
   }
 
   std::string
   category_manipulator::glue_params(const category_t &entity,
-                                       std::string separator)const noexcept
+                                    std::string separator) const noexcept
   {
     std::stringstream params;
     bool concat = false;

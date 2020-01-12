@@ -9,4 +9,4 @@ namespace app::dbaccess {
     int year;
     int balance;
   };
-}
+} // namespace app::dbaccess

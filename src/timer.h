@@ -5,4 +5,4 @@ namespace app::logic {
   {
     int posix_timer;
   };
-};
+}; // namespace app::logic

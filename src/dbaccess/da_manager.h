@@ -7,4 +7,4 @@ namespace app::dbaccess {
   {
     db_connection m_db_conn;
   };
-}
+} // namespace app::dbaccess

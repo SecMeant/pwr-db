@@ -1,13 +1,14 @@
 #pragma once
 
-#include <mysql/mysql.h>
 #include <memory>
+#include <mysql/mysql.h>
 
 namespace app::dbaccess {
 
   struct mysql_res_deleter
   {
-    void operator() (MYSQL_RES *res) const noexcept
+    void
+    operator()(MYSQL_RES *res) const noexcept
     {
       mysql_free_result(res);
     }
@@ -15,7 +16,8 @@ namespace app::dbaccess {
 
   struct mysql_conn_deleter
   {
-    void operator() (MYSQL *conn) const noexcept
+    void
+    operator()(MYSQL *conn) const noexcept
     {
       mysql_close(conn);
     }

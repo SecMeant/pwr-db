@@ -1,15 +1,14 @@
 #include "hr_manager.h"
+#include "dbaccess/table/valid.h"
 #include "hldb.h"
 #include "reflect.h"
-#include "dbaccess/table/valid.h"
 
 #include <fmt/format.h>
 
 namespace app::logic {
   hr_manager::hr_manager(hldb_i &p)
-  : parent(p)
-  {
-  }
+    : parent(p)
+  {}
 
   bool
   hr_manager::modify_salary(int employee_id, int new_salary) noexcept
@@ -18,7 +17,8 @@ namespace app::logic {
                                     "SET salary = {} "
                                     "WHERE id = {}";
 
-    return this->parent.raw_query(fmt::format(query_template, new_salary, employee_id));
+    return this->parent.raw_query(
+      fmt::format(query_template, new_salary, employee_id));
   }
 
   bool
@@ -28,7 +28,8 @@ namespace app::logic {
                                     "SET privilege = {} "
                                     "WHERE employeeid = {}";
 
-    return this->parent.raw_query(fmt::format(query_template, static_cast<int>(new_priv), employee_id));
+    return this->parent.raw_query(fmt::format(
+      query_template, static_cast<int>(new_priv), employee_id));
   }
 
   bool
@@ -42,4 +43,4 @@ namespace app::logic {
   {
     return this->parent.remove_employee(employee_id);
   }
-}
+} // namespace app::logic

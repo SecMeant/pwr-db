@@ -7,9 +7,10 @@ namespace app::logic {
 
   class hr_manager
   {
-    hldb_i& parent;
+    hldb_i &parent;
+
   public:
-    hr_manager(hldb_i&);
+    hr_manager(hldb_i &);
     bool
     modify_salary(int employee_id, int new_salary) noexcept;
 
@@ -24,4 +25,4 @@ namespace app::logic {
     fire(int employee_id) noexcept;
   };
 
-}
+} // namespace app::logic

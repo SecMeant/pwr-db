@@ -1,12 +1,12 @@
+#include "credentials_manipulator.h"
 #include "../../reflect.h"
 #include "../data_access_manager.h"
-#include "credentials_manipulator.h"
+#include "hldb.h"
 #include <fmt/format.h>
 #include <sstream>
-#include "hldb.h"
 namespace app::dbaccess {
   std::vector<credentials_t>
-  credentials_manipulator::get_all()const noexcept
+  credentials_manipulator::get_all() const noexcept
   {
 
     auto *hldb_inst = this->parent()->parent();
@@ -32,7 +32,8 @@ namespace app::dbaccess {
   }
 
   std::vector<credentials_t>
-  credentials_manipulator::get_like(const credentials_t &entity)const noexcept
+  credentials_manipulator::get_like(const credentials_t &entity) const
+    noexcept
   {
     std::stringstream command;
     command << "SELECT id, employeeid, login, pass_hash, privilege "
@@ -67,7 +68,7 @@ namespace app::dbaccess {
   }
 
   credentials_t
-  credentials_manipulator::get(int id)const noexcept
+  credentials_manipulator::get(int id) const noexcept
   {
     auto *hldb_inst = this->parent()->parent();
     auto command =
@@ -91,7 +92,7 @@ namespace app::dbaccess {
   }
 
   bool
-  credentials_manipulator::add(const credentials_t &entity)const noexcept
+  credentials_manipulator::add(const credentials_t &entity) const noexcept
   {
     std::string command = "INSERT INTO credentials "
                           "(id,employeeid,login,pass_hash) "
@@ -109,7 +110,8 @@ namespace app::dbaccess {
   }
 
   bool
-  credentials_manipulator::modify(const credentials_t &entity)const noexcept
+  credentials_manipulator::modify(const credentials_t &entity) const
+    noexcept
   {
     std::stringstream command;
     command << "UPDATE credentials SET";
@@ -126,7 +128,7 @@ namespace app::dbaccess {
   }
 
   bool
-  credentials_manipulator::remove(int id)const noexcept
+  credentials_manipulator::remove(int id) const noexcept
   {
     std::string command =
       fmt::format("DELETE from credentials WHERE id = {}", id);
@@ -135,7 +137,7 @@ namespace app::dbaccess {
   }
 
   data_access_manager *
-  credentials_manipulator::parent()const noexcept
+  credentials_manipulator::parent() const noexcept
   {
     return container_of(
       this, data_access_manager, m_credentials_manipulator);
@@ -143,7 +145,8 @@ namespace app::dbaccess {
 
   std::string
   credentials_manipulator::glue_params(const credentials_t &entity,
-                                       std::string separator)const noexcept
+                                       std::string separator) const
+    noexcept
   {
     std::stringstream params;
     bool concat = false;

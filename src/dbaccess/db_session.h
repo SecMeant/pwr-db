@@ -12,7 +12,8 @@ namespace app::dbaccess {
       , password(std::move(password))
     {}
 
-    std::string get_password_hash() const noexcept
+    std::string
+    get_password_hash() const noexcept
     {
       // TODO implement hashing
       return this->password;

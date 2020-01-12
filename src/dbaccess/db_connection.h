@@ -1,8 +1,8 @@
 #pragma once
 
-#include "mysql_types.h"
 #include "db_connection_i.h"
 #include "db_session.h"
+#include "mysql_types.h"
 
 #include <mysql/mysql.h>
 
@@ -48,7 +48,8 @@ namespace app::dbaccess {
     query(const std::string &query_string) noexcept override;
 
     bool
-    authenticate(std::string_view username, std::string_view password) noexcept override;
+    authenticate(std::string_view username,
+                 std::string_view password) noexcept override;
 
     void
     close() noexcept override;

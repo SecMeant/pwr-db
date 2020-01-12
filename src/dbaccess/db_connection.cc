@@ -28,7 +28,8 @@ namespace app::dbaccess {
   }
 
   bool
-  db_connection::authenticate(std::string_view username, std::string_view password) noexcept
+  db_connection::authenticate(std::string_view username,
+                              std::string_view password) noexcept
   {
     this->close();
 
