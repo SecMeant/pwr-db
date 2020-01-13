@@ -57,9 +57,40 @@ protected:
       }
     }
 
-    offers = hldb_inst.get_all_offers();
-    customers = hldb_inst.get_all_customers();
-    employees = hldb_inst.get_all_employees();
+    offer_t o;
+    o.id = 1;
+    o.name = "Wycieczka do japonii";
+    o.country = "Japonia";
+    o.city = "Shibuya";
+    o.date_begin = str2epoch("12.03.2015");
+    o.date_end = str2epoch("23.04.2016");
+    o.price = 1337;
+    o.insurance_cost = 1234;
+    o.extra_meals_cost = 4567;
+    o.categoryid = 2;
+    o.tickets_count = 13;
+
+    offers.push_back(std::move(o));
+
+    customer_t c;
+    c.id = 1;
+    c.name = "Jan";
+    c.surname = "Kowalski";
+    c.email = "JanKowalski@wp.pl";
+    c.pesel = "12345678987";
+
+    customers.push_back(std::move(c));
+
+    employee_t e;
+    e.id = 1;
+    e.name = "Kamil";
+    e.surname = "Rutkowski";
+    e.hire_date = str2epoch("11.11.2018");
+    e.salary = 1345;
+    e.email = "KamilRutkowski@wp.pl";
+    e.phone_number = "123456789";
+
+    employees.push_back(std::move(e));
   }
 
   hldb hldb_inst{ DB_DATABASE_TEST };
@@ -70,13 +101,13 @@ protected:
   std::vector<employee_t> employees;
 };
 
-TEST_F(ReservationManagerTest, ReservationManagerReserveMock)
+TEST_F(ReservationManagerTest, add_tour_Properly_Fills_Tour_Structure_With_Customer_And_Employee_Information)
 {
   ASSERT_TRUE(offers.size() > 0);
   ASSERT_TRUE(customers.size() > 0);
   ASSERT_TRUE(employees.size() > 0);
 
-  hldb_mock hm("asdf");
+  hldb_mock hm(DB_DATABASE_TEST);
   reservation_manager rm(hm);
   auto of = offers[0];
   EXPECT_CALL(hm, get_offers_like(of.id))
