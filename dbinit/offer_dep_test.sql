@@ -33,7 +33,7 @@ values
 insert into biuro_podrozy_test.offers
   ( name, city, country, date_begin, date_end, price, categoryid, insurance_cost, extra_meals_cost, tickets_count)
 values
-  ('wycieczka 1','tokio','japonia',str_to_date('14.01.19','%d.%m.%y'),str_to_date('20.01.19','%d.%m.%y'),6412,1,830,393,55),
+  ('wycieczka 1','tokio','japonia',str_to_date('14.01.19','%d.%m.%y'),str_to_date('20.01.19','%d.%m.%y'),6412,1,300,200,55),
   ('wycieczka 2','meksyk-city','meksyk',str_to_date('15.01.19','%d.%m.%y'),str_to_date('21.01.19','%d.%m.%y'),4298,4,614,538,55),
   ('wycieczka 3','nowy jork','usa',str_to_date('16.01.19','%d.%m.%y'),str_to_date('22.01.19','%d.%m.%y'),6990,2,795,385,46),
   ('wycieczka 4','kair','egipt',str_to_date('17.01.19','%d.%m.%y'),str_to_date('23.01.19','%d.%m.%y'),5040,4,793,608,52),

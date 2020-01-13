@@ -123,14 +123,15 @@ namespace app::logic {
     if (t.extra_meals)
       max_old_cost = o_old.extra_meals_cost;
 
-    int payed = max_old_cost - t.debt;
-    int cost_diff = (o_new.price - o_old.price);
+    int payed = t.reserved_tickets*max_old_cost - t.debt;
+    int new_cost = o_new.price;
     if (t.insurance)
-      cost_diff += o_new.insurance_cost - o_old.insurance_cost;
+      new_cost += o_new.insurance_cost;
     if (t.extra_meals)
-      cost_diff += o_new.extra_meals_cost - o_old.extra_meals_cost;
-    fmt::print("\n COST: {}\n",cost_diff - payed);
-    return cost_diff - payed;
+      new_cost += o_new.extra_meals_cost;
+    new_cost = t.reserved_tickets*new_cost;
+
+    return new_cost - payed;
   }
 
 } // namespace app::logic
