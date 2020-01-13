@@ -1,9 +1,12 @@
 #include "hldb.h"
 #include "dbaccess/db_connection.h"
 #include "dbaccess/db_defaults.h"
+#include <fmt/format.h>
+
 using namespace app::dbaccess;
 using namespace app::dbaccess::defaults;
 using namespace app::dbaccess;
+
 namespace app::logic {
   hldb::hldb()
     : m_hr(*this)
@@ -28,6 +31,13 @@ namespace app::logic {
   hldb::get_all_customers()
   {
     const auto manip = db_access_manager.get_customer_manipulator();
+    return manip->get_all();
+  }
+
+  std::vector<credentials_t>
+  hldb::get_all_credentials()
+  {
+    const auto manip = db_access_manager.get_credentials_manipulator();
     return manip->get_all();
   }
 
@@ -91,6 +101,13 @@ namespace app::logic {
   hldb::get_customers_like(int id)
   {
     const auto manip = db_access_manager.get_customer_manipulator();
+    return manip->get(id);
+  }
+
+  credentials_t
+  hldb::get_credentials_like(int id)
+  {
+    const auto manip = db_access_manager.get_credentials_manipulator();
     return manip->get(id);
   }
 
@@ -291,6 +308,19 @@ namespace app::logic {
   hldb::raw_query_res(const std::string &t1)
   {
     return m_dbconn.query_res(t1);
+  }
+
+  std::string
+  hldb::hash(std::string_view s)
+  {
+    constexpr auto query_template = "select password('{}');";
+
+    auto res = this->raw_query_res(fmt::format(query_template, s));
+
+    if (!res)
+      return "";
+
+    return mysql_fetch_row(res.get())[0] + 1;
   }
 
 } // namespace app::logic

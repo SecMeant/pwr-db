@@ -14,6 +14,8 @@ namespace app::logic {
   public:
     virtual std::vector<dbaccess::customer_t>
     get_all_customers() = 0;
+    virtual std::vector<dbaccess::credentials_t>
+    get_all_credentials() = 0;
     virtual std::vector<dbaccess::offer_t>
     get_all_offers() = 0;
     virtual std::vector<dbaccess::employee_t>
@@ -34,6 +36,8 @@ namespace app::logic {
 
     virtual dbaccess::customer_t
     get_customers_like(int id) = 0;
+    virtual dbaccess::credentials_t
+    get_credentials_like(int id) = 0;
     virtual dbaccess::offer_t
     get_offers_like(int id) = 0;
     virtual dbaccess::employee_t
@@ -97,6 +101,8 @@ namespace app::logic {
     remove_category(int id) = 0;
     virtual bool
     modify_category(const dbaccess::category_t &) = 0;
+    virtual std::string
+    hash(std::string_view s) = 0;
     virtual ~hldb_i() = default;
   };
 
@@ -114,6 +120,8 @@ namespace app::logic {
 
     std::vector<dbaccess::customer_t>
     get_all_customers();
+    std::vector<dbaccess::credentials_t>
+    get_all_credentials();
     std::vector<dbaccess::offer_t>
     get_all_offers();
     std::vector<dbaccess::employee_t>
@@ -138,6 +146,8 @@ namespace app::logic {
 
     dbaccess::customer_t
     get_customers_like(int id);
+    dbaccess::credentials_t
+    get_credentials_like(int id);
     dbaccess::offer_t
     get_offers_like(int id);
     dbaccess::employee_t
@@ -198,5 +208,7 @@ namespace app::logic {
     raw_query_res(const std::string &t1);
     const dbaccess::employee_t &
     get_logged_user();
+    std::string
+    hash(std::string_view s);
   };
 } // namespace app::logic
