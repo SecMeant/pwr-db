@@ -62,7 +62,6 @@ protected:
     employees = hldb_inst.get_all_employees();
   }
 
-
   hldb hldb_inst{ DB_DATABASE_TEST };
   std::string employee_log = "employee_1";
   std::string employee_pass = "alamakota";
@@ -95,7 +94,14 @@ TEST_F(ReservationManagerTest, ReservationManagerReserveMock)
     .WillOnce(ReturnRef(emp));
 
   tour_t tour;
-  EXPECT_CALL(hm, add_tour).WillOnce(SaveArg<0>(&tour));
+  ON_CALL(hm, add_tour)
+    .WillByDefault(Invoke([&tour](const tour_t &t) -> bool {
+      tour = t;
+      return t.valid();
+    }));
+
+  EXPECT_CALL(hm, add_tour)
+    .Times(1);
 
   int ticket_count = 10;
   bool insurance = false;

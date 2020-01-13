@@ -14,7 +14,7 @@ find_library(libcurl curl REQUIRED)
 include_directories(src)
 
 set(CMAKE_CXX_FLAGS_DEBUG "-fsanitize=address -ggdb -O0")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -flto -march=native")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native")
 
 set(TARGET_NAME ${CMAKE_PROJECT_NAME})
 set(TARGET_LIB_NAME ${TARGET_NAME}-base)
