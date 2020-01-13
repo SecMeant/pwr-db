@@ -129,6 +129,7 @@ namespace app::logic {
       cost_diff += o_new.insurance_cost - o_old.insurance_cost;
     if (t.extra_meals)
       cost_diff += o_new.extra_meals_cost - o_old.extra_meals_cost;
+    fmt::print("\n COST: {}\n",cost_diff - payed);
     return cost_diff - payed;
   }
 

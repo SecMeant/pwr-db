@@ -33,16 +33,7 @@ namespace app::dbaccess {
   }
 
   std::string
-  str2base_str(std::string &s)
-  {
-    int day, mon, year;
-    if (3 != sscanf(s.c_str(), "%d.%d.%d;", &day, &mon, &year)) {
-      return INVALID_DATE;
-    }
-    return fmt::format("{:0>2}.{:0>2}.{:0>2}", day, mon, year % 100);
-  }
-  std::string
-  str2base_str(std::string &&s)
+  str2base_str(const std::string &s)
   {
     int day, mon, year;
     if (3 != sscanf(s.c_str(), "%d.%d.%d;", &day, &mon, &year)) {

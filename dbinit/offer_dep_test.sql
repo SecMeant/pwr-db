@@ -46,9 +46,10 @@ values
   ("employee_2", 'F578F4A1136DB20EC96B6D29FB890283F123F459',1,3),
   ("employee_3", 'F578F4A1136DB20EC96B6D29FB890283F123F459',1,4);
 
-create trigger on_new_tour_appear
-after insert on biuro_podrozy_test.tour
-for each row
-update biuro_podrozy_test.offers
-  set offers.tickets_count = offers.tickets_count - new.reserved_tickets
-  where offers.id = new.offerid;
+insert into biuro_podrozy_test.tour
+  (offerid, customerid, employeeid, insurance, extra_meals, debt, state, reserved_tickets)
+values
+  (1 ,1, 1, 1, 0, 1379 ,0 ,4),
+  (2, 2, 1, 1, 1, 1062 ,0 ,5),
+  (3, 3, 1, 1, 1, 2509 ,0 ,3),
+  (4, 4, 1, 0, 0, 1122 ,0 ,2);

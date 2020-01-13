@@ -14,7 +14,7 @@ using namespace testing;
 using testing::_;
 
 constexpr const char *DB_SCRIPT_INIT_PATH = "../dbinit/base_init.sql";
-constexpr const char *DB_SCRIPT_DEP_PATH = "../dbinit/logic_dep_test.sql";
+constexpr const char *DB_SCRIPT_DEP_PATH = "../dbinit/reservation_dep_test.sql";
 constexpr const char *DB_DATABASE_TEST = "biuro_podrozy_test";
 class ReservationManagerTest : public ::testing::Test
 {
@@ -79,7 +79,6 @@ TEST_F(ReservationManagerTest, ReservationManagerReserveMock)
 
   hldb_mock hm("asdf");
   reservation_manager rm(hm);
-
   auto of = offers[0];
   EXPECT_CALL(hm, get_offers_like(of.id))
     .Times(1)
@@ -102,9 +101,7 @@ TEST_F(ReservationManagerTest, ReservationManagerReserveMock)
   bool insurance = false;
   bool extra_meals = true;
   int debt = ticket_count * (of.price + of.extra_meals_cost);
-
-  rm.reserve_tour(of.id, cu.id, ticket_count, insurance, extra_meals);
-
+  ASSERT_TRUE(rm.reserve_tour(of.id, cu.id, ticket_count, insurance, extra_meals));
   ASSERT_TRUE(tour.offerid == of.id);
   ASSERT_TRUE(tour.customersid == cu.id);
   ASSERT_TRUE(tour.employeesid == emp.id);

@@ -18,5 +18,8 @@ namespace app::dbaccess {
     int extra_meals_cost;
     int categoryid;
     int tickets_count;
+    bool operator==(const offer_t&rhs)const {
+      return this->name == rhs.name;
+    }
   };
 } // namespace app::dbaccess

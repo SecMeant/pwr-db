@@ -16,19 +16,15 @@ namespace app::logic {
                                     bool extra_meals)
   {
     auto o = parent.get_offers_like(off_id);
-
     if (!o.valid())
       return false;
     auto c = parent.get_customers_like(cus_id);
-
     if (!c.valid())
       return false;
-
     auto e = parent.get_logged_user();
     auto t = prepare(o, c, e, ticket_count, insurance, extra_meals);
     if (!t.valid())
       return false;
-
     parent.add_tour(t);
     return true;
   }

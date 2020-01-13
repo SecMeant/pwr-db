@@ -11,7 +11,5 @@ namespace app::dbaccess {
   std::string
   epoch2str(const date_t &);
   std::string
-  str2base_str(std::string &s);
-  std::string
-  str2base_str(std::string &&s);
+  str2base_str(const std::string &s);
 } // namespace app::dbaccess
