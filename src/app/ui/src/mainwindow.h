@@ -14,6 +14,9 @@ class MainWindow : public QMainWindow
 public:
   explicit MainWindow(app::logic::hldb_i &hldb, QWidget *parent = nullptr);
   ~MainWindow();
+    void low_privilege_setup();
+
+    void high_privilege_setup();
 
 private slots:
     void on_customer_id_textChanged(const QString &arg1);

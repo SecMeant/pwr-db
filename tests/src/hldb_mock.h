@@ -57,5 +57,6 @@ namespace app::logic {
     MOCK_METHOD(const dbaccess::employee_t &, get_logged_user, ());
     MOCK_METHOD(std::string, hash, (std::string_view s));
     MOCK_METHOD(dbaccess::category_t, get_category_by_id, (int id));
+    MOCK_METHOD(logic::privilege_level, get_user_privilage, ());
   };
 } // namespace app::logic

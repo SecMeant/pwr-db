@@ -21,6 +21,6 @@ void login_popup::on_dialogButtonBox_accepted()
 }
 
 void login_popup::on_dialogButtonBox_rejected()
-{    
+{
    exit(0);
 }

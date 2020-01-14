@@ -337,5 +337,10 @@ namespace app::logic {
       return *it;
     return {};
   }
+  privilege_level
+  hldb::get_user_privilage()
+  {
+    return m_session.privilege();
+  }
 
 } // namespace app::logic

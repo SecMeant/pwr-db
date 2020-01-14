@@ -106,6 +106,8 @@ namespace app::logic {
     virtual dbaccess::category_t
     get_category_by_id(int id) = 0;
     virtual ~hldb_i() = default;
+    virtual privilege_level
+    get_user_privilage()=0;
   };
 
   class hldb : public hldb_i
@@ -209,11 +211,14 @@ namespace app::logic {
     raw_query(const std::string &t1);
     dbaccess::mysql_res_t
     raw_query_res(const std::string &t1);
+
     const dbaccess::employee_t &
     get_logged_user();
     std::string
     hash(std::string_view s);
     dbaccess::category_t
     get_category_by_id(int id);
+    privilege_level
+    get_user_privilage();
   };
 } // namespace app::logic

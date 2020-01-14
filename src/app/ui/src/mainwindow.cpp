@@ -363,4 +363,18 @@ void MainWindow::on_logout_released()
       w_login.exec();
     }while(!w_login.get_login_status());
     this->setEnabled(true);
+    if(logic.get_user_privilage() == privilege_level::high)
+        high_privilege_setup();
+    else
+        low_privilege_setup();
+}
+
+void MainWindow::low_privilege_setup()
+{
+   this->ui->tabWidget->setTabEnabled(4,false);
+}
+
+void MainWindow::high_privilege_setup()
+{
+   this->ui->tabWidget->setTabEnabled(4,true);
 }

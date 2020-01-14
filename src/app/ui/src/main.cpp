@@ -17,6 +17,10 @@ int main(int argc, char *argv[])
   do{
     w_login.exec();
   }while(!w_login.get_login_status());
+  if(h.get_user_privilage() == privilege_level::high)
+      w.high_privilege_setup();
+  else
+      w.low_privilege_setup();
   w.show();
 
   return a.exec();
