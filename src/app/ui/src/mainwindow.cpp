@@ -210,7 +210,45 @@ void MainWindow::on_offer_search_released()
 
 void MainWindow::on_offer_results_cellClicked(int row, int column)
 {
+  column = 0;
+  auto item = this->ui->offer_results->item(row, column);
+  this->ui->offer_id->setText(item->text());
 
+  ++column;
+  item = this->ui->offer_results->item(row, column);
+  this->ui->offer_name->setText(item->text());
+
+  ++column;
+  item = this->ui->offer_results->item(row, column);
+  this->ui->offer_country->setText(item->text());
+
+  ++column;
+  item = this->ui->offer_results->item(row, column);
+  this->ui->offer_city->setText(item->text());
+
+  ++column;
+  item = this->ui->offer_results->item(row, column);
+  this->ui->offer_price->setText(item->text());
+
+  ++column;
+  item = this->ui->offer_results->item(row, column);
+  this->ui->offer_from->setText(item->text());
+
+  ++column;
+  item = this->ui->offer_results->item(row, column);
+  this->ui->offer_to->setText(item->text());
+
+  ++column;
+  item = this->ui->offer_results->item(row, column);
+  this->ui->offer_insurance_cost->setText(item->text());
+
+  ++column;
+  item = this->ui->offer_results->item(row, column);
+  this->ui->offer_extra_meals_cost->setText(item->text());
+
+  ++column;
+  item = this->ui->offer_results->item(row, column);
+  this->ui->offer_ticket_count->setText(item->text());
 }
 
 void MainWindow::on_tour_customer_id_textChanged(const QString &arg1)
