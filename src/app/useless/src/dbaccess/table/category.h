@@ -6,6 +6,8 @@
 namespace app::dbaccess {
   struct category_t
   {
+    static constexpr size_t field_count = 2;
+
     VALIDATABLE_BY(int, id);
     std::string name;
 
