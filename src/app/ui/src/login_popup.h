@@ -16,11 +16,11 @@ public:
     explicit login_popup(app::logic::hldb_i &hldb, QWidget *parent = nullptr);
     ~login_popup();
 
+    bool get_login_status(){return this->auth_status;}
 private slots:
     void on_dialogButtonBox_accepted();
 
     void on_dialogButtonBox_rejected();
-    bool get_login_status(){return this->auth_status;}
 private:
     Ui::login_popup *ui;
     bool auth_status = false;

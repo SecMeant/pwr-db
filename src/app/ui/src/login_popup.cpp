@@ -1,6 +1,6 @@
 #include "login_popup.h"
 #include "ui_login_popup.h"
-
+#include <cstdlib>
 login_popup::login_popup(app::logic::hldb_i &hldb, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::login_popup),
@@ -21,5 +21,6 @@ void login_popup::on_dialogButtonBox_accepted()
 
 void login_popup::on_dialogButtonBox_rejected()
 {
-    QCoreApplication::quit();
+      auth_status = true;
+//    exit(0);
 }

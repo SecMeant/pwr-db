@@ -14,7 +14,9 @@ int main(int argc, char *argv[])
   hldb h(dbaccess::defaults::DB_DATABASE);
   login_popup w_login(h);
   MainWindow w(h);
-  w_login.exec();
+  do{
+    w_login.exec();
+  }while(!w_login.get_login_status());
   w.show();
 
   return a.exec();
