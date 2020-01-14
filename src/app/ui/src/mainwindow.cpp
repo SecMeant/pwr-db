@@ -149,3 +149,8 @@ void MainWindow::on_employee_results_cellClicked(int row, int column)
 
 }
 
+
+void MainWindow::on_tour_modify_released()
+{
+
+}

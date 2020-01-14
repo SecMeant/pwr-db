@@ -70,6 +70,8 @@ private slots:
 
     void on_employee_results_cellClicked(int row, int column);
 
+    void on_tour_modify_released();
+
 private:
   Ui::MainWindow *ui;
 };
