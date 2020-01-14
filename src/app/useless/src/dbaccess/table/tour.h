@@ -6,6 +6,8 @@ namespace app::dbaccess {
 
   struct tour_t
   {
+    static constexpr size_t field_count = 9;
+
     VALIDATABLE_BY(int, id)
     int debt;
     int insurance;

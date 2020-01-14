@@ -10,6 +10,8 @@ namespace app::dbaccess {
 
   struct employee_t
   {
+    static constexpr size_t field_count = 7;
+
     VALIDATABLE_BY(int, id)
     std::string name;
     std::string surname;

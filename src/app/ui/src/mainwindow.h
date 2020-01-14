@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "hldb.h"
 
 namespace Ui {
   class MainWindow;
@@ -12,7 +13,7 @@ class MainWindow : public QMainWindow
   Q_OBJECT
 
 public:
-  explicit MainWindow(QWidget *parent = nullptr);
+  explicit MainWindow(app::logic::hldb_i &hldb, QWidget *parent = nullptr);
   ~MainWindow();
 
 private slots:
@@ -74,6 +75,7 @@ private slots:
 
 private:
   Ui::MainWindow *ui;
+  app::logic::hldb_i &logic;
 };
 
 #endif // MAINWINDOW_H

@@ -7,6 +7,8 @@
 namespace app::dbaccess {
   struct offer_t
   {
+    static constexpr size_t field_count = 11;
+
     VALIDATABLE_BY(int, id);
     std::string name;
     std::string country;

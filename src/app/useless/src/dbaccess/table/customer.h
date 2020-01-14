@@ -6,6 +6,8 @@
 namespace app::dbaccess {
   struct customer_t
   {
+    static constexpr size_t field_count = 5;
+
     VALIDATABLE_BY(int, id)
     std::string name;
     std::string surname;

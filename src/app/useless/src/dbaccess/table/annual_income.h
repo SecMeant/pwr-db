@@ -5,6 +5,8 @@
 namespace app::dbaccess {
   struct annual_income_t
   {
+    static constexpr size_t field_count = 3;
+
     VALIDATABLE_BY(int, id);
     int year;
     int balance;

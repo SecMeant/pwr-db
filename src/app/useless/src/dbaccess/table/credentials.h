@@ -8,6 +8,8 @@
 namespace app::dbaccess {
   struct credentials_t
   {
+    static constexpr size_t field_count = 5;
+
     int id;
     int employeeid;
     std::string login;
