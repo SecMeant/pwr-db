@@ -15,8 +15,9 @@ namespace app::dbaccess {
     int employeesid;
     int offerid;
     int reserved_tickets;
-    bool operator==(const tour_t& rhs)const{
-      return this->offerid == rhs.offerid;
+    bool operator==(const tour_t& rhs)const
+    {
+      return offerid == rhs.offerid;
     }
   };
 } // namespace app::dbaccess
