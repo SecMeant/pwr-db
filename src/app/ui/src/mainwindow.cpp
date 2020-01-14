@@ -34,19 +34,19 @@ customer_parse_info(Ui::MainWindow *ui)
   auto new_customer = customer_t::make_any();
 
   if (!ui->customer_id->text().isEmpty())
-    new_customer.id = ui->customer_name->text().toInt();
+    new_customer.id = ui->customer_id->text().toInt();
 
   if (!ui->customer_name->text().isEmpty())
-    new_customer.id = ui->customer_name->text().toInt();
+    new_customer.name = ui->customer_name->text().toStdString();
 
   if (!ui->customer_surname->text().isEmpty())
-    new_customer.id = ui->customer_surname->text().toInt();
+    new_customer.surname = ui->customer_surname->text().toStdString();
 
   if (!ui->customer_email->text().isEmpty())
-    new_customer.id = ui->customer_email->text().toInt();
+    new_customer.email = ui->customer_email->text().toStdString();
 
   if (!ui->customer_pesel->text().isEmpty())
-    new_customer.id = ui->customer_pesel->text().toInt();
+    new_customer.pesel = ui->customer_pesel->text().toStdString();
 
   return new_customer;
 }
@@ -130,16 +130,16 @@ offer_parse_info(Ui::MainWindow *ui)
   auto new_offer = offer_t::make_any();
 
   if (!ui->offer_id->text().isEmpty())
-    new_offer.id = ui->offer_name->text().toInt();
+    new_offer.id = ui->offer_id->text().toInt();
 
   if (!ui->offer_name->text().isEmpty())
-    new_offer.name = ui->offer_name->text().toInt();
+    new_offer.name = ui->offer_name->text().toStdString();
 
   if (!ui->offer_country->text().isEmpty())
-    new_offer.country = ui->offer_country->text().toInt();
+    new_offer.country = ui->offer_country->text().toStdString();
 
   if (!ui->offer_city->text().isEmpty())
-    new_offer.city = ui->offer_city->text().toInt();
+    new_offer.city = ui->offer_city->text().toStdString();
 
   if (!ui->offer_price->text().isEmpty())
     new_offer.price = ui->offer_price->text().toInt();
@@ -258,9 +258,39 @@ void MainWindow::on_tour_customer_id_textChanged(const QString &arg1)
 
 }
 
+static customer_t
+tour_customer_parse_info(Ui::MainWindow *ui)
+{
+  auto new_customer = customer_t::make_any();
+
+  if (!ui->customer_id->text().isEmpty())
+    new_customer.id = ui->customer_id->text().toInt();
+
+  if (!ui->customer_name->text().isEmpty())
+    new_customer.name = ui->customer_name->text().toStdString();
+
+  if (!ui->customer_surname->text().isEmpty())
+    new_customer.surname = ui->customer_surname->text().toStdString();
+
+  if (!ui->customer_email->text().isEmpty())
+    new_customer.email = ui->customer_email->text().toStdString();
+
+  if (!ui->customer_pesel->text().isEmpty())
+    new_customer.pesel = ui->customer_pesel->text().toStdString();
+
+  return new_customer;
+}
+
 void MainWindow::on_tour_customer_search_released()
 {
+  auto new_customer = customer_parse_info(this->ui);
 
+  auto customers = this->logic.get_customers_like(new_customer);
+
+  this->ui->customer_results->clear();
+
+  for (auto &c : customers)
+    customer_result_add_row(this->ui->new_tour_customer_results, c);
 }
 
 void MainWindow::on_tour_offer_id_textChanged(const QString &arg1)
@@ -270,17 +300,80 @@ void MainWindow::on_tour_offer_id_textChanged(const QString &arg1)
 
 void MainWindow::on_tour_offer_search_released()
 {
+  auto new_offer = offer_parse_info(this->ui);
 
+  auto offers = this->logic.get_offers_like(new_offer);
+
+  this->ui->offer_results->clear();
+
+  for (auto &c : offers)
+    offer_result_add_row(this->ui->new_tour_offer_results, c, this->logic);
 }
 
 void MainWindow::on_tour_customer_result_cellClicked(int row, int column)
 {
+  column = 0;
+  auto item = this->ui->customer_results->item(row, column);
+  this->ui->tour_customer_id->setText(item->text());
 
+  ++column;
+  item = this->ui->customer_results->item(row, column);
+  this->ui->new_tour_customer_name->setText(item->text());
+
+  ++column;
+  item = this->ui->new_tour_customer_results->item(row, column);
+  this->ui->new_tour_customer_surname->setText(item->text());
+
+  ++column;
+  item = this->ui->new_tour_customer_results->item(row, column);
+  this->ui->new_tour_customer_email->setText(item->text());
+
+  ++column;
+  item = this->ui->new_tour_customer_results->item(row, column);
+  this->ui->new_tour_customer_pesel->setText(item->text());
 }
 
 void MainWindow::on_tour_offer_result_cellClicked(int row, int column)
 {
+  column = 0;
+  auto item = this->ui->new_tour_offer_results->item(row, column);
+  this->ui->new_tour_offer_id->setText(item->text());
 
+  ++column;
+  item = this->ui->new_tour_offer_results->item(row, column);
+  this->ui->new_tour_offer_name->setText(item->text());
+
+  ++column;
+  item = this->ui->new_tour_offer_results->item(row, column);
+  this->ui->new_tour_offer_country->setText(item->text());
+
+  ++column;
+  item = this->ui->new_tour_offer_results->item(row, column);
+  this->ui->new_tour_offer_city->setText(item->text());
+
+  ++column;
+  item = this->ui->new_tour_offer_results->item(row, column);
+  this->ui->new_tour_offer_price->setText(item->text());
+
+  ++column;
+  item = this->ui->new_tour_offer_results->item(row, column);
+  this->ui->new_tour_offer_from->setText(item->text());
+
+  ++column;
+  item = this->ui->new_tour_offer_results->item(row, column);
+  this->ui->new_tour_offer_to->setText(item->text());
+
+  ++column;
+  item = this->ui->new_tour_offer_results->item(row, column);
+  this->ui->new_tour_offer_insurance_cost->setText(item->text());
+
+  ++column;
+  item = this->ui->new_tour_offer_results->item(row, column);
+  this->ui->new_tour_offer_extra_meals_cost->setText(item->text());
+
+  ++column;
+  item = this->ui->new_tour_offer_results->item(row, column);
+  this->ui->new_tour_offer_ticket_count->setText(item->text());
 }
 
 void MainWindow::on_tour_with_insurance_toggled(bool checked)
@@ -295,8 +388,25 @@ void MainWindow::on_tour_with_extra_melas_toggled(bool checked)
 
 void MainWindow::on_buy_tour_released()
 {
+  auto customer_itemlist = this->ui->new_tour_customer_results->selectedItems();
 
+  if (customer_itemlist.size() != customer_t::field_count)
+    return;
+
+  auto offer_itemlist = this->ui->new_tour_offer_results->selectedItems();
+
+  if (offer_itemlist.size() != offer_t::field_count)
+    return;
+
+  auto customer_id = customer_itemlist[0]->text().toInt();
+  auto offer_id = offer_itemlist[0]->text().toInt();
+  auto ticket_count = this->ui->new_tour_tickets_number->text().toInt();
+  auto insurance = this->ui->new_tour_with_insurance->isChecked();
+  auto extra_meals = this->ui->new_tour_with_extra_meals->isChecked();
+
+  this->logic.make_reservation(offer_id, customer_id, ticket_count, insurance, extra_meals);
 }
+
 
 void MainWindow::on_tour_id_textChanged(const QString &arg1)
 {
@@ -314,19 +424,124 @@ void MainWindow::on_tour_extra_meals_toggled(bool checked)
 
 }
 
+static tour_t
+tour_parse_info(Ui::MainWindow *ui)
+{
+  tour_t tour = tour_t::make_any();
+
+  if (!ui->tour_id->text().isEmpty())
+    tour.id = ui->tour_id->text().toInt();
+
+  if (!ui->tour_debt->text().isEmpty())
+    tour.debt = ui->tour_debt->text().toInt();
+
+  if (!ui->tour_state->text().isEmpty()) {
+    auto state = static_cast<tour_state>(ui->tour_state->text().toInt());
+    tour.state = valid(state) ? state : tour_state::ANY;
+  }
+
+  if (!ui->tour_customer_id->text().isEmpty())
+    tour.customersid = ui->tour_customer_id->text().toInt();
+
+  if (!ui->tour_employee_id->text().isEmpty())
+    tour.employeesid = ui->tour_employee_id->text().toInt();
+
+  if (!ui->tour_offer_id->text().isEmpty())
+    tour.offerid = ui->tour_offer_id->text().toInt();
+
+  if (!ui->tour_ticket_count->text().isEmpty())
+    tour.reserved_tickets = ui->tour_ticket_count->text().toInt();
+
+  return tour;
+}
+
+void MainWindow::on_tour_modify_released()
+{
+  tour_t tour = tour_parse_info(this->ui);
+  this->logic.modify_tour(tour);
+}
+
+static void
+tour_result_add_row(QTableWidget *table, const tour_t &tour)
+{
+  std::array<QTableWidgetItem *, tour_t::field_count> row;
+
+  row[0] = new QTableWidgetItem(QString(tour.id));
+  row[1] = new QTableWidgetItem(QString(tour.debt));
+  row[2] = new QTableWidgetItem(QString(tour.insurance));
+  row[3] = new QTableWidgetItem(QString(tour.extra_meals));
+  row[4] = new QTableWidgetItem(QString(to_str(tour.state).c_str()));
+  row[5] = new QTableWidgetItem(QString(tour.customersid));
+  row[6] = new QTableWidgetItem(QString(tour.employeesid));
+  row[7] = new QTableWidgetItem(QString(tour.offerid));
+  row[8] = new QTableWidgetItem(QString(tour.reserved_tickets));
+
+  auto row_index = table->rowCount();
+  table->insertRow(row_index);
+
+  for (auto i = 0ull; i < row.size(); ++i)
+    table->setItem(row_index, i, row[i]);
+}
+
 void MainWindow::on_tour_search_released()
 {
+  tour_t tour = tour_parse_info(this->ui);
+  auto tours = this->logic.get_tours_like(tour);
 
+  this->ui->tour_results->clear();
+
+  for (auto &t : tours)
+    tour_result_add_row(this->ui->tour_results, t);
 }
 
 void MainWindow::on_tour_resign_released()
 {
+  auto tour_itemlist = this->ui->tour_results->selectedItems();
 
+  if (tour_itemlist.size() != tour_t::field_count)
+    return;
+
+  auto tour_id = tour_itemlist[0]->text().toInt();
+  this->logic.drop_reservation(tour_id);
 }
 
 void MainWindow::on_tour_results_cellClicked(int row, int column)
 {
+  column = 0;
+  auto item = this->ui->tour_results->item(row, column);
+  this->ui->tour_id->setText(item->text());
 
+  ++column;
+  item = this->ui->tour_results->item(row, column);
+  this->ui->tour_debt->setText(item->text());
+
+  ++column;
+  item = this->ui->tour_results->item(row, column);
+  this->ui->tour_state->setText(item->text());
+
+  ++column;
+  item = this->ui->tour_results->item(row, column);
+  this->ui->tour_customer_id->setText(item->text());
+
+  ++column;
+  item = this->ui->tour_results->item(row, column);
+  this->ui->tour_employee_id->setText(item->text());
+
+  ++column;
+  item = this->ui->tour_results->item(row, column);
+  this->ui->tour_offer_id->setText(item->text());
+
+  ++column;
+  item = this->ui->tour_results->item(row, column);
+  this->ui->tour_ticket_count->setText(item->text());
+
+  ++column;
+  item = this->ui->tour_results->item(row, column);
+  this->ui->tour_insurance->setChecked(item->text().toInt());
+
+  ++column;
+  item = this->ui->tour_results->item(row, column);
+  this->ui->tour_extra_meals->setChecked(item->text().toInt());
 }
 
 void MainWindow::on_employee_id_textChanged(const QString &arg1)
@@ -345,12 +560,6 @@ void MainWindow::on_employee_search_released()
 }
 
 void MainWindow::on_employee_results_cellClicked(int row, int column)
-{
-
-}
-
-
-void MainWindow::on_tour_modify_released()
 {
 
 }

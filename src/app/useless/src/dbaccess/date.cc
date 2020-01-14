@@ -23,6 +23,20 @@ namespace app::dbaccess {
     return date_t(tb(tt));
   }
 
+  date_t
+  str2epoch(const std::string &date)
+  {
+    std::stringstream ss(date);
+    std::tm ptm{};
+    ss >> std::get_time(&ptm, "%d.%m.%Y");
+    int64_t tt = std::mktime(&ptm) * SEC_TO_MS;
+    if (tt <-3600000 )
+      return date_t(tb(-1));
+    else if(tt == -3600000)
+      return date_t(tb(0));
+    return date_t(tb(tt));
+  }
+
   std::string
   epoch2str(const date_t &date)
   {
