@@ -13,6 +13,40 @@ namespace app::dbaccess {
     INVALID = -1,
     ANY = -2
   };
+
+  inline bool valid(tour_state ts)
+  {
+    // I pray to the gods of GCC for optimizing this
+    // int range check. Please listen.
+    switch(ts) {
+      case tour_state::UNFINSHED:
+      case tour_state::FINISHED:
+      case tour_state::RESIGNED:
+      case tour_state::INVALID:
+      case tour_state::ANY:
+        return true;
+    }
+
+    return false;
+  }
+
+  inline std::string to_str(tour_state ts)
+  {
+    switch(ts) {
+      case tour_state::UNFINSHED:
+        return "UNFINISHED";
+      case tour_state::FINISHED:
+        return "FINISHED";
+      case tour_state::RESIGNED:
+        return "RESIGNED";
+      case tour_state::INVALID:
+        return "INVALID";
+      case tour_state::ANY:
+        return "ANY";
+    }
+
+    return "Unknown";
+  }
 }
 
 namespace app {
