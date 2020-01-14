@@ -11,6 +11,8 @@ add_executable(bdgui
     src/mainwindow.ui
     src/mainwindow.cpp
     src/main.cpp
+    src/login_popup.ui
+    src/login_popup.cpp
 )
 target_include_directories(bdgui PUBLIC src)
 
