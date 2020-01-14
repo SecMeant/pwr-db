@@ -844,32 +844,37 @@
              </column>
              <column>
               <property name="text">
-               <string>Name</string>
+               <string>Debt</string>
               </property>
              </column>
              <column>
               <property name="text">
-               <string>Country</string>
+               <string>State</string>
               </property>
              </column>
              <column>
               <property name="text">
-               <string>City</string>
+               <string>Customer id</string>
               </property>
              </column>
              <column>
               <property name="text">
-               <string>Price</string>
+               <string>Employee id</string>
               </property>
              </column>
              <column>
               <property name="text">
-               <string>From</string>
+               <string>Offer id</string>
               </property>
              </column>
              <column>
               <property name="text">
-               <string>To</string>
+               <string>Insurance</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Extra meals</string>
               </property>
              </column>
              <column>
