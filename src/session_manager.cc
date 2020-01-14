@@ -44,41 +44,21 @@ namespace app::logic {
     : parent(p)
   {}
 
-  std::string
-  session_manager::hash(std::string_view s) noexcept
-  {
-    constexpr auto query_template = "select password('{}');";
-
-    auto res = this->parent.raw_query_res(fmt::format(query_template, s));
-
-    if (!res)
-      return "";
-
-    return mysql_fetch_row(res.get())[0] + 1;
-  }
-
   dbaccess::credentials_t
   session_manager::get_user_info(std::string_view username) noexcept
   {
-    // TODO use data manipulator
-    constexpr auto query_template =
-      "SELECT pass_hash, privilege, employeeid from credentials where "
-      "login = \"{}\"";
-
-    auto res =
-      this->parent.raw_query_res(fmt::format(query_template, username));
-
     dbaccess::credentials_t creds;
-
-    if (!res || mysql_num_rows(res.get()) != 1)
-      return creds;
-
-    auto row = mysql_fetch_row(res.get());
     creds.login = username;
-    creds.pass_hash = row[0];
-    creds.privilege = static_cast<logic::privilege_level>(atoi(row[1]));
-    creds.employeeid = atoi(row[2]);
-    return creds;
+    sql::set_any(creds.id);
+    sql::set_any(creds.employeeid);
+    sql::set_any(creds.pass_hash);
+    sql::set_any(creds.privilege);
+
+    auto res = this->parent.get_credentials_like(creds);
+
+    if (res.size() == 1)
+      return res[0];
+    return {};
   }
 
   dbaccess::credentials_t
@@ -90,7 +70,7 @@ namespace app::logic {
     if (!stored_creds.valid())
       return {};
 
-    auto hash = this->hash(password);
+    auto hash = this->parent.hash(password);
     auto hash_match = stored_creds.pass_hash == hash;
 
     if (!hash_match)
