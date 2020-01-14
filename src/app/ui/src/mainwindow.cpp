@@ -546,22 +546,114 @@ void MainWindow::on_tour_results_cellClicked(int row, int column)
 
 void MainWindow::on_employee_id_textChanged(const QString &arg1)
 {
+  if (arg1.isEmpty())
+    this->ui->employee_add->setText("Add");
+  else
+    this->ui->employee_add->setText("Modify");
+}
 
+static employee_t
+employee_parse_info(Ui::MainWindow *ui)
+{
+  employee_t emp = employee_t::make_any();
+
+  if (!ui->employee_id->text().isEmpty())
+    emp.id = ui->employee_id->text().toInt();
+
+  if (!ui->employee_name->text().isEmpty())
+    emp.name = ui->employee_name->text().toStdString();
+
+  if (!ui->employee_surname->text().isEmpty())
+    emp.surname = ui->employee_surname->text().toStdString();
+
+  if (!ui->employee_hiredate->text().isEmpty())
+    emp.hire_date = str2epoch(ui->employee_hiredate->text().toStdString());
+
+  if (!ui->employee_salary->text().isEmpty())
+    emp.salary = ui->employee_salary->text().toInt();
+
+  if (!ui->employee_phone->text().isEmpty())
+    emp.phone_number = ui->employee_phone->text().toStdString();
+
+  if (!ui->employee_email->text().isEmpty())
+    emp.email = ui->employee_email->text().toStdString();
+
+  return emp;
 }
 
 void MainWindow::on_employee_add_released()
 {
+  auto new_employee = employee_parse_info(this->ui);
 
+  if (sql::any(new_employee.id)) { // Add
+    this->logic.add_employee(new_employee);
+  } else { // Modify
+    this->logic.modify_employee(new_employee);
+  }
+
+}
+
+static void
+employee_result_add_row(QTableWidget *table, const employee_t &employee)
+{
+  std::array<QTableWidgetItem *, employee_t::field_count> row;
+
+  row[0] = new QTableWidgetItem(QString(employee.id));
+  row[1] = new QTableWidgetItem(employee.name.c_str());
+  row[2] = new QTableWidgetItem(employee.surname.c_str());
+  row[3] = new QTableWidgetItem(epoch2str(employee.hire_date).c_str());
+  row[4] = new QTableWidgetItem(employee.salary);
+  row[5] = new QTableWidgetItem(employee.phone_number.c_str());
+  row[6] = new QTableWidgetItem(employee.email.c_str());
+
+  auto row_index = table->rowCount();
+  table->insertRow(row_index);
+
+  for (auto i = 0ull; i < row.size(); ++i)
+    table->setItem(row_index, i, row[i]);
 }
 
 void MainWindow::on_employee_search_released()
 {
+  auto new_employee = employee_parse_info(this->ui);
 
+  auto employees = this->logic.get_employees_like(new_employee);
+
+  this->ui->employee_results->clear();
+
+  for (auto &c : employees)
+    employee_result_add_row(this->ui->employee_results, c);
 }
 
 void MainWindow::on_employee_results_cellClicked(int row, int column)
 {
+  column = 0;
+  auto item = this->ui->employee_results->item(row, column);
+  this->ui->employee_id->setText(item->text());
 
+  ++column;
+  item = this->ui->employee_results->item(row, column);
+  this->ui->employee_name->setText(item->text());
+
+  ++column;
+  item = this->ui->employee_results->item(row, column);
+  this->ui->employee_surname->setText(item->text());
+
+  ++column;
+  item = this->ui->employee_results->item(row, column);
+  this->ui->employee_hiredate->setText(item->text());
+
+  ++column;
+  item = this->ui->employee_results->item(row, column);
+  this->ui->employee_salary->setText(item->text());
+
+  ++column;
+  item = this->ui->employee_results->item(row, column);
+  this->ui->employee_phone->setText(item->text());
+
+  ++column;
+  item = this->ui->employee_results->item(row, column);
+  this->ui->employee_email->setText(item->text());
 }
 
 void MainWindow::on_logout_released()
