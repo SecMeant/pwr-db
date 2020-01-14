@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <property name="minimumSize">
@@ -117,7 +117,36 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
            <item>
-            <widget class="QTableWidget" name="customer_results"/>
+            <widget class="QTableWidget" name="customer_results">
+             <property name="columnCount">
+              <number>5</number>
+             </property>
+             <column>
+              <property name="text">
+               <string>Id</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Name</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Surname</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Email</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Pesel</string>
+              </property>
+             </column>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -259,7 +288,58 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
-            <widget class="QTableWidget" name="offer_results"/>
+            <widget class="QTableWidget" name="offer_results">
+             <column>
+              <property name="text">
+               <string>Id</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Name</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Country</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>City</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Price</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>From</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>To</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Nowa kolumna</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Extra meals cost</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Ticket count</string>
+              </property>
+             </column>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -272,7 +352,33 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout">
         <item row="1" column="0">
-         <widget class="QTableWidget" name="tour_customer_result"/>
+         <widget class="QTableWidget" name="tour_customer_result">
+          <column>
+           <property name="text">
+            <string>Id</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Surname</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Email</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Pesel</string>
+           </property>
+          </column>
+         </widget>
         </item>
         <item row="0" column="0">
          <widget class="QGroupBox" name="groupBox_6">
@@ -347,7 +453,58 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QTableWidget" name="tour_offer_result"/>
+         <widget class="QTableWidget" name="tour_offer_result">
+          <column>
+           <property name="text">
+            <string>Id</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Country</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>City</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Price</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>From</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>To</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Insurance cost</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Extra meals cost</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Ticket count</string>
+           </property>
+          </column>
+         </widget>
         </item>
         <item row="0" column="1">
          <widget class="QGroupBox" name="groupBox_7">
@@ -415,7 +572,7 @@
            <item row="6" column="1">
             <widget class="QLineEdit" name="tour_offer_to"/>
            </item>
-           <item row="9" column="1">
+           <item row="10" column="1">
             <widget class="QPushButton" name="tour_offer_search">
              <property name="text">
               <string>Search</string>
@@ -451,6 +608,16 @@
            </item>
            <item row="1" column="1">
             <widget class="QLineEdit" name="tour_offer_name"/>
+           </item>
+           <item row="9" column="1">
+            <widget class="QLineEdit" name="tour_offer_ticket_count"/>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="label_32">
+             <property name="text">
+              <string>Ticket count</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -614,7 +781,48 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="QTableWidget" name="tour_results"/>
+            <widget class="QTableWidget" name="tour_results">
+             <column>
+              <property name="text">
+               <string>Id</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Name</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Country</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>City</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Price</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>From</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>To</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Ticket count</string>
+              </property>
+             </column>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -726,7 +934,43 @@
          </widget>
         </item>
         <item>
-         <widget class="QTableWidget" name="employee_results"/>
+         <widget class="QTableWidget" name="employee_results">
+          <column>
+           <property name="text">
+            <string>Id</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Surname</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Hire date</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Salry</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Phone number</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Email</string>
+           </property>
+          </column>
+         </widget>
         </item>
        </layout>
       </widget>
