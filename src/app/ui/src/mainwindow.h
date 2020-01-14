@@ -72,6 +72,8 @@ private slots:
 
     void on_tour_modify_released();
 
+    void on_logout_released();
+
 private:
   Ui::MainWindow *ui;
   app::logic::hldb_i &logic;

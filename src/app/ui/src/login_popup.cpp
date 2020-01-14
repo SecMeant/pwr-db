@@ -17,13 +17,10 @@ login_popup::~login_popup()
 
 void login_popup::on_dialogButtonBox_accepted()
 {
-    qDebug() << "Login: " << this->ui->username->text() << ", pass: " <<this->ui->password->text();
-    auth_status = logic.authenticate(this->ui->username->text().toStdString(), this->ui->password->text().toStdString());
-    qDebug() << "Stat: " << auth_status;
+    auth_status = logic.login(this->ui->username->text().toStdString(), this->ui->password->text().toStdString());
 }
 
 void login_popup::on_dialogButtonBox_rejected()
-{
-    auth_status = true;
-//    exit(0);
+{    
+   exit(0);
 }

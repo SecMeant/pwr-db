@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "login_popup.h"
-
+#include "login_popup.h"
 using namespace app;
 using namespace app::logic;
 using namespace app::dbaccess;
@@ -353,4 +353,14 @@ void MainWindow::on_employee_results_cellClicked(int row, int column)
 void MainWindow::on_tour_modify_released()
 {
 
+}
+
+void MainWindow::on_logout_released()
+{
+    this->setEnabled(false);
+    login_popup w_login(logic);
+    do{
+      w_login.exec();
+    }while(!w_login.get_login_status());
+    this->setEnabled(true);
 }

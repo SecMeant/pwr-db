@@ -12,7 +12,6 @@ int main(int argc, char *argv[])
   QApplication a(argc, argv);
 
   hldb h(dbaccess::defaults::DB_DATABASE);
-
   login_popup w_login(h);
   MainWindow w(h);
   do{
