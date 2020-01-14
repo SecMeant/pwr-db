@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "hldb.h"
+#include "login_popup.h"
 
 namespace Ui {
   class MainWindow;
@@ -11,7 +12,7 @@ namespace Ui {
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
-
+  login_popup w_login;
 public:
   explicit MainWindow(app::logic::hldb_i &hldb, QWidget *parent = nullptr);
   ~MainWindow();

@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "login_popup.h"
 
 using namespace app;
 using namespace app::logic;
@@ -8,9 +9,11 @@ using namespace app::dbaccess;
 MainWindow::MainWindow(hldb_i &hldb, QWidget *parent)
 : QMainWindow(parent)
 , ui(new Ui::MainWindow)
-, logic(hldb)
+, logic(hldb),
+  w_login(parent)
 {
   ui->setupUi(this);
+  w_login.exec();
 }
 
 MainWindow::~MainWindow()

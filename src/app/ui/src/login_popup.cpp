@@ -12,3 +12,13 @@ login_popup::~login_popup()
 {
     delete ui;
 }
+
+void login_popup::on_dialogButtonBox_accepted()
+{
+
+}
+
+void login_popup::on_dialogButtonBox_rejected()
+{
+
+}
