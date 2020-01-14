@@ -103,6 +103,8 @@ namespace app::logic {
     modify_category(const dbaccess::category_t &) = 0;
     virtual std::string
     hash(std::string_view s) = 0;
+    virtual dbaccess::category_t
+    get_category_by_id(int id) = 0;
     virtual ~hldb_i() = default;
   };
 
@@ -117,6 +119,7 @@ namespace app::logic {
     offer_manager m_offer_manager;
     hr_manager m_hr;
     dbaccess::data_access_manager db_access_manager;
+    std::vector<dbaccess::category_t> category_cache;
 
     std::vector<dbaccess::customer_t>
     get_all_customers();
@@ -210,5 +213,7 @@ namespace app::logic {
     get_logged_user();
     std::string
     hash(std::string_view s);
+    dbaccess::category_t
+    get_category_by_id(int id);
   };
 } // namespace app::logic

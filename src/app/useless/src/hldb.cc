@@ -25,6 +25,9 @@ namespace app::logic {
                              database_name,
                              DB_PORT_NO,
                              { DB_USERNAME, DB_PASSWORD });
+
+    if (m_dbconn)
+      this->category_cache = this->get_all_category();
   }
 
   std::vector<customer_t>
@@ -321,6 +324,18 @@ namespace app::logic {
       return "";
 
     return mysql_fetch_row(res.get())[0] + 1;
+  }
+
+  category_t
+  hldb::get_category_by_id(int id)
+  {
+    auto it = std::find_if(std::begin(this->category_cache),
+                           std::end(this->category_cache),
+                           [id](const auto &c) {return c.id == id;});
+
+    if (it != std::end(this->category_cache))
+      return *it;
+    return {};
   }
 
 } // namespace app::logic
