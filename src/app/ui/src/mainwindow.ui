@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>4</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab">
        <property name="minimumSize">
@@ -402,6 +402,20 @@
           </column>
          </widget>
         </item>
+        <item row="5" column="1">
+         <widget class="QCheckBox" name="tour_with_extra_meals">
+          <property name="text">
+           <string>With extra meals</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0" colspan="2">
+         <widget class="QPushButton" name="buy_tour">
+          <property name="text">
+           <string>Buy</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="0">
          <widget class="QGroupBox" name="groupBox_6">
           <property name="minimumSize">
@@ -472,63 +486,6 @@
             </widget>
            </item>
           </layout>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QTableWidget" name="tour_offer_results">
-          <property name="selectionBehavior">
-           <enum>QAbstractItemView::SelectRows</enum>
-          </property>
-          <column>
-           <property name="text">
-            <string>Id</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Name</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Country</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>City</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Price</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>From</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>To</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Insurance cost</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Extra meals cost</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Ticket count</string>
-           </property>
-          </column>
          </widget>
         </item>
         <item row="0" column="1">
@@ -647,24 +604,77 @@
           </layout>
          </widget>
         </item>
-        <item row="3" column="0" colspan="2">
-         <widget class="QPushButton" name="buy_tour">
-          <property name="text">
-           <string>Buy</string>
+        <item row="1" column="1">
+         <widget class="QTableWidget" name="tour_offer_results">
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
           </property>
+          <column>
+           <property name="text">
+            <string>Id</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Country</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>City</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Price</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>From</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>To</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Insurance cost</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Extra meals cost</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Ticket count</string>
+           </property>
+          </column>
          </widget>
         </item>
+        <item row="5" column="0">
+         <widget class="QLineEdit" name="tour_reserved_tickets"/>
+        </item>
         <item row="2" column="0">
-         <widget class="QCheckBox" name="tour_with_insurance">
+         <widget class="QLabel" name="label_41">
           <property name="text">
-           <string>With insurance</string>
+           <string>Reserved ticket number</string>
           </property>
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QCheckBox" name="tour_with_extra_melas">
+         <widget class="QCheckBox" name="tour_with_insurance">
           <property name="text">
-           <string>With extra meals</string>
+           <string>With insurance</string>
           </property>
          </widget>
         </item>

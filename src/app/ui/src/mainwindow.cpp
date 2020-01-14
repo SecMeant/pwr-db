@@ -9,11 +9,10 @@ using namespace app::dbaccess;
 MainWindow::MainWindow(hldb_i &hldb, QWidget *parent)
 : QMainWindow(parent)
 , ui(new Ui::MainWindow)
-, logic(hldb),
-  w_login(parent)
+, logic(hldb)
 {
   ui->setupUi(this);
-  w_login.exec();
+
 }
 
 MainWindow::~MainWindow()
