@@ -46,6 +46,10 @@ namespace app::logic {
     tour_t tour;
 
     offer_t offer = parent.get_offers_like(offer_id);
+    offer_t zero_cost_offer = offer;
+    zero_cost_offer.price =0;
+    zero_cost_offer.insurance_cost =0;
+    zero_cost_offer.extra_meals_cost =0;
     if (!offer.valid())
       return false;
     app::sql::set_any(tour.id);
@@ -58,10 +62,15 @@ namespace app::logic {
     app::sql::set_any(tour.reserved_tickets);
     tour.offerid = offer_id;
     auto tours = parent.get_tours_like(tour);
+
     for (auto t = tours.begin(); t != tours.end(); t++) {
-      auto to_return = callculate_cost_diff(offer, offer, *t);
+      auto to_return = ~(callculate_cost_diff(zero_cost_offer, offer, *t)-1);
+      t->debt = to_return;
       parent.modify_tour(*t);
     }
+    offer.date_begin = date_t(tb(-1));
+    offer.date_end = date_t(tb(-1));
+    parent.modify_offer(offer);
     return true;
   }
 
@@ -82,7 +91,6 @@ namespace app::logic {
     app::sql::set_any(tour.reserved_tickets);
     tour.offerid = offer_1.id;
     auto tours = parent.get_tours_like(tour);
-
     for (auto t = tours.begin(); t != tours.end(); t++) {
       t->debt = callculate_cost_diff(offer_1, offer_2, *t);
       parent.modify_tour(*t);
@@ -123,14 +131,15 @@ namespace app::logic {
     if (t.extra_meals)
       max_old_cost = o_old.extra_meals_cost;
 
-    int payed = max_old_cost - t.debt;
-    int cost_diff = (o_new.price - o_old.price);
+    int payed = t.reserved_tickets*max_old_cost - t.debt;
+    int new_cost = o_new.price;
     if (t.insurance)
-      cost_diff += o_new.insurance_cost - o_old.insurance_cost;
+      new_cost += o_new.insurance_cost;
     if (t.extra_meals)
-      cost_diff += o_new.extra_meals_cost - o_old.extra_meals_cost;
-    fmt::print("\n COST: {}\n",cost_diff - payed);
-    return cost_diff - payed;
+      new_cost += o_new.extra_meals_cost;
+    new_cost = t.reserved_tickets*new_cost;
+
+    return new_cost - payed;
   }
 
 } // namespace app::logic

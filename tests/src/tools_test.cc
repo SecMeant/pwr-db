@@ -9,40 +9,50 @@ using namespace app::logic;
 using namespace app::dbaccess;
 using namespace app::dbaccess::defaults;
 
-
-TEST(DB_TEST, basicDatabaseConnection)
+class test_time_utils : public ::testing::Test
 {
-  db_connection c(
-    DB_HOSTNAME, DB_DATABASE, DB_PORT_NO, { DB_USERNAME_HIPRIO, DB_PASSWORD_HIPRIO });
-  EXPECT_EQ(true, c)<< "HI_PRIO ACCOUNT INACCESSIBLE";
+public:
+  test_time_utils() = default;
+  virtual ~test_time_utils()= default;
+   void
+  SetUp() override
+  {
+    date_from_current_age_str = "05.01.2020";
+    date_from_current_age_ms = 1578178800000;
+    fisrt_valid_date_str = "01.01.1970";
+    fisrt_valid_date_ms = 0;
+    incorrect_date_str = "01.01.197@";
+    incorrect_date_ms = -1;
+  }
 
-  c = db_connection(
-    DB_HOSTNAME, DB_DATABASE, DB_PORT_NO, { DB_USERNAME_MIPRIO, DB_PASSWORD_MIPRIO });
-  EXPECT_EQ(true, c)<< "MI_PRIO ACCOUNT INACCESSIBLE";
+  string date_from_current_age_str;
+  uint64_t date_from_current_age_ms;
+  string fisrt_valid_date_str;
+  uint64_t fisrt_valid_date_ms;
+  string incorrect_date_str;
+  uint64_t incorrect_date_ms;
+};
 
-  c = db_connection(
-    DB_HOSTNAME, DB_DATABASE, DB_PORT_NO, { DB_USERNAME_LOPRIO, DB_PASSWORD_LOPRIO });
-  EXPECT_EQ(true, c)<< "LO_PRIO ACCOUNT INACCESSIBLE";
-}
-
-TEST(DB_UTILS, dateConverterTest)
+TEST_F(test_time_utils, date_convertion_test)
 {
-  string d_str = "05.01.2020";
-  uint64_t time_mill = 1578178800000;
+  date_t base_date = date_t(tb(date_from_current_age_ms));
+  ASSERT_EQ(date_from_current_age_str, epoch2str(base_date));
 
-  date_t base_date = date_t(tb(time_mill));
-  EXPECT_EQ(d_str, epoch2str(base_date));
-
-  uint64_t time_conv = str2epoch(d_str.c_str()).time_since_epoch().count();
-  EXPECT_EQ(time_mill, time_conv);
+  uint64_t time_conv = str2epoch(date_from_current_age_str.c_str()).time_since_epoch().count();
+  ASSERT_EQ(date_from_current_age_ms, time_conv);
   // first day in chrono life
-  d_str = "01.01.1970";
-  time_mill = 0;
 
-  base_date = date_t(tb(time_mill));
-  EXPECT_EQ(d_str, epoch2str(base_date));
+  base_date = date_t(tb(fisrt_valid_date_ms));
+  ASSERT_EQ(fisrt_valid_date_str, epoch2str(base_date));
 
-  time_conv = str2epoch(d_str.c_str()).time_since_epoch().count();
-  EXPECT_EQ(time_mill, time_conv);
+  time_conv = str2epoch(fisrt_valid_date_str.c_str()).time_since_epoch().count();
+  ASSERT_EQ(fisrt_valid_date_ms, time_conv);
+
+  // VERIFY WRONG DATA
+  base_date = date_t(tb(incorrect_date_ms));
+  ASSERT_NE(incorrect_date_str, epoch2str(base_date));
+
+  time_conv = str2epoch(incorrect_date_str.c_str()).time_since_epoch().count();
+  ASSERT_EQ(incorrect_date_ms, time_conv);
 }
 

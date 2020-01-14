@@ -77,6 +77,13 @@ namespace app::sql {
   }
 
   template<typename T>
+  constexpr void
+  set_invalid(T &t)
+  {
+    t = INVALID<T>;
+  }
+
+  template<typename T>
   constexpr bool
   any(const T &t)
   {

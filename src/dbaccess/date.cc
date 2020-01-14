@@ -16,7 +16,9 @@ namespace app::dbaccess {
     std::tm ptm{};
     ss >> std::get_time(&ptm, "%d.%m.%Y");
     int64_t tt = std::mktime(&ptm) * SEC_TO_MS;
-    if (tt < 0)
+    if (tt <-3600000 )
+      return date_t(tb(-1));
+    else if(tt == -3600000)
       return date_t(tb(0));
     return date_t(tb(tt));
   }
