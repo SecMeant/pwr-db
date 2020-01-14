@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>3</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="tab">
        <property name="minimumSize">
@@ -98,7 +98,7 @@
             </widget>
            </item>
            <item row="4" column="1">
-            <widget class="QLineEdit" name="pesel"/>
+            <widget class="QLineEdit" name="customer_pesel"/>
            </item>
            <item row="4" column="0">
             <widget class="QLabel" name="label_36">
@@ -153,7 +153,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QLineEdit" name="name"/>
+            <widget class="QLineEdit" name="offer_name"/>
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_8">
@@ -507,7 +507,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QLineEdit" name="tour_offer_name_2"/>
+            <widget class="QLineEdit" name="tour_name"/>
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_27">
@@ -517,7 +517,7 @@
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QLineEdit" name="tour_offer_country_2"/>
+            <widget class="QLineEdit" name="tour_country"/>
            </item>
            <item row="3" column="0">
             <widget class="QLabel" name="label_28">
@@ -527,7 +527,7 @@
             </widget>
            </item>
            <item row="3" column="1">
-            <widget class="QLineEdit" name="tour_offer_city_2"/>
+            <widget class="QLineEdit" name="tour_city"/>
            </item>
            <item row="4" column="0">
             <widget class="QLabel" name="label_29">
@@ -537,7 +537,7 @@
             </widget>
            </item>
            <item row="4" column="1">
-            <widget class="QLineEdit" name="tour_offer_price_2"/>
+            <widget class="QLineEdit" name="tour_price"/>
            </item>
            <item row="5" column="0">
             <widget class="QLabel" name="label_30">
@@ -547,7 +547,7 @@
             </widget>
            </item>
            <item row="5" column="1">
-            <widget class="QLineEdit" name="tour_offer_from_2"/>
+            <widget class="QLineEdit" name="tour_from"/>
            </item>
            <item row="6" column="0">
             <widget class="QLabel" name="label_31">
@@ -557,7 +557,7 @@
             </widget>
            </item>
            <item row="6" column="1">
-            <widget class="QLineEdit" name="tour_offer_to_2"/>
+            <widget class="QLineEdit" name="tour_to"/>
            </item>
            <item row="7" column="1">
             <widget class="QCheckBox" name="tour_insurance">
