@@ -17,5 +17,21 @@ namespace app::dbaccess {
     int salary;
     std::string email;
     std::string phone_number;
+
+    inline static employee_t
+    make_any()
+    {
+      employee_t ret;
+
+      sql::set_any(ret.id);
+      sql::set_any(ret.name);
+      sql::set_any(ret.surname);
+      sql::set_any(ret.hire_date);
+      sql::set_any(ret.salary);
+      sql::set_any(ret.email);
+      sql::set_any(ret.phone_number);
+
+      return ret;
+    }
   };
 } // namespace app::dbaccess
