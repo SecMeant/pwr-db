@@ -8,7 +8,7 @@ find_library(libfmt fmt REQUIRED)
 find_library(libmysqlclient mysqlclient REQUIRED)
 find_library(libcurl curl REQUIRED)
 
-set(CMAKE_CXX_FLAGS_DEBUG "-fsanitize=address -ggdb -O0")
+set(CMAKE_CXX_FLAGS_DEBUG "-g3 -ggdb -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native")
 
 set(TARGET_LIB_NAME useless)
