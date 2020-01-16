@@ -446,10 +446,14 @@ insert into
 biuro_podrozy.credentials
   (login,  pass_hash,  privilege, employeeid)
 values
-  ("mamanger_1", '5fd924625f6ab16a19cc9807c7c506ae1813490e4ba675f843d5a10e0baacdb8',2,1),
-  ("employee_1", 'a63ab36162a4f4ee6622ccd787b0a048c26b93acfc05c6b1843659b253c3c00b',1,2),
-  ("employee_2", 'c1b5f0eac826b829526f13b182808f34515826d4f1f2f9db4173568718a995e1',1,3),
-  ("employee_3", 'f64aeef4ae2075114506128ee0e944353022ad959f3e69e5738d13dc560e351b',1,4);
+  -- hash of password : passwd1
+  ("mamanger_1", '2C69A0416BB8AA4A03F12734987F34D154E3964E',2,1),
+  -- hash of password : passwd2
+  ("employee_1", '96E7C231A54050DFA9571101979A6201CA3C2A18',1,2),
+  -- hash of password : passwd3
+  ("employee_2", '4B6BB75317F7D15EB8926F76DF7ABCDE276E80DA',1,3),
+  -- hash of password : passwd4
+  ("employee_3", '072774747BD9E7D0E2EE9DBCAFAECD74D1620816',1,4);
 
 
 insert into biuro_podrozy.customers
