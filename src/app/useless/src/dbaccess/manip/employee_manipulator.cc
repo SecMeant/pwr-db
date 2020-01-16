@@ -147,12 +147,13 @@ namespace app::dbaccess {
 
   std::string
   employee_manipulator::glue_params(const employee_t &entity,
-                                    std::string separator) const noexcept
+                                    std::string_view separator,
+                                    std::string_view eq) const noexcept
   {
     std::stringstream params;
     bool concat = false;
     if (!sql::any(entity.name)) {
-      params << fmt::format(" name = \'{}\'", entity.name);
+      params << fmt::format(" name {} \'{}\'", entity.name);
       concat = true;
     }
 
@@ -161,7 +162,7 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" surname = \'{}\' ", entity.surname);
+      params << fmt::format(" surname {} \'{}\' ", eq, entity.surname);
     }
 
     if (!sql::any(entity.hire_date)) {
@@ -179,7 +180,7 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" salary = {} ", entity.salary);
+      params << fmt::format(" salary {} {} ", eq, entity.salary);
     }
 
     if (!sql::any(entity.email)) {
@@ -187,14 +188,15 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" email = \'{}\' ", entity.email);
+      params << fmt::format(" email {} \'{}\' ", eq, entity.email);
     }
 
     if (!sql::any(entity.phone_number)) {
       if (concat)
         params << fmt::format(" {} ", separator);
 
-      params << fmt::format(" phone_number = \'{}\' ",
+      params << fmt::format(" phone_number {} \'{}\' ",
+                            eq,
                             entity.phone_number);
     }
     return params.str();

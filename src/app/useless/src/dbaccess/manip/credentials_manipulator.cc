@@ -145,7 +145,8 @@ namespace app::dbaccess {
 
   std::string
   credentials_manipulator::glue_params(const credentials_t &entity,
-                                       std::string separator) const
+                                       std::string_view separator,
+                                       std::string_view eq) const
     noexcept
   {
     std::stringstream params;
@@ -160,7 +161,7 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" employeeid = \'{}\' ", entity.employeeid);
+      params << fmt::format(" employeeid {} \'{}\' ", eq, entity.employeeid);
     }
 
     if (!sql::any(entity.login)) {
@@ -168,21 +169,22 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" login = \'{}\' ", entity.login);
+      params << fmt::format(" login {} \'{}\' ", eq, entity.login);
     }
 
     if (!sql::any(entity.pass_hash)) {
       if (concat)
         params << fmt::format(" {} ", separator);
 
-      params << fmt::format(" pass_hash = {} ", entity.pass_hash);
+      params << fmt::format(" pass_hash {} {} ", eq, entity.pass_hash);
     }
 
     if (!sql::any(entity.privilege)) {
       if (concat)
         params << fmt::format(" {} ", separator);
 
-      params << fmt::format(" privilege = {} ",
+      params << fmt::format(" privilege {} {} ",
+                            eq,
                             static_cast<int>(entity.privilege));
     }
 

@@ -146,7 +146,8 @@ namespace app::dbaccess {
 
   std::string
   tour_manipulator::glue_params(const tour_t &entity,
-                                std::string separator) const noexcept
+                                std::string_view separator,
+                                std::string_view eq) const noexcept
   {
     std::stringstream params;
     bool concat = false;
@@ -155,7 +156,7 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" debt = {} ", entity.debt);
+      params << fmt::format(" debt {} {} ", eq, entity.debt);
     }
 
     if (!sql::any(entity.insurance)) {
@@ -163,14 +164,14 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" insurance = {} ", entity.insurance);
+      params << fmt::format(" insurance {} {} ", eq, entity.insurance);
     }
     if (!sql::any(entity.extra_meals)) {
       if (concat)
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" extra_meals = {} ", entity.extra_meals);
+      params << fmt::format(" extra_meals {} {} ", eq, entity.extra_meals);
     }
 
     if (!sql::any(entity.state)) {
@@ -178,7 +179,7 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" state = {} ", entity.state);
+      params << fmt::format(" state {} {} ", eq, entity.state);
     }
 
     if (!sql::any(entity.customersid)) {
@@ -186,7 +187,7 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" customerid = {} ", entity.customersid);
+      params << fmt::format(" customerid {} {} ", eq, entity.customersid);
     }
 
     if (!sql::any(entity.employeesid)) {
@@ -194,7 +195,7 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" employeeid = {} ", entity.employeesid);
+      params << fmt::format(" employeeid {} {} ", eq, entity.employeesid);
     }
 
     if (!sql::any(entity.offerid)) {
@@ -202,7 +203,7 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" offerid = {} ", entity.offerid);
+      params << fmt::format(" offerid {} {} ", eq, entity.offerid);
     }
 
     if (!sql::any(entity.reserved_tickets)) {
@@ -210,7 +211,8 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" reserved_tickets = {} ",
+      params << fmt::format(" reserved_tickets {} {} ",
+                            eq,
                             entity.reserved_tickets);
     }
 

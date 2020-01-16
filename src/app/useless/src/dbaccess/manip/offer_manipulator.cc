@@ -1,7 +1,7 @@
-#include "offer_manipulator.h"
 #include "../../reflect.h"
 #include "../data_access_manager.h"
 #include "hldb.h"
+#include "offer_manipulator.h"
 #include <fmt/format.h>
 #include <sstream>
 namespace app::dbaccess {
@@ -169,12 +169,13 @@ namespace app::dbaccess {
 
   std::string
   offer_manipulator::glue_params(const offer_t &entity,
-                                 std::string separator) const noexcept
+                                 std::string_view separator,
+                                 std::string_view eq) const noexcept
   {
     std::stringstream params;
     bool concat = false;
     if (!sql::any(entity.name)) {
-      params << fmt::format(" name = \'{}\' ", entity.name);
+      params << fmt::format(" name {} \'{}\' ", entity.name);
       concat = true;
     }
 
@@ -183,7 +184,7 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" country = \'{}\' ", entity.country);
+      params << fmt::format(" country {} \'{}\' ", eq, entity.country);
     }
 
     if (!sql::any(entity.date_begin)) {
@@ -211,7 +212,7 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" price = {} ", entity.price);
+      params << fmt::format(" price {} {} ", eq, entity.price);
     }
 
     if (!sql::any(entity.insurance_cost)) {
@@ -219,8 +220,8 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" insurance_cost = {} ",
-                            entity.insurance_cost);
+      params << fmt::format(
+        " insurance_cost {} {} ", eq, entity.insurance_cost);
     }
 
     if (!sql::any(entity.extra_meals_cost)) {
@@ -228,8 +229,8 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" extra_meals_cost = {} ",
-                            entity.extra_meals_cost);
+      params << fmt::format(
+        " extra_meals_cost {} {} ", eq, entity.extra_meals_cost);
     }
 
     if (!sql::any(entity.categoryid)) {
@@ -237,7 +238,7 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" categoryid = {} ", entity.categoryid);
+      params << fmt::format(" categoryid {} {} ", eq, entity.categoryid);
     }
 
     if (!sql::any(entity.tickets_count)) {
@@ -245,7 +246,8 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" tickets_count = {} ", entity.tickets_count);
+      params << fmt::format(
+        " tickets_count {} {} ", eq, entity.tickets_count);
     }
     return params.str();
   }

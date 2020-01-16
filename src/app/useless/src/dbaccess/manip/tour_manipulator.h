@@ -1,7 +1,8 @@
 #pragma once
 #include "dbaccess/table/tour.h"
 #include "entity_manipulator.h"
-#include <string>
+
+#include <string_view>
 
 namespace app::dbaccess {
   class data_access_manager;
@@ -31,7 +32,7 @@ namespace app::dbaccess {
 
   private:
     std::string
-    glue_params(const tour_t &entity, std::string separator) const
+    glue_params(const tour_t &entity, std::string_view separator, std::string_view eq = "LIKE") const
       noexcept;
   };
 } // namespace app::dbaccess

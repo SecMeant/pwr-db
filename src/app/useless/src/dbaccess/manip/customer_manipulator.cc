@@ -126,12 +126,13 @@ namespace app::dbaccess {
 
   std::string
   customer_manipulator::glue_params(const customer_t &entity,
-                                    std::string separator) const noexcept
+                                    std::string_view separator,
+                                    std::string_view eq) const noexcept
   {
     std::stringstream params;
     bool concat = false;
     if (!sql::any(entity.name)) {
-      params << fmt::format(" name = \'{}\' ", entity.name);
+      params << fmt::format(" name {} \'{}\' ", eq, entity.name);
       concat = true;
     }
 
@@ -140,7 +141,7 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" surname = \'{}\' ", entity.surname);
+      params << fmt::format(" surname {} \'{}\' ", eq, entity.surname);
     }
 
     if (!sql::any(entity.email)) {
@@ -148,14 +149,14 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" email = \'{}\' ", entity.email);
+      params << fmt::format(" email {} \'{}\' ", eq, entity.email);
     }
 
     if (!sql::any(entity.pesel)) {
       if (concat)
         params << fmt::format(" {} ", separator);
 
-      params << fmt::format(" pesel = {} ", entity.pesel);
+      params << fmt::format(" pesel {} {} ", eq, entity.pesel);
     }
     return params.str();
   }

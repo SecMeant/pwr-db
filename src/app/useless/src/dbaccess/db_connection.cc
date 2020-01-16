@@ -8,6 +8,8 @@ namespace app::dbaccess {
   mysql_res_t
   db_connection::query_res(const std::string &query_string) noexcept
   {
+    fmt::print("Query: {}\n", query_string);
+
     auto res = mysql_query(this->connection.get(), query_string.c_str());
 
     if (res)
@@ -24,6 +26,7 @@ namespace app::dbaccess {
   bool
   db_connection::query(const std::string &query_string) noexcept
   {
+    fmt::print("Query: {}\n", query_string);
     return !mysql_query(this->connection.get(), query_string.c_str());
   }
 

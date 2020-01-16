@@ -2,6 +2,8 @@
 #include "dbaccess/table/employee.h"
 #include "entity_manipulator.h"
 
+#include <string_view>
+
 namespace app::dbaccess {
   class data_access_manager;
 
@@ -31,7 +33,7 @@ namespace app::dbaccess {
 
   private:
     std::string
-    glue_params(const employee_t &entity, std::string separator) const
+    glue_params(const employee_t &entity, std::string_view separator, std::string_view eq = "LIKE") const
       noexcept;
   };
 } // namespace app::dbaccess

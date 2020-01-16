@@ -123,7 +123,8 @@ namespace app::dbaccess {
 
   std::string
   category_manipulator::glue_params(const category_t &entity,
-                                    std::string separator) const noexcept
+                                    std::string_view separator,
+                                    std::string_view eq) const noexcept
   {
     std::stringstream params;
     bool concat = false;
@@ -137,7 +138,7 @@ namespace app::dbaccess {
         params << fmt::format(" {} ", separator);
       else
         concat = true;
-      params << fmt::format(" name = \'{}\' ", entity.name);
+      params << fmt::format(" name {} \'{}\' ", eq, entity.name);
     }
     return params.str();
   }

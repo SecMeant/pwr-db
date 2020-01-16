@@ -68,7 +68,7 @@ customer_result_add_row(QTableWidget *table, const customer_t &customer)
 {
   std::array<QTableWidgetItem *, customer_t::field_count> row;
 
-  row[0] = new QTableWidgetItem(QString(customer.id));
+  row[0] = new QTableWidgetItem(QString::number(customer.id));
   row[1] = new QTableWidgetItem(customer.name.c_str());
   row[2] = new QTableWidgetItem(customer.surname.c_str());
   row[3] = new QTableWidgetItem(customer.email.c_str());
