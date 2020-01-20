@@ -116,7 +116,7 @@ namespace app::dbaccess {
     std::stringstream command;
     command << "UPDATE credentials SET";
 
-    auto params = glue_params(entity, ", ");
+    auto params = glue_params(entity, ", ", "=");
 
     if (params == "")
       return false;
@@ -152,7 +152,7 @@ namespace app::dbaccess {
     std::stringstream params;
     bool concat = false;
     if (!sql::any(entity.id)) {
-      params << fmt::format(" id = \'{}\' ", entity.id);
+      params << fmt::format(" id {} \'{}\' ", eq, entity.id);
       concat = true;
     }
 

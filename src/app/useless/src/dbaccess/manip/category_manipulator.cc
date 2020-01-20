@@ -95,7 +95,7 @@ namespace app::dbaccess {
     std::stringstream command;
     command << "UPDATE category SET";
 
-    auto params = glue_params(entity, ", ");
+    auto params = glue_params(entity, ", ", "=");
 
     if (params == "")
       return false;

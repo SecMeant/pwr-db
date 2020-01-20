@@ -141,7 +141,7 @@ namespace app::dbaccess {
     std::stringstream command;
     command << "UPDATE offers SET";
 
-    auto params = glue_params(entity, ", ");
+    auto params = glue_params(entity, ", ", "=");
 
     if (params == "")
       return false;
@@ -175,7 +175,7 @@ namespace app::dbaccess {
     std::stringstream params;
     bool concat = false;
     if (!sql::any(entity.name)) {
-      params << fmt::format(" name {} \'{}\' ", entity.name);
+      params << fmt::format(" name {} \'{}\' ", eq, entity.name);
       concat = true;
     }
 

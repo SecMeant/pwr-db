@@ -98,7 +98,7 @@ namespace app::dbaccess {
     std::stringstream command;
     command << "UPDATE customers SET";
 
-    auto params = glue_params(entity, ", ");
+    auto params = glue_params(entity, ", ", "=");
 
     if (params == "")
       return false;
