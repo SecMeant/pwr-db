@@ -13,6 +13,9 @@ namespace app::logic {
   bool
   hr_manager::modify_salary(int employee_id, int new_salary) noexcept
   {
+    if (new_salary < 0)
+      return false;
+
     constexpr auto query_template = "UPDATE employees "
                                     "SET salary = {} "
                                     "WHERE id = {}";

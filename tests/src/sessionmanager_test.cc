@@ -221,14 +221,46 @@ TEST_F(SessionManagerTest, authenticate_Updates_Login_Status_On_Success)
     ASSERT_EQ(sm.state(), state_t::logedin);
     ASSERT_EQ(sm.privilege(), li.priv);
   }
+}
+
+TEST_F(SessionManagerTest, authenticate_Updates_Login_Status_On_Failre)
+{
+  ASSERT_TRUE(credentials.size() > 0);
+
+  hldb_mock hm(DB_DATABASE_TEST);
+  session_manager sm(hm);
+
+  ON_CALL(hm, authenticate).WillByDefault(
+    Invoke([&](auto &&... Args) -> bool { return check_creds(Args...); }));
+
+  EXPECT_CALL(hm, authenticate(_, _))
+    .Times(AnyNumber());
+
+
+  ON_CALL(hm, get_credentials_like(An<const credentials_t &>()))
+    .WillByDefault(Invoke([&](auto &&... Args) -> auto {
+      return get_credentials_like_mock(Args...);
+    }));
+
+  EXPECT_CALL(hm, get_credentials_like(An<const credentials_t &>()))
+    .Times(AnyNumber());
+
+
+  ON_CALL(hm, hash)
+    .WillByDefault(Invoke([&](auto&& arg) -> auto { return hash_mock(arg); }));
+
+  EXPECT_CALL(hm, hash)
+    .Times(AnyNumber());
+
+
+  ON_CALL(hm, get_employees_like(An<int>()))
+    .WillByDefault(Invoke(get_employees_like_mock));
+
+  EXPECT_CALL(hm, get_employees_like(An<int>()))
+    .Times(AnyNumber());
 
   ASSERT_FALSE(sm.authenticate(invalid_credentials.username,
                                invalid_credentials.password));
 
   ASSERT_EQ(sm.state(), state_t::logedout);
-
-  auto &cred = login_info[0];
-  ASSERT_TRUE(sm.authenticate(cred.username, cred.password));
-  ASSERT_EQ(sm.state(), state_t::logedin);
-  ASSERT_EQ(sm.privilege(), cred.priv);
 }

@@ -60,7 +60,7 @@ protected:
   std::vector<employee_t> emps;
 };
 
-TEST_F(HRManagerTest, ModifySalaryTest) {
+TEST_F(HRManagerTest, modify_salary_successed_with_positive_salary) {
   ASSERT_TRUE(emps.size() > 0);
 
   ASSERT_TRUE(hldb_inst.m_session.authenticate("manager_1", "passwd1"));
@@ -74,6 +74,23 @@ TEST_F(HRManagerTest, ModifySalaryTest) {
     auto emp_renewed = hldb_inst.get_employees_like(emp.id);
 
     EXPECT_EQ(emp_renewed.salary, new_salary);
+  }
+}
+
+TEST_F(HRManagerTest, modify_salary_fails_with_negative_salary) {
+  ASSERT_TRUE(emps.size() > 0);
+
+  ASSERT_TRUE(hldb_inst.m_session.authenticate("manager_1", "passwd1"));
+
+  for (auto &emp : emps) {
+    auto old_salary = emp.salary;
+    auto new_salary = (old_salary + 1) * (-1);
+
+    EXPECT_FALSE(hldb_inst.m_hr.modify_salary(emp.id, new_salary));
+
+    auto emp_renewed = hldb_inst.get_employees_like(emp.id);
+
+    EXPECT_EQ(emp_renewed.salary, old_salary);
   }
 }
 
