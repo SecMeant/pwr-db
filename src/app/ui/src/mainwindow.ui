@@ -45,7 +45,7 @@
     <item row="1" column="0" colspan="3">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>3</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab">
        <property name="minimumSize">
@@ -284,39 +284,49 @@
            <item row="8" column="1">
             <widget class="QLineEdit" name="offer_extra_meals_cost"/>
            </item>
-           <item row="9" column="0">
+           <item row="10" column="0">
             <widget class="QLabel" name="label_19">
              <property name="text">
               <string>Ticket count</string>
              </property>
             </widget>
            </item>
-           <item row="9" column="1">
+           <item row="10" column="1">
             <widget class="QLineEdit" name="offer_ticket_count"/>
            </item>
-           <item row="11" column="1">
+           <item row="12" column="1">
             <widget class="QPushButton" name="offer_add">
              <property name="text">
               <string>Add</string>
              </property>
             </widget>
            </item>
-           <item row="12" column="1">
+           <item row="13" column="1">
             <widget class="QPushButton" name="offer_search">
              <property name="text">
               <string>Search</string>
              </property>
             </widget>
            </item>
-           <item row="10" column="0">
+           <item row="11" column="0">
             <widget class="QLabel" name="label_40">
              <property name="text">
               <string>Category id</string>
              </property>
             </widget>
            </item>
-           <item row="10" column="1">
+           <item row="11" column="1">
             <widget class="QComboBox" name="offer_category"/>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="label_43">
+             <property name="text">
+              <string>Category id</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QLineEdit" name="offer_category_id"/>
            </item>
           </layout>
          </widget>
@@ -372,12 +382,17 @@
              </column>
              <column>
               <property name="text">
-               <string>Nowa kolumna</string>
+               <string>Insurance cost</string>
               </property>
              </column>
              <column>
               <property name="text">
                <string>Extra meals cost</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Category id</string>
               </property>
              </column>
              <column>
@@ -581,7 +596,7 @@
            <item row="6" column="1">
             <widget class="QLineEdit" name="new_tour_offer_to"/>
            </item>
-           <item row="10" column="1">
+           <item row="12" column="1">
             <widget class="QPushButton" name="new_tour_offer_search">
              <property name="text">
               <string>Search</string>
@@ -598,10 +613,10 @@
              </property>
             </widget>
            </item>
-           <item row="8" column="1">
+           <item row="9" column="1">
             <widget class="QLineEdit" name="new_tour_offer_extra_meals_cost"/>
            </item>
-           <item row="8" column="0">
+           <item row="9" column="0">
             <widget class="QLabel" name="label_39">
              <property name="text">
               <string>Extra meals cost</string>
@@ -618,15 +633,25 @@
            <item row="1" column="1">
             <widget class="QLineEdit" name="new_tour_offer_name"/>
            </item>
-           <item row="9" column="1">
+           <item row="11" column="1">
             <widget class="QLineEdit" name="new_tour_offer_ticket_count"/>
            </item>
-           <item row="9" column="0">
+           <item row="11" column="0">
             <widget class="QLabel" name="label_32">
              <property name="text">
               <string>Ticket count</string>
              </property>
             </widget>
+           </item>
+           <item row="10" column="0">
+            <widget class="QLabel" name="label_29">
+             <property name="text">
+              <string>Category id</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="1">
+            <widget class="QLineEdit" name="new_tour_offer_category_id"/>
            </item>
           </layout>
          </widget>
@@ -679,6 +704,11 @@
           <column>
            <property name="text">
             <string>Extra meals cost</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Category id</string>
            </property>
           </column>
           <column>
@@ -1034,6 +1064,52 @@
            </property>
           </column>
          </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="Charts">
+       <attribute name="title">
+        <string>Charts</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="1">
+         <layout class="QVBoxLayout" name="annual_income_chart_layout">
+          <item>
+           <widget class="QGroupBox" name="annual_income_chart">
+            <property name="title">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="annual_income_draw_chart">
+            <property name="text">
+             <string>Draw chart</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="2">
+         <layout class="QVBoxLayout" name="tour_chart_layout">
+          <item>
+           <widget class="QGroupBox" name="tour_chart">
+            <property name="title">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="choose_year"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="tour_draw_chart">
+            <property name="text">
+             <string>Draw chart</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>

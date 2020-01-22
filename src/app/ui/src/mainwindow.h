@@ -3,7 +3,8 @@
 
 #include <QMainWindow>
 #include "hldb.h"
-
+#include <memory>
+//#include <QBarSeries>
 namespace Ui {
   class MainWindow;
 }
@@ -77,9 +78,17 @@ private slots:
 
     void on_new_tour_with_extra_meals_toggled(bool checked);
 
+    void on_annual_income_draw_chart_released();
+
+    void on_tour_draw_chart_released();
+
+    void on_choose_year_currentIndexChanged(const QString &arg1);
+
 private:
   Ui::MainWindow *ui;
   app::logic::hldb_i &logic;
+//  std::unique_ptr<QBarSeries> series;
+//  std::vector<QBarSet> months;
 };
 
 #endif // MAINWINDOW_H

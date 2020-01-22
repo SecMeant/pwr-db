@@ -13,7 +13,7 @@ MainWindow::MainWindow(hldb_i &hldb, QWidget *parent)
 , logic(hldb)
 {
   ui->setupUi(this);
-
+//  series = std::make_unique<QBarSeries>();
 }
 
 MainWindow::~MainWindow()
@@ -542,11 +542,13 @@ void MainWindow::on_logout_released()
 void MainWindow::low_privilege_setup()
 {
    this->ui->tabWidget->setTabEnabled(4,false);
+    this->ui->tabWidget->setTabEnabled(5,false);
 }
 
 void MainWindow::high_privilege_setup()
 {
    this->ui->tabWidget->setTabEnabled(4,true);
+    this->ui->tabWidget->setTabEnabled(5,true);
 }
 
 void MainWindow::on_new_tour_customer_search_released()
@@ -676,6 +678,21 @@ void MainWindow::on_new_tour_with_insurance_toggled(bool checked)
 }
 
 void MainWindow::on_new_tour_with_extra_meals_toggled(bool checked)
+{
+
+}
+
+void MainWindow::on_annual_income_draw_chart_released()
+{
+
+}
+
+void MainWindow::on_tour_draw_chart_released()
+{
+
+}
+
+void MainWindow::on_choose_year_currentIndexChanged(const QString &arg1)
 {
 
 }
