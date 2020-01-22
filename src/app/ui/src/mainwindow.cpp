@@ -87,7 +87,7 @@ void MainWindow::on_customer_search_released()
 
   auto customers = this->logic.get_customers_like(new_customer);
 
-  this->ui->customer_results->clear();
+  this->ui->customer_results->setRowCount(0);
 
   for (auto &c : customers)
     customer_result_add_row(this->ui->customer_results, c);
@@ -204,7 +204,7 @@ void MainWindow::on_offer_search_released()
 
   auto offers = this->logic.get_offers_like(new_offer);
 
-  this->ui->offer_results->clear();
+  this->ui->offer_results->setRowCount(0);
 
   for (auto &c : offers)
     offer_result_add_row(this->ui->offer_results, c, this->logic);
@@ -287,7 +287,7 @@ void MainWindow::on_tour_customer_search_released()
 
   auto customers = this->logic.get_customers_like(new_customer);
 
-  this->ui->customer_results->clear();
+  this->ui->customer_results->setRowCount(0);
 
   for (auto &c : customers)
     customer_result_add_row(this->ui->new_tour_customer_results, c);
@@ -304,7 +304,7 @@ void MainWindow::on_tour_offer_search_released()
 
   auto offers = this->logic.get_offers_like(new_offer);
 
-  this->ui->offer_results->clear();
+  this->ui->offer_results->setRowCount(0);
 
   for (auto &c : offers)
     offer_result_add_row(this->ui->new_tour_offer_results, c, this->logic);
@@ -488,7 +488,7 @@ void MainWindow::on_tour_search_released()
   tour_t tour = tour_parse_info(this->ui);
   auto tours = this->logic.get_tours_like(tour);
 
-  this->ui->tour_results->clear();
+  this->ui->tour_results->setRowCount(0);
 
   for (auto &t : tours)
     tour_result_add_row(this->ui->tour_results, t);
@@ -619,7 +619,7 @@ void MainWindow::on_employee_search_released()
 
   auto employees = this->logic.get_employees_like(new_employee);
 
-  this->ui->employee_results->clear();
+  this->ui->employee_results->setRowCount(0);
 
   for (auto &c : employees)
     employee_result_add_row(this->ui->employee_results, c);
