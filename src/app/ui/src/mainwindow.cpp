@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "login_popup.h"
 #include "login_popup.h"
+#include <QDebug>
 using namespace app;
 using namespace app::logic;
 using namespace app::dbaccess;
@@ -253,11 +254,6 @@ void MainWindow::on_offer_results_cellClicked(int row, int column)
   this->ui->offer_ticket_count->setText(item->text());
 }
 
-void MainWindow::on_tour_customer_id_textChanged(const QString &arg1)
-{
-
-}
-
 static customer_t
 tour_customer_parse_info(Ui::MainWindow *ui)
 {
@@ -280,133 +276,6 @@ tour_customer_parse_info(Ui::MainWindow *ui)
 
   return new_customer;
 }
-
-void MainWindow::on_tour_customer_search_released()
-{
-  auto new_customer = customer_parse_info(this->ui);
-
-  auto customers = this->logic.get_customers_like(new_customer);
-
-  this->ui->customer_results->setRowCount(0);
-
-  for (auto &c : customers)
-    customer_result_add_row(this->ui->new_tour_customer_results, c);
-}
-
-void MainWindow::on_tour_offer_id_textChanged(const QString &arg1)
-{
-
-}
-
-void MainWindow::on_tour_offer_search_released()
-{
-  auto new_offer = offer_parse_info(this->ui);
-
-  auto offers = this->logic.get_offers_like(new_offer);
-
-  this->ui->offer_results->setRowCount(0);
-
-  for (auto &c : offers)
-    offer_result_add_row(this->ui->new_tour_offer_results, c, this->logic);
-}
-
-void MainWindow::on_tour_customer_result_cellClicked(int row, int column)
-{
-  column = 0;
-  auto item = this->ui->customer_results->item(row, column);
-  this->ui->tour_customer_id->setText(item->text());
-
-  ++column;
-  item = this->ui->customer_results->item(row, column);
-  this->ui->new_tour_customer_name->setText(item->text());
-
-  ++column;
-  item = this->ui->new_tour_customer_results->item(row, column);
-  this->ui->new_tour_customer_surname->setText(item->text());
-
-  ++column;
-  item = this->ui->new_tour_customer_results->item(row, column);
-  this->ui->new_tour_customer_email->setText(item->text());
-
-  ++column;
-  item = this->ui->new_tour_customer_results->item(row, column);
-  this->ui->new_tour_customer_pesel->setText(item->text());
-}
-
-void MainWindow::on_tour_offer_result_cellClicked(int row, int column)
-{
-  column = 0;
-  auto item = this->ui->new_tour_offer_results->item(row, column);
-  this->ui->new_tour_offer_id->setText(item->text());
-
-  ++column;
-  item = this->ui->new_tour_offer_results->item(row, column);
-  this->ui->new_tour_offer_name->setText(item->text());
-
-  ++column;
-  item = this->ui->new_tour_offer_results->item(row, column);
-  this->ui->new_tour_offer_country->setText(item->text());
-
-  ++column;
-  item = this->ui->new_tour_offer_results->item(row, column);
-  this->ui->new_tour_offer_city->setText(item->text());
-
-  ++column;
-  item = this->ui->new_tour_offer_results->item(row, column);
-  this->ui->new_tour_offer_price->setText(item->text());
-
-  ++column;
-  item = this->ui->new_tour_offer_results->item(row, column);
-  this->ui->new_tour_offer_from->setText(item->text());
-
-  ++column;
-  item = this->ui->new_tour_offer_results->item(row, column);
-  this->ui->new_tour_offer_to->setText(item->text());
-
-  ++column;
-  item = this->ui->new_tour_offer_results->item(row, column);
-  this->ui->new_tour_offer_insurance_cost->setText(item->text());
-
-  ++column;
-  item = this->ui->new_tour_offer_results->item(row, column);
-  this->ui->new_tour_offer_extra_meals_cost->setText(item->text());
-
-  ++column;
-  item = this->ui->new_tour_offer_results->item(row, column);
-  this->ui->new_tour_offer_ticket_count->setText(item->text());
-}
-
-void MainWindow::on_tour_with_insurance_toggled(bool checked)
-{
-
-}
-
-void MainWindow::on_tour_with_extra_melas_toggled(bool checked)
-{
-
-}
-
-void MainWindow::on_buy_tour_released()
-{
-  auto customer_itemlist = this->ui->new_tour_customer_results->selectedItems();
-
-  if (customer_itemlist.size() != customer_t::field_count)
-    return;
-
-  auto offer_itemlist = this->ui->new_tour_offer_results->selectedItems();
-
-  if (offer_itemlist.size() != offer_t::field_count)
-    return;
-
-  auto customer_id = customer_itemlist[0]->text().toInt();
-  auto offer_id = offer_itemlist[0]->text().toInt();
-  auto ticket_count = this->ui->new_tour_tickets_number->text().toInt();
-  auto insurance = this->ui->new_tour_with_insurance->isChecked();
-  auto extra_meals = this->ui->new_tour_with_extra_meals->isChecked();
-
-  this->logic.make_reservation(offer_id, customer_id, ticket_count, insurance, extra_meals);
-}
-
 
 void MainWindow::on_tour_id_textChanged(const QString &arg1)
 {
@@ -678,4 +547,135 @@ void MainWindow::low_privilege_setup()
 void MainWindow::high_privilege_setup()
 {
    this->ui->tabWidget->setTabEnabled(4,true);
+}
+
+void MainWindow::on_new_tour_customer_search_released()
+{
+    auto new_customer = customer_parse_info(this->ui);
+
+    auto customers = this->logic.get_customers_like(new_customer);
+
+    this->ui->customer_results->setRowCount(0);
+
+    for (auto &c : customers)
+      customer_result_add_row(this->ui->new_tour_customer_results, c);
+}
+
+void MainWindow::on_new_tour_buy_released()
+{
+    auto customer_itemlist = this->ui->new_tour_customer_results->selectedItems();
+
+    if (customer_itemlist.size() != customer_t::field_count)
+      return;
+
+    auto offer_itemlist = this->ui->new_tour_offer_results->selectedItems();
+
+    if (offer_itemlist.size() != offer_t::field_count)
+      return;
+
+    auto customer_id = customer_itemlist[0]->text().toInt();
+    auto offer_id = offer_itemlist[0]->text().toInt();
+    auto ticket_count = this->ui->new_tour_tickets_number->text().toInt();
+    auto insurance = this->ui->new_tour_with_insurance->isChecked();
+    auto extra_meals = this->ui->new_tour_with_extra_meals->isChecked();
+
+    this->logic.make_reservation(offer_id, customer_id, ticket_count, insurance, extra_meals);
+}
+
+void MainWindow::on_new_tour_offer_search_released()
+{
+    auto new_offer = offer_parse_info(this->ui);
+
+    auto offers = this->logic.get_offers_like(new_offer);
+
+    this->ui->offer_results->setRowCount(0);
+
+    for (auto &c : offers)
+      offer_result_add_row(this->ui->new_tour_offer_results, c, this->logic);
+}
+
+void MainWindow::on_new_tour_customer_id_textChanged(const QString &arg1)
+{
+
+}
+
+void MainWindow::on_new_tour_offer_id_textChanged(const QString &arg1)
+{
+
+}
+
+void MainWindow::on_new_tour_customer_results_cellClicked(int row, int column)
+{
+    column = 0;
+    auto item = this->ui->customer_results->item(row, column);
+    this->ui->tour_customer_id->setText(item->text());
+
+    ++column;
+    item = this->ui->customer_results->item(row, column);
+    this->ui->new_tour_customer_name->setText(item->text());
+
+    ++column;
+    item = this->ui->new_tour_customer_results->item(row, column);
+    this->ui->new_tour_customer_surname->setText(item->text());
+
+    ++column;
+    item = this->ui->new_tour_customer_results->item(row, column);
+    this->ui->new_tour_customer_email->setText(item->text());
+
+    ++column;
+    item = this->ui->new_tour_customer_results->item(row, column);
+    this->ui->new_tour_customer_pesel->setText(item->text());
+}
+
+void MainWindow::on_new_tour_offer_results_cellClicked(int row, int column)
+{
+    column = 0;
+    auto item = this->ui->new_tour_offer_results->item(row, column);
+    this->ui->new_tour_offer_id->setText(item->text());
+
+    ++column;
+    item = this->ui->new_tour_offer_results->item(row, column);
+    this->ui->new_tour_offer_name->setText(item->text());
+
+    ++column;
+    item = this->ui->new_tour_offer_results->item(row, column);
+    this->ui->new_tour_offer_country->setText(item->text());
+
+    ++column;
+    item = this->ui->new_tour_offer_results->item(row, column);
+    this->ui->new_tour_offer_city->setText(item->text());
+
+    ++column;
+    item = this->ui->new_tour_offer_results->item(row, column);
+    this->ui->new_tour_offer_price->setText(item->text());
+
+    ++column;
+    item = this->ui->new_tour_offer_results->item(row, column);
+    this->ui->new_tour_offer_from->setText(item->text());
+
+    ++column;
+    item = this->ui->new_tour_offer_results->item(row, column);
+    this->ui->new_tour_offer_to->setText(item->text());
+
+    ++column;
+    item = this->ui->new_tour_offer_results->item(row, column);
+    this->ui->new_tour_offer_insurance_cost->setText(item->text());
+
+    ++column;
+    item = this->ui->new_tour_offer_results->item(row, column);
+    this->ui->new_tour_offer_extra_meals_cost->setText(item->text());
+
+    ++column;
+    item = this->ui->new_tour_offer_results->item(row, column);
+    this->ui->new_tour_offer_ticket_count->setText(item->text());
+}
+
+void MainWindow::on_new_tour_with_insurance_toggled(bool checked)
+{
+
+}
+
+void MainWindow::on_new_tour_with_extra_meals_toggled(bool checked)
+{
+
 }

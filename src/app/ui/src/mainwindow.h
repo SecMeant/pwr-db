@@ -35,24 +35,6 @@ private slots:
 
     void on_offer_results_cellClicked(int row, int column);
 
-    void on_tour_customer_id_textChanged(const QString &arg1);
-
-    void on_tour_customer_search_released();
-
-    void on_tour_offer_id_textChanged(const QString &arg1);
-
-    void on_tour_offer_search_released();
-
-    void on_tour_customer_result_cellClicked(int row, int column);
-
-    void on_tour_offer_result_cellClicked(int row, int column);
-
-    void on_tour_with_insurance_toggled(bool checked);
-
-    void on_tour_with_extra_melas_toggled(bool checked);
-
-    void on_buy_tour_released();
-
     void on_tour_insurance_toggled(bool checked);
 
     void on_tour_id_textChanged(const QString &arg1);
@@ -76,6 +58,24 @@ private slots:
     void on_tour_modify_released();
 
     void on_logout_released();
+
+    void on_new_tour_customer_search_released();
+
+    void on_new_tour_buy_released();
+
+    void on_new_tour_offer_search_released();
+
+    void on_new_tour_customer_id_textChanged(const QString &arg1);
+
+    void on_new_tour_offer_id_textChanged(const QString &arg1);
+
+    void on_new_tour_customer_results_cellClicked(int row, int column);
+
+    void on_new_tour_offer_results_cellClicked(int row, int column);
+
+    void on_new_tour_with_insurance_toggled(bool checked);
+
+    void on_new_tour_with_extra_meals_toggled(bool checked);
 
 private:
   Ui::MainWindow *ui;
