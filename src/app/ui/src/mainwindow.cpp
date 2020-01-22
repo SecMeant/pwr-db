@@ -3,9 +3,13 @@
 #include "login_popup.h"
 #include "login_popup.h"
 #include <QDebug>
+
 using namespace app;
 using namespace app::logic;
 using namespace app::dbaccess;
+
+QString success_info = "SUCCESS";
+QString fail_info = "FAILED";
 
 MainWindow::MainWindow(hldb_i &hldb, QWidget *parent)
 : QMainWindow(parent)
@@ -13,7 +17,6 @@ MainWindow::MainWindow(hldb_i &hldb, QWidget *parent)
 , logic(hldb)
 {
   ui->setupUi(this);
-//  series = std::make_unique<QBarSeries>();
 }
 
 MainWindow::~MainWindow()
@@ -157,6 +160,9 @@ offer_parse_info(Ui::MainWindow *ui)
   if (!ui->offer_extra_meals_cost->text().isEmpty())
     new_offer.extra_meals_cost = ui->offer_extra_meals_cost->text().toInt();
 
+  if (!ui->offer_category_id->text().isEmpty())
+    new_offer.categoryid = ui->offer_category_id->text().toInt();
+
   if (!ui->offer_ticket_count->text().isEmpty())
     new_offer.tickets_count = ui->offer_ticket_count->text().toInt();
 
@@ -190,7 +196,7 @@ offer_result_add_row(QTableWidget *table, const offer_t &offer, hldb_i &logic)
   row[7] = new QTableWidgetItem(QString::number(offer.insurance_cost));
   row[8] = new QTableWidgetItem(QString::number(offer.extra_meals_cost));
   row[9] = new QTableWidgetItem(QString::number(offer.tickets_count));
-  row[10] = new QTableWidgetItem(logic.get_category_by_id(offer.categoryid).name.c_str());
+  row[10] = new QTableWidgetItem(QString::number(offer.categoryid));
 
   auto row_index = table->rowCount();
   table->insertRow(row_index);
@@ -335,15 +341,15 @@ tour_result_add_row(QTableWidget *table, const tour_t &tour)
 {
   std::array<QTableWidgetItem *, tour_t::field_count> row;
 
-  row[0] = new QTableWidgetItem(QString(tour.id));
-  row[1] = new QTableWidgetItem(QString(tour.debt));
-  row[2] = new QTableWidgetItem(QString(tour.insurance));
-  row[3] = new QTableWidgetItem(QString(tour.extra_meals));
+  row[0] = new QTableWidgetItem(QString(QString::number(tour.id)));
+  row[1] = new QTableWidgetItem(QString(QString::number(tour.debt)));
+  row[2] = new QTableWidgetItem(QString(QString::number(tour.insurance)));
+  row[3] = new QTableWidgetItem(QString(QString::number(tour.extra_meals)));
   row[4] = new QTableWidgetItem(QString(to_str(tour.state).c_str()));
-  row[5] = new QTableWidgetItem(QString(tour.customersid));
-  row[6] = new QTableWidgetItem(QString(tour.employeesid));
-  row[7] = new QTableWidgetItem(QString(tour.offerid));
-  row[8] = new QTableWidgetItem(QString(tour.reserved_tickets));
+  row[5] = new QTableWidgetItem(QString(QString::number(tour.customersid)));
+  row[6] = new QTableWidgetItem(QString(QString::number(tour.employeesid)));
+  row[7] = new QTableWidgetItem(QString(QString::number(tour.offerid)));
+  row[8] = new QTableWidgetItem(QString(QString::number(tour.reserved_tickets)));
 
   auto row_index = table->rowCount();
   table->insertRow(row_index);
@@ -551,9 +557,32 @@ void MainWindow::high_privilege_setup()
     this->ui->tabWidget->setTabEnabled(5,true);
 }
 
+static customer_t
+new_tour_customer_parse_info(Ui::MainWindow *ui)
+{
+  auto new_customer = customer_t::make_any();
+
+  if (!ui->new_tour_customer_id->text().isEmpty())
+    new_customer.id = ui->new_tour_customer_id->text().toInt();
+
+  if (!ui->new_tour_customer_name->text().isEmpty())
+    new_customer.name = ui->new_tour_customer_name->text().toStdString();
+
+  if (!ui->new_tour_customer_surname->text().isEmpty())
+    new_customer.surname = ui->new_tour_customer_surname->text().toStdString();
+
+  if (!ui->new_tour_customer_email->text().isEmpty())
+    new_customer.email = ui->new_tour_customer_email->text().toStdString();
+
+  if (!ui->new_tour_customer_pesel->text().isEmpty())
+    new_customer.pesel = ui->new_tour_customer_pesel->text().toStdString();
+
+  return new_customer;
+}
+
 void MainWindow::on_new_tour_customer_search_released()
 {
-    auto new_customer = customer_parse_info(this->ui);
+    auto new_customer = new_tour_customer_parse_info(this->ui);
 
     auto customers = this->logic.get_customers_like(new_customer);
 
@@ -581,12 +610,56 @@ void MainWindow::on_new_tour_buy_released()
     auto insurance = this->ui->new_tour_with_insurance->isChecked();
     auto extra_meals = this->ui->new_tour_with_extra_meals->isChecked();
 
-    this->logic.make_reservation(offer_id, customer_id, ticket_count, insurance, extra_meals);
+    auto status = this->logic.make_reservation(offer_id, customer_id, ticket_count, insurance, extra_meals);
+
+    const auto& info_str = status ? success_info : fail_info;
+    this->ui->status->setText(info_str);
+}
+
+static offer_t
+new_tour_offer_parse_info(Ui::MainWindow *ui)
+{
+  auto new_offer = offer_t::make_any();
+
+  if (!ui->new_tour_offer_id->text().isEmpty())
+    new_offer.id = ui->new_tour_offer_id->text().toInt();
+
+  if (!ui->new_tour_offer_name->text().isEmpty())
+    new_offer.name = ui->new_tour_offer_name->text().toStdString();
+
+  if (!ui->new_tour_offer_country->text().isEmpty())
+    new_offer.country = ui->new_tour_offer_country->text().toStdString();
+
+  if (!ui->new_tour_offer_city->text().isEmpty())
+    new_offer.city = ui->new_tour_offer_city->text().toStdString();
+
+  if (!ui->new_tour_offer_from->text().isEmpty())
+    new_offer.date_begin = str2epoch(ui->new_tour_offer_from->text().toStdString().c_str());
+
+  if (!ui->new_tour_offer_to->text().isEmpty())
+    new_offer.date_end = str2epoch(ui->new_tour_offer_to->text().toStdString().c_str());
+
+  if (!ui->new_tour_offer_price->text().isEmpty())
+    new_offer.price = ui->new_tour_offer_price->text().toInt();
+
+  if (!ui->new_tour_offer_insurance_cost->text().isEmpty())
+    new_offer.insurance_cost = ui->new_tour_offer_insurance_cost->text().toInt();
+
+  if (!ui->new_tour_offer_extra_meals_cost->text().isEmpty())
+    new_offer.extra_meals_cost = ui->new_tour_offer_extra_meals_cost->text().toInt();
+
+  if (!ui->new_tour_offer_category_id->text().isEmpty())
+    new_offer.categoryid = ui->new_tour_offer_category_id->text().toInt();
+
+  if (!ui->new_tour_offer_ticket_count->text().isEmpty())
+    new_offer.tickets_count = ui->new_tour_offer_ticket_count->text().toInt();
+
+  return new_offer;
 }
 
 void MainWindow::on_new_tour_offer_search_released()
 {
-    auto new_offer = offer_parse_info(this->ui);
+    auto new_offer = new_tour_offer_parse_info(this->ui);
 
     auto offers = this->logic.get_offers_like(new_offer);
 
@@ -609,11 +682,11 @@ void MainWindow::on_new_tour_offer_id_textChanged(const QString &arg1)
 void MainWindow::on_new_tour_customer_results_cellClicked(int row, int column)
 {
     column = 0;
-    auto item = this->ui->customer_results->item(row, column);
-    this->ui->tour_customer_id->setText(item->text());
+    auto item = this->ui->new_tour_customer_results->item(row, column);
+    this->ui->new_tour_customer_id->setText(item->text());
 
     ++column;
-    item = this->ui->customer_results->item(row, column);
+    item = this->ui->new_tour_customer_results->item(row, column);
     this->ui->new_tour_customer_name->setText(item->text());
 
     ++column;
