@@ -179,16 +179,16 @@ offer_result_add_row(QTableWidget *table, const offer_t &offer, hldb_i &logic)
 {
   std::array<QTableWidgetItem *, offer_t::field_count> row;
 
-  row[0] = new QTableWidgetItem(QString(offer.id));
+  row[0] = new QTableWidgetItem(QString::number(offer.id));
   row[1] = new QTableWidgetItem(offer.name.c_str());
   row[2] = new QTableWidgetItem(offer.country.c_str());
   row[3] = new QTableWidgetItem(offer.city.c_str());
-  row[4] = new QTableWidgetItem(offer.price);
+  row[4] = new QTableWidgetItem(QString::number(offer.price));
   row[5] = new QTableWidgetItem(epoch2str(offer.date_begin).c_str());
   row[6] = new QTableWidgetItem(epoch2str(offer.date_end).c_str());
-  row[7] = new QTableWidgetItem(offer.insurance_cost);
-  row[8] = new QTableWidgetItem(offer.extra_meals_cost);
-  row[9] = new QTableWidgetItem(offer.tickets_count);
+  row[7] = new QTableWidgetItem(QString::number(offer.insurance_cost));
+  row[8] = new QTableWidgetItem(QString::number(offer.extra_meals_cost));
+  row[9] = new QTableWidgetItem(QString::number(offer.tickets_count));
   row[10] = new QTableWidgetItem(logic.get_category_by_id(offer.categoryid).name.c_str());
 
   auto row_index = table->rowCount();

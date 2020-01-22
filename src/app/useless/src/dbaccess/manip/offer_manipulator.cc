@@ -187,6 +187,14 @@ namespace app::dbaccess {
       params << fmt::format(" country {} \'{}\' ", eq, entity.country);
     }
 
+    if (!sql::any(entity.city)) {
+      if (concat)
+        params << fmt::format(" {} ", separator);
+      else
+        concat = true;
+      params << fmt::format(" city {} \'{}\' ", eq, entity.city);
+    }
+
     if (!sql::any(entity.date_begin)) {
       auto date = str2base_str(epoch2str(entity.date_begin));
       if (concat)
