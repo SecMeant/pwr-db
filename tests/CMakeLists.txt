@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
-
+if (EXISTS "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+endif()
 set (TEST_NAME useless_test)
 
 file( GLOB T_SRC "src/*.cc")
@@ -7,6 +9,7 @@ find_library(libgtest gtest REQUIRED)
 find_library(libgtestmain gtest_main REQUIRED)
 find_library(libgmock gmock REQUIRED)
 find_library(libpthread pthread REQUIRED)
+find_package(CppUTest REQUIRED)
 
 add_executable(${TEST_NAME} ${T_SRC})
-target_link_libraries(${TEST_NAME} ${libgtestmain} ${libgtest} ${libgmock} ${libpthread} useless ${libfmt})
+target_link_libraries(${TEST_NAME} ${libgtestmain} ${libgtest} ${libgmock} ${libpthread} useless ${libfmt} CSlim CppUTest::CppUTest CppUTest::CppUTestExt)
