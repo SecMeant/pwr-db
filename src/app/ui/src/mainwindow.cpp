@@ -301,12 +301,12 @@ tour_result_add_row(QTableWidget *table, const tour_t &tour)
 
   row[0] = new QTableWidgetItem(QString(QString::number(tour.id)));
   row[1] = new QTableWidgetItem(QString(QString::number(tour.debt)));
-  row[2] = new QTableWidgetItem(QString(QString::number(tour.insurance)));
-  row[3] = new QTableWidgetItem(QString(QString::number(tour.extra_meals)));
-  row[4] = new QTableWidgetItem(QString(to_str(tour.state).c_str()));
-  row[5] = new QTableWidgetItem(QString(QString::number(tour.customersid)));
-  row[6] = new QTableWidgetItem(QString(QString::number(tour.employeesid)));
-  row[7] = new QTableWidgetItem(QString(QString::number(tour.offerid)));
+  row[2] = new QTableWidgetItem(QString(to_str(tour.state).c_str()));
+  row[3] = new QTableWidgetItem(QString(QString::number(tour.customersid)));
+  row[4] = new QTableWidgetItem(QString(QString::number(tour.employeesid)));
+  row[5] = new QTableWidgetItem(QString(QString::number(tour.offerid)));
+  row[6] = new QTableWidgetItem(QString(QString::number(tour.insurance)));
+  row[7] = new QTableWidgetItem(QString(QString::number(tour.extra_meals)));
   row[8] = new QTableWidgetItem(QString(QString::number(tour.reserved_tickets)));
 
   auto row_index = table->rowCount();
