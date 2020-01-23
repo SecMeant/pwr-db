@@ -44,13 +44,7 @@ MainWindow::MainWindow(hldb_i &hldb, QWidget *parent)
   t_chart->addSeries(tour_series.get());
   t_chart->setTitle("Tour statistic");
   t_chart->setAnimationOptions(QChart::SeriesAnimations);
-  QStringList categories;
-  categories << "Jan" << "Feb" << "Mar" << "Apr" << "May" << "Jun" << "Jul" <<"Aug" <<"Sep" << "Oct" <<"Nov" <<"Dec";
-  QBarCategoryAxis *axisX = new QBarCategoryAxis();
-  axisX->append(categories);
-  t_chart->addAxis(axisX, Qt::AlignBottom);
-  tour_series->attachAxis(axisX);
-  t_chart->legend()->setVisible(false);
+  t_chart->legend()->setVisible(true);
   t_chart->legend()->setAlignment(Qt::AlignBottom);
   QChartView *chartView = new QChartView(t_chart.get());
   chartView->setRenderHint(QPainter::Antialiasing);

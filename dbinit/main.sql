@@ -1393,20 +1393,20 @@ end//
 
 delimiter ;
 -- procedura delete client must check if client has any tours and not state
-call reserve_tour(1,4,5,1,1,1);
-call resign_from_insurance(2);
-call resign_from_extra_meals(2);
-call resign_from_insurance(2);
-call resign_from_extra_meals(2);
-call resign_from_insurance(8);
-call resign_from_extra_meals(8);
-call modify_offer(2,'wycieczka 2','usa','new york',str_to_date('15.01.19','%d.%m.%y'),str_to_date('21.01.19','%d.%m.%y'),4298,614,538,4);
+-- call reserve_tour(1,4,5,1,1,1);
+-- call resign_from_insurance(2);
+-- call resign_from_extra_meals(2);
+-- call resign_from_insurance(2);
+-- call resign_from_extra_meals(2);
+-- call resign_from_insurance(8);
+-- call resign_from_extra_meals(8);
+-- call modify_offer(2,'wycieczka 2','usa','new york',str_to_date('15.01.19','%d.%m.%y'),str_to_date('21.01.19','%d.%m.%y'),4298,614,538,4);
 
 -- pokazanie funkcjionalnosci tirgera
-set foreign_key_checks=0;
-delete from biuro_podrozy.employees where biuro_podrozy.employees.id =1;
-set foreign_key_checks=1;
-call change_employee_tours(null, 2);
+-- set foreign_key_checks=0;
+-- delete from biuro_podrozy.employees where biuro_podrozy.employees.id =1;
+-- set foreign_key_checks=1;
+-- call change_employee_tours(null, 2);
 -- pokazanie naruszania kluczy w kazdej z tabel
 
 -- insert into
