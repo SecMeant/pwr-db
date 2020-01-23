@@ -6,6 +6,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt5Charts REQUIRED)
 
 add_executable(bdgui
     src/mainwindow.ui
@@ -15,5 +16,6 @@ add_executable(bdgui
     src/login_popup.cpp
 )
 target_include_directories(bdgui PUBLIC src)
+target_include_directories(bdgui PUBLIC ${Qt5Charts_INCLUDE_DIRS})
 
-target_link_libraries(bdgui Qt5::Widgets useless)
+target_link_libraries(bdgui Qt5::Widgets Qt5::Charts useless)

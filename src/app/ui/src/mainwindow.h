@@ -4,11 +4,14 @@
 #include <QMainWindow>
 #include "hldb.h"
 #include <memory>
-//#include <QBarSeries>
+#include <QBarSeries>
+#include <QBarSet>
+#include <QChart>
+#include <vector>
 namespace Ui {
   class MainWindow;
 }
-
+constexpr int months_in_year = 12;
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
@@ -87,8 +90,10 @@ private slots:
 private:
   Ui::MainWindow *ui;
   app::logic::hldb_i &logic;
-//  std::unique_ptr<QBarSeries> series;
-//  std::vector<QBarSet> months;
+  std::unique_ptr<QtCharts::QChart> chart;
+  std::unique_ptr<QtCharts::QBarSeries> ai_series;
+  std::unique_ptr<QtCharts::QBarSeries> tour_series;
+  std::array<QtCharts::QBarSet*, months_in_year> annual_months;
 };
 
 #endif // MAINWINDOW_H

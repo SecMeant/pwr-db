@@ -3,17 +3,51 @@
 #include "login_popup.h"
 #include "login_popup.h"
 #include <QDebug>
+#include <QBarCategoryAxis>
+#include <QChartView>
 using namespace app;
 using namespace app::logic;
 using namespace app::dbaccess;
-
+using namespace QtCharts;
 MainWindow::MainWindow(hldb_i &hldb, QWidget *parent)
 : QMainWindow(parent)
 , ui(new Ui::MainWindow)
 , logic(hldb)
 {
   ui->setupUi(this);
-//  series = std::make_unique<QBarSeries>();
+  ai_series = std::make_unique<QBarSeries>();
+  tour_series = std::make_unique<QBarSeries>();
+  chart = std::make_unique<QChart>();
+  annual_months[0]= new QBarSet("January");
+  annual_months[1]= new QBarSet("February");
+  annual_months[2]= new QBarSet("March");
+  annual_months[3]= new QBarSet("April");
+  annual_months[4]= new QBarSet("May");
+  annual_months[5]= new QBarSet("June");
+  annual_months[6]= new QBarSet("July");
+  annual_months[7]= new QBarSet("August");
+  annual_months[8]= new QBarSet("Semptember");
+  annual_months[9]= new QBarSet("Octomber");
+  annual_months[10]= new QBarSet("November");
+  annual_months[11]= new QBarSet("December");
+
+  for(auto &am : annual_months)
+      tour_series->append(am);
+
+  chart->addSeries(tour_series.get());
+  chart->setTitle("Tour statistic");
+  chart->setAnimationOptions(QChart::SeriesAnimations);
+  QStringList categories;
+  categories << "Jan" << "Feb" << "Mar" << "Apr" << "May" << "Jun" << "Jul" <<"Aug" <<"Sep" << "Oct" <<"Nov" <<"Dec";
+  QBarCategoryAxis *axisX = new QBarCategoryAxis();
+  axisX->append(categories);
+  chart->addAxis(axisX, Qt::AlignBottom);
+  tour_series->attachAxis(axisX);
+  chart->legend()->setVisible(true);
+  chart->legend()->setAlignment(Qt::AlignBottom);
+  QChartView *chartView = new QChartView(chart.get());
+  chartView->setRenderHint(QPainter::Antialiasing);
+  ui->tour_chart_layout->addWidget(chartView,0);
 }
 
 MainWindow::~MainWindow()
