@@ -105,6 +105,8 @@ namespace app::logic {
     hash(std::string_view s) = 0;
     virtual dbaccess::category_t
     get_category_by_id(int id) = 0;
+    virtual int
+    get_category_id_by_name(std::string_view catname) = 0;
     virtual ~hldb_i() = default;
     virtual privilege_level
     get_user_privilage()=0;
@@ -218,6 +220,8 @@ namespace app::logic {
     hash(std::string_view s);
     dbaccess::category_t
     get_category_by_id(int id);
+    int
+    get_category_id_by_name(std::string_view cat_name);
     privilege_level
     get_user_privilage();
   };

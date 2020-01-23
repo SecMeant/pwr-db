@@ -447,7 +447,7 @@ biuro_podrozy.credentials
   (login,  pass_hash,  privilege, employeeid)
 values
   -- hash of password : passwd1
-  ("mamanger_1", '2C69A0416BB8AA4A03F12734987F34D154E3964E',2,1),
+  ("manager_1", '2C69A0416BB8AA4A03F12734987F34D154E3964E',2,1),
   -- hash of password : passwd2
   ("employee_1", '96E7C231A54050DFA9571101979A6201CA3C2A18',1,2),
   -- hash of password : passwd3

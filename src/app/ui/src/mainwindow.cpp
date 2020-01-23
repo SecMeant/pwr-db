@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QBarCategoryAxis>
 #include <QChartView>
+
 using namespace app;
 using namespace app::logic;
 using namespace app::dbaccess;
@@ -71,7 +72,21 @@ MainWindow::MainWindow(hldb_i &hldb, QWidget *parent)
   chartView = new QChartView(ai_chart.get());
   chartView->setRenderHint(QPainter::Antialiasing);
   ui->annual_income_chart_layout->addWidget(chartView);
+  auto i = 1ull;
 
+  ui->offer_category->addItem("");
+  ui->new_tour_offer_category->addItem("");
+  while (1)
+  {
+    auto cat = logic.get_category_by_id(i);
+
+    if (!cat.valid())
+      break;
+
+    ui->offer_category->addItem(cat.name.c_str());
+    ui->new_tour_offer_category->addItem(cat.name.c_str());
+    ++i;
+  }
 }
 
 MainWindow::~MainWindow()
@@ -87,32 +102,9 @@ void MainWindow::on_customer_id_textChanged(const QString &arg1)
     this->ui->customer_add->setText("Modify");
 }
 
-static customer_t
-customer_parse_info(Ui::MainWindow *ui)
-{
-  auto new_customer = customer_t::make_any();
-
-  if (!ui->customer_id->text().isEmpty())
-    new_customer.id = ui->customer_id->text().toInt();
-
-  if (!ui->customer_name->text().isEmpty())
-    new_customer.name = ui->customer_name->text().toStdString();
-
-  if (!ui->customer_surname->text().isEmpty())
-    new_customer.surname = ui->customer_surname->text().toStdString();
-
-  if (!ui->customer_email->text().isEmpty())
-    new_customer.email = ui->customer_email->text().toStdString();
-
-  if (!ui->customer_pesel->text().isEmpty())
-    new_customer.pesel = ui->customer_pesel->text().toStdString();
-
-  return new_customer;
-}
-
 void MainWindow::on_customer_add_released()
 {
-  auto new_customer = customer_parse_info(this->ui);
+  auto new_customer = customer_parse_info();
 
   if (sql::any(new_customer.id)) { // Add
     this->logic.add_customer(new_customer);
@@ -142,7 +134,7 @@ customer_result_add_row(QTableWidget *table, const customer_t &customer)
 
 void MainWindow::on_customer_search_released()
 {
-  auto new_customer = customer_parse_info(this->ui);
+  auto new_customer = customer_parse_info();
 
   auto customers = this->logic.get_customers_like(new_customer);
 
@@ -183,50 +175,9 @@ void MainWindow::on_offer_id_textChanged(const QString &arg1)
     this->ui->offer_add->setText("Modify");
 }
 
-static offer_t
-offer_parse_info(Ui::MainWindow *ui)
-{
-  auto new_offer = offer_t::make_any();
-
-  if (!ui->offer_id->text().isEmpty())
-    new_offer.id = ui->offer_id->text().toInt();
-
-  if (!ui->offer_name->text().isEmpty())
-    new_offer.name = ui->offer_name->text().toStdString();
-
-  if (!ui->offer_country->text().isEmpty())
-    new_offer.country = ui->offer_country->text().toStdString();
-
-  if (!ui->offer_city->text().isEmpty())
-    new_offer.city = ui->offer_city->text().toStdString();
-
-  if (!ui->offer_price->text().isEmpty())
-    new_offer.price = ui->offer_price->text().toInt();
-
-  if (!ui->offer_from->text().isEmpty())
-    new_offer.date_begin = str2epoch(ui->offer_from->text().toStdString().c_str());
-
-  if (!ui->offer_to->text().isEmpty())
-    new_offer.date_end = str2epoch(ui->offer_to->text().toStdString().c_str());
-
-  if (!ui->offer_insurance_cost->text().isEmpty())
-    new_offer.insurance_cost = ui->offer_insurance_cost->text().toInt();
-
-  if (!ui->offer_extra_meals_cost->text().isEmpty())
-    new_offer.extra_meals_cost = ui->offer_extra_meals_cost->text().toInt();
-
-//  if (!ui->offer_category_id->text().isEmpty())
-//    new_offer.categoryid = ui->offer_category_id->text().toInt();
-
-  if (!ui->offer_ticket_count->text().isEmpty())
-    new_offer.tickets_count = ui->offer_ticket_count->text().toInt();
-
-  return new_offer;
-}
-
 void MainWindow::on_offer_add_released()
 {
-  auto new_offer = offer_parse_info(this->ui);
+  auto new_offer = offer_parse_info();
 
   if (sql::any(new_offer.id)) { // Add
     this->logic.add_offer(new_offer);
@@ -250,8 +201,8 @@ offer_result_add_row(QTableWidget *table, const offer_t &offer, hldb_i &logic)
   row[6] = new QTableWidgetItem(epoch2str(offer.date_end).c_str());
   row[7] = new QTableWidgetItem(QString::number(offer.insurance_cost));
   row[8] = new QTableWidgetItem(QString::number(offer.extra_meals_cost));
-  row[9] = new QTableWidgetItem(QString::number(offer.tickets_count));
-  row[10] = new QTableWidgetItem(QString::number(offer.categoryid));
+  row[9] = new QTableWidgetItem(QString::number(offer.categoryid));
+  row[10] = new QTableWidgetItem(QString::number(offer.tickets_count));
 
   auto row_index = table->rowCount();
   table->insertRow(row_index);
@@ -262,7 +213,7 @@ offer_result_add_row(QTableWidget *table, const offer_t &offer, hldb_i &logic)
 
 void MainWindow::on_offer_search_released()
 {
-  auto new_offer = offer_parse_info(this->ui);
+  auto new_offer = offer_parse_info();
 
   auto offers = this->logic.get_offers_like(new_offer);
 
@@ -312,30 +263,13 @@ void MainWindow::on_offer_results_cellClicked(int row, int column)
 
   ++column;
   item = this->ui->offer_results->item(row, column);
+  auto catid = item->text().toInt();
+  auto cat = logic.get_category_by_id(catid);
+  this->ui->offer_category->setCurrentIndex(catid);
+
+  ++column;
+  item = this->ui->offer_results->item(row, column);
   this->ui->offer_ticket_count->setText(item->text());
-}
-
-static customer_t
-tour_customer_parse_info(Ui::MainWindow *ui)
-{
-  auto new_customer = customer_t::make_any();
-
-  if (!ui->customer_id->text().isEmpty())
-    new_customer.id = ui->customer_id->text().toInt();
-
-  if (!ui->customer_name->text().isEmpty())
-    new_customer.name = ui->customer_name->text().toStdString();
-
-  if (!ui->customer_surname->text().isEmpty())
-    new_customer.surname = ui->customer_surname->text().toStdString();
-
-  if (!ui->customer_email->text().isEmpty())
-    new_customer.email = ui->customer_email->text().toStdString();
-
-  if (!ui->customer_pesel->text().isEmpty())
-    new_customer.pesel = ui->customer_pesel->text().toStdString();
-
-  return new_customer;
 }
 
 void MainWindow::on_tour_id_textChanged(const QString &arg1)
@@ -354,40 +288,9 @@ void MainWindow::on_tour_extra_meals_toggled(bool checked)
 
 }
 
-static tour_t
-tour_parse_info(Ui::MainWindow *ui)
-{
-  tour_t tour = tour_t::make_any();
-
-  if (!ui->tour_id->text().isEmpty())
-    tour.id = ui->tour_id->text().toInt();
-
-  if (!ui->tour_debt->text().isEmpty())
-    tour.debt = ui->tour_debt->text().toInt();
-
-  if (!ui->tour_state->text().isEmpty()) {
-    auto state = static_cast<tour_state>(ui->tour_state->text().toInt());
-    tour.state = valid(state) ? state : tour_state::ANY;
-  }
-
-  if (!ui->tour_customer_id->text().isEmpty())
-    tour.customersid = ui->tour_customer_id->text().toInt();
-
-  if (!ui->tour_employee_id->text().isEmpty())
-    tour.employeesid = ui->tour_employee_id->text().toInt();
-
-  if (!ui->tour_offer_id->text().isEmpty())
-    tour.offerid = ui->tour_offer_id->text().toInt();
-
-  if (!ui->tour_ticket_count->text().isEmpty())
-    tour.reserved_tickets = ui->tour_ticket_count->text().toInt();
-
-  return tour;
-}
-
 void MainWindow::on_tour_modify_released()
 {
-  tour_t tour = tour_parse_info(this->ui);
+  tour_t tour = tour_parse_info();
   this->logic.modify_tour(tour);
 }
 
@@ -415,7 +318,7 @@ tour_result_add_row(QTableWidget *table, const tour_t &tour)
 
 void MainWindow::on_tour_search_released()
 {
-  tour_t tour = tour_parse_info(this->ui);
+  tour_t tour = tour_parse_info();
   auto tours = this->logic.get_tours_like(tour);
 
   this->ui->tour_results->setRowCount(0);
@@ -482,38 +385,9 @@ void MainWindow::on_employee_id_textChanged(const QString &arg1)
     this->ui->employee_add->setText("Modify");
 }
 
-static employee_t
-employee_parse_info(Ui::MainWindow *ui)
-{
-  employee_t emp = employee_t::make_any();
-
-  if (!ui->employee_id->text().isEmpty())
-    emp.id = ui->employee_id->text().toInt();
-
-  if (!ui->employee_name->text().isEmpty())
-    emp.name = ui->employee_name->text().toStdString();
-
-  if (!ui->employee_surname->text().isEmpty())
-    emp.surname = ui->employee_surname->text().toStdString();
-
-  if (!ui->employee_hiredate->text().isEmpty())
-    emp.hire_date = str2epoch(ui->employee_hiredate->text().toStdString());
-
-  if (!ui->employee_salary->text().isEmpty())
-    emp.salary = ui->employee_salary->text().toInt();
-
-  if (!ui->employee_phone->text().isEmpty())
-    emp.phone_number = ui->employee_phone->text().toStdString();
-
-  if (!ui->employee_email->text().isEmpty())
-    emp.email = ui->employee_email->text().toStdString();
-
-  return emp;
-}
-
 void MainWindow::on_employee_add_released()
 {
-  auto new_employee = employee_parse_info(this->ui);
+  auto new_employee = employee_parse_info();
 
   if (sql::any(new_employee.id)) { // Add
     this->logic.add_employee(new_employee);
@@ -545,7 +419,7 @@ employee_result_add_row(QTableWidget *table, const employee_t &employee)
 
 void MainWindow::on_employee_search_released()
 {
-  auto new_employee = employee_parse_info(this->ui);
+  auto new_employee = employee_parse_info();
 
   auto employees = this->logic.get_employees_like(new_employee);
 
@@ -612,32 +486,9 @@ void MainWindow::high_privilege_setup()
     this->ui->tabWidget->setTabEnabled(5,true);
 }
 
-static customer_t
-new_tour_customer_parse_info(Ui::MainWindow *ui)
-{
-  auto new_customer = customer_t::make_any();
-
-  if (!ui->new_tour_customer_id->text().isEmpty())
-    new_customer.id = ui->new_tour_customer_id->text().toInt();
-
-  if (!ui->new_tour_customer_name->text().isEmpty())
-    new_customer.name = ui->new_tour_customer_name->text().toStdString();
-
-  if (!ui->new_tour_customer_surname->text().isEmpty())
-    new_customer.surname = ui->new_tour_customer_surname->text().toStdString();
-
-  if (!ui->new_tour_customer_email->text().isEmpty())
-    new_customer.email = ui->new_tour_customer_email->text().toStdString();
-
-  if (!ui->new_tour_customer_pesel->text().isEmpty())
-    new_customer.pesel = ui->new_tour_customer_pesel->text().toStdString();
-
-  return new_customer;
-}
-
 void MainWindow::on_new_tour_customer_search_released()
 {
-    auto new_customer = new_tour_customer_parse_info(this->ui);
+    auto new_customer = new_tour_customer_parse_info();
 
     auto customers = this->logic.get_customers_like(new_customer);
 
@@ -671,50 +522,9 @@ void MainWindow::on_new_tour_buy_released()
     this->ui->status->setText(info_str);
 }
 
-static offer_t
-new_tour_offer_parse_info(Ui::MainWindow *ui)
-{
-  auto new_offer = offer_t::make_any();
-
-  if (!ui->new_tour_offer_id->text().isEmpty())
-    new_offer.id = ui->new_tour_offer_id->text().toInt();
-
-  if (!ui->new_tour_offer_name->text().isEmpty())
-    new_offer.name = ui->new_tour_offer_name->text().toStdString();
-
-  if (!ui->new_tour_offer_country->text().isEmpty())
-    new_offer.country = ui->new_tour_offer_country->text().toStdString();
-
-  if (!ui->new_tour_offer_city->text().isEmpty())
-    new_offer.city = ui->new_tour_offer_city->text().toStdString();
-
-  if (!ui->new_tour_offer_from->text().isEmpty())
-    new_offer.date_begin = str2epoch(ui->new_tour_offer_from->text().toStdString().c_str());
-
-  if (!ui->new_tour_offer_to->text().isEmpty())
-    new_offer.date_end = str2epoch(ui->new_tour_offer_to->text().toStdString().c_str());
-
-  if (!ui->new_tour_offer_price->text().isEmpty())
-    new_offer.price = ui->new_tour_offer_price->text().toInt();
-
-  if (!ui->new_tour_offer_insurance_cost->text().isEmpty())
-    new_offer.insurance_cost = ui->new_tour_offer_insurance_cost->text().toInt();
-
-  if (!ui->new_tour_offer_extra_meals_cost->text().isEmpty())
-    new_offer.extra_meals_cost = ui->new_tour_offer_extra_meals_cost->text().toInt();
-
-//  if (!ui->new_tour_offer_category_id->text().isEmpty())
-//    new_offer.categoryid = ui->new_tour_offer_category_id->text().toInt();
-
-  if (!ui->new_tour_offer_ticket_count->text().isEmpty())
-    new_offer.tickets_count = ui->new_tour_offer_ticket_count->text().toInt();
-
-  return new_offer;
-}
-
 void MainWindow::on_new_tour_offer_search_released()
 {
-    auto new_offer = new_tour_offer_parse_info(this->ui);
+    auto new_offer = new_tour_offer_parse_info();
 
     auto offers = this->logic.get_offers_like(new_offer);
 
@@ -823,4 +633,197 @@ void MainWindow::on_tour_draw_chart_released()
 void MainWindow::on_choose_year_currentIndexChanged(const QString &arg1)
 {
 
+}
+
+customer_t
+MainWindow::customer_parse_info() noexcept
+{
+  auto new_customer = customer_t::make_any();
+
+  if (!ui->customer_id->text().isEmpty())
+    new_customer.id = ui->customer_id->text().toInt();
+
+  if (!ui->customer_name->text().isEmpty())
+    new_customer.name = ui->customer_name->text().toStdString();
+
+  if (!ui->customer_surname->text().isEmpty())
+    new_customer.surname = ui->customer_surname->text().toStdString();
+
+  if (!ui->customer_email->text().isEmpty())
+    new_customer.email = ui->customer_email->text().toStdString();
+
+  if (!ui->customer_pesel->text().isEmpty())
+    new_customer.pesel = ui->customer_pesel->text().toStdString();
+
+  return new_customer;
+}
+
+offer_t
+MainWindow::offer_parse_info() noexcept
+{
+  auto new_offer = offer_t::make_any();
+
+  if (!ui->offer_id->text().isEmpty())
+    new_offer.id = ui->offer_id->text().toInt();
+
+  if (!ui->offer_name->text().isEmpty())
+    new_offer.name = ui->offer_name->text().toStdString();
+
+  if (!ui->offer_country->text().isEmpty())
+    new_offer.country = ui->offer_country->text().toStdString();
+
+  if (!ui->offer_city->text().isEmpty())
+    new_offer.city = ui->offer_city->text().toStdString();
+
+  if (!ui->offer_price->text().isEmpty())
+    new_offer.price = ui->offer_price->text().toInt();
+
+  if (!ui->offer_from->text().isEmpty())
+    new_offer.date_begin = str2epoch(ui->offer_from->text().toStdString().c_str());
+
+  if (!ui->offer_to->text().isEmpty())
+    new_offer.date_end = str2epoch(ui->offer_to->text().toStdString().c_str());
+
+  if (!ui->offer_insurance_cost->text().isEmpty())
+    new_offer.insurance_cost = ui->offer_insurance_cost->text().toInt();
+
+  if (!ui->offer_extra_meals_cost->text().isEmpty())
+    new_offer.extra_meals_cost = ui->offer_extra_meals_cost->text().toInt();
+
+  if (!ui->offer_category->currentText().isEmpty()) {
+    auto catname = ui->offer_category->currentText();
+    new_offer.categoryid = logic.get_category_id_by_name(catname.toStdString());
+  }
+
+  if (!ui->offer_ticket_count->text().isEmpty())
+    new_offer.tickets_count = ui->offer_ticket_count->text().toInt();
+
+  return new_offer;
+}
+
+customer_t
+MainWindow::new_tour_customer_parse_info() noexcept
+{
+  auto new_customer = customer_t::make_any();
+
+  if (!ui->new_tour_customer_id->text().isEmpty())
+    new_customer.id = ui->new_tour_customer_id->text().toInt();
+
+  if (!ui->new_tour_customer_name->text().isEmpty())
+    new_customer.name = ui->new_tour_customer_name->text().toStdString();
+
+  if (!ui->new_tour_customer_surname->text().isEmpty())
+    new_customer.surname = ui->new_tour_customer_surname->text().toStdString();
+
+  if (!ui->new_tour_customer_email->text().isEmpty())
+    new_customer.email = ui->new_tour_customer_email->text().toStdString();
+
+  if (!ui->new_tour_customer_pesel->text().isEmpty())
+    new_customer.pesel = ui->new_tour_customer_pesel->text().toStdString();
+
+  return new_customer;
+}
+
+offer_t
+MainWindow::new_tour_offer_parse_info() noexcept
+{
+  auto new_offer = offer_t::make_any();
+
+  if (!ui->new_tour_offer_id->text().isEmpty())
+    new_offer.id = ui->new_tour_offer_id->text().toInt();
+
+  if (!ui->new_tour_offer_name->text().isEmpty())
+    new_offer.name = ui->new_tour_offer_name->text().toStdString();
+
+  if (!ui->new_tour_offer_country->text().isEmpty())
+    new_offer.country = ui->new_tour_offer_country->text().toStdString();
+
+  if (!ui->new_tour_offer_city->text().isEmpty())
+    new_offer.city = ui->new_tour_offer_city->text().toStdString();
+
+  if (!ui->new_tour_offer_from->text().isEmpty())
+    new_offer.date_begin = str2epoch(ui->new_tour_offer_from->text().toStdString().c_str());
+
+  if (!ui->new_tour_offer_to->text().isEmpty())
+    new_offer.date_end = str2epoch(ui->new_tour_offer_to->text().toStdString().c_str());
+
+  if (!ui->new_tour_offer_price->text().isEmpty())
+    new_offer.price = ui->new_tour_offer_price->text().toInt();
+
+  if (!ui->new_tour_offer_insurance_cost->text().isEmpty())
+    new_offer.insurance_cost = ui->new_tour_offer_insurance_cost->text().toInt();
+
+  if (!ui->new_tour_offer_extra_meals_cost->text().isEmpty())
+    new_offer.extra_meals_cost = ui->new_tour_offer_extra_meals_cost->text().toInt();
+
+  if (!ui->new_tour_offer_category->currentText().isEmpty()) {
+    auto catname = ui->new_tour_offer_category->currentText();
+    new_offer.categoryid = logic.get_category_id_by_name(catname.toStdString());
+  }
+
+  if (!ui->new_tour_offer_ticket_count->text().isEmpty())
+    new_offer.tickets_count = ui->new_tour_offer_ticket_count->text().toInt();
+
+  return new_offer;
+}
+
+
+tour_t
+MainWindow::tour_parse_info() noexcept
+{
+  tour_t tour = tour_t::make_any();
+
+  if (!ui->tour_id->text().isEmpty())
+    tour.id = ui->tour_id->text().toInt();
+
+  if (!ui->tour_debt->text().isEmpty())
+    tour.debt = ui->tour_debt->text().toInt();
+
+  if (!ui->tour_state->text().isEmpty()) {
+    auto state = static_cast<tour_state>(ui->tour_state->text().toInt());
+    tour.state = valid(state) ? state : tour_state::ANY;
+  }
+
+  if (!ui->tour_customer_id->text().isEmpty())
+    tour.customersid = ui->tour_customer_id->text().toInt();
+
+  if (!ui->tour_employee_id->text().isEmpty())
+    tour.employeesid = ui->tour_employee_id->text().toInt();
+
+  if (!ui->tour_offer_id->text().isEmpty())
+    tour.offerid = ui->tour_offer_id->text().toInt();
+
+  if (!ui->tour_ticket_count->text().isEmpty())
+    tour.reserved_tickets = ui->tour_ticket_count->text().toInt();
+
+  return tour;
+}
+
+employee_t
+MainWindow::employee_parse_info() noexcept
+{
+  employee_t emp = employee_t::make_any();
+
+  if (!ui->employee_id->text().isEmpty())
+    emp.id = ui->employee_id->text().toInt();
+
+  if (!ui->employee_name->text().isEmpty())
+    emp.name = ui->employee_name->text().toStdString();
+
+  if (!ui->employee_surname->text().isEmpty())
+    emp.surname = ui->employee_surname->text().toStdString();
+
+  if (!ui->employee_hiredate->text().isEmpty())
+    emp.hire_date = str2epoch(ui->employee_hiredate->text().toStdString());
+
+  if (!ui->employee_salary->text().isEmpty())
+    emp.salary = ui->employee_salary->text().toInt();
+
+  if (!ui->employee_phone->text().isEmpty())
+    emp.phone_number = ui->employee_phone->text().toStdString();
+
+  if (!ui->employee_email->text().isEmpty())
+    emp.email = ui->employee_email->text().toStdString();
+
+  return emp;
 }
