@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QBarCategoryAxis>
 #include <QChartView>
+#include <fmt/format.h>
 
 using namespace app;
 using namespace app::logic;
@@ -50,18 +51,14 @@ MainWindow::MainWindow(hldb_i &hldb, QWidget *parent)
   chartView->setRenderHint(QPainter::Antialiasing);
   ui->tour_chart_layout->addWidget(chartView,0);
 
-  // cause we dont have manager for annual income
-  auto res = logic.raw_query_res("SELECT DATE_FORMAT(year,'%Y'),balance FROM annual_income");
-  for (uint i = 0; i < res->row_count; i++) {
-    auto row = mysql_fetch_row(res.get());
-    auto bar = new QBarSet(row[0]);
-    *bar << atoi(row[1]);
-    ai_series->append(bar);
-  }
+  auto year = ui->annual_income_begin_date->value();
+  auto scope = ui->annual_income_scope->value();
+  draw_ai_chart(year,41);
   ai_chart->legend()->setVisible(true);
   ai_chart->addSeries(ai_series.get());
+  draw_ai_chart(year,scope); // this is ugly trick, cause for some reason onec allocated scope cannot be exapnded
   ai_chart->setTitle("Annual income statistic");
-  ai_chart->setAnimationOptions(QChart::SeriesAnimations);
+  ai_chart->setAnimationOptions(QChart::NoAnimation);
   ai_chart->legend()->setAlignment(Qt::AlignBottom);
   chartView = new QChartView(ai_chart.get());
   chartView->setRenderHint(QPainter::Antialiasing);
@@ -86,6 +83,21 @@ MainWindow::MainWindow(hldb_i &hldb, QWidget *parent)
 MainWindow::~MainWindow()
 {
   delete ui;
+}
+
+void MainWindow::draw_ai_chart(int year, int range)
+{
+    ai_series->clear();
+    auto res = logic.raw_query_res(fmt::format(
+        "SELECT DATE_FORMAT(year,'%Y'),balance FROM annual_income WHERE year >= STR_TO_DATE(\'{}\',\'%Y\')", year));
+    auto min_scope = res->row_count < range ? res->row_count : range;
+    for (uint i = 0; i < min_scope; i++) {
+      auto row = mysql_fetch_row(res.get());
+      auto bar = new QBarSet(row[0]);
+      *bar << atoi(row[1]);
+      ai_series->append(bar);
+    }
+
 }
 
 void MainWindow::on_customer_id_textChanged(const QString &arg1)
@@ -635,11 +647,6 @@ void MainWindow::on_new_tour_with_extra_meals_toggled(bool checked)
 
 }
 
-void MainWindow::on_annual_income_draw_chart_released()
-{
-
-}
-
 void MainWindow::on_tour_draw_chart_released()
 {
 
@@ -841,4 +848,17 @@ MainWindow::employee_parse_info() noexcept
     emp.email = ui->employee_email->text().toStdString();
 
   return emp;
+}
+
+
+void MainWindow::on_annual_income_begin_date_valueChanged(int yaer)
+{
+    auto scope = ui->annual_income_scope->value();
+    draw_ai_chart(yaer,scope);
+}
+
+void MainWindow::on_annual_income_scope_valueChanged(int scope)
+{
+    auto yaer = ui->annual_income_begin_date->value();
+    draw_ai_chart(yaer,scope);
 }

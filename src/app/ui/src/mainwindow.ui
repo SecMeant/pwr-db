@@ -1065,21 +1065,40 @@
         <item row="0" column="1">
          <layout class="QVBoxLayout" name="annual_income_chart_layout">
           <item>
-           <widget class="QPushButton" name="annual_income_draw_chart">
+           <widget class="QLabel" name="label_44">
             <property name="text">
-             <string>Draw chart</string>
+             <string>Since year</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QSlider" name="year_lower_scope">
+           <widget class="QSlider" name="annual_income_begin_date">
+            <property name="minimum">
+             <number>1978</number>
+            </property>
+            <property name="maximum">
+             <number>2019</number>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QSlider" name="year_upper_scope">
+           <widget class="QLabel" name="label_43">
+            <property name="text">
+             <string>Scope</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSlider" name="annual_income_scope">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>41</number>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -1095,7 +1114,7 @@
           <item>
            <widget class="QPushButton" name="tour_draw_chart">
             <property name="text">
-             <string>Draw chart</string>
+             <string>Refresh chart</string>
             </property>
            </widget>
           </item>

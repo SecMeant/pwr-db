@@ -81,11 +81,13 @@ private slots:
 
     void on_new_tour_with_extra_meals_toggled(bool checked);
 
-    void on_annual_income_draw_chart_released();
-
     void on_tour_draw_chart_released();
 
     void on_choose_year_currentIndexChanged(const QString &arg1);
+
+    void on_annual_income_begin_date_valueChanged(int value);
+
+    void on_annual_income_scope_valueChanged(int value);
 
 private:
     app::dbaccess::customer_t customer_parse_info() noexcept;
@@ -95,6 +97,7 @@ private:
     app::dbaccess::tour_t tour_parse_info() noexcept;
     app::dbaccess::employee_t employee_parse_info() noexcept;
     void update_status(bool status) noexcept;
+    void draw_ai_chart(int year, int range);
 
 private:
   Ui::MainWindow *ui;
