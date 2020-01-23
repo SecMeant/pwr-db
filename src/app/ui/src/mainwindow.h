@@ -94,6 +94,7 @@ private:
     app::dbaccess::offer_t new_tour_offer_parse_info() noexcept;
     app::dbaccess::tour_t tour_parse_info() noexcept;
     app::dbaccess::employee_t employee_parse_info() noexcept;
+    void update_status(bool status) noexcept;
 
 private:
   Ui::MainWindow *ui;

@@ -99,13 +99,15 @@ void MainWindow::on_customer_id_textChanged(const QString &arg1)
 void MainWindow::on_customer_add_released()
 {
   auto new_customer = customer_parse_info();
+  bool status;
 
   if (sql::any(new_customer.id)) { // Add
-    this->logic.add_customer(new_customer);
+    status = this->logic.add_customer(new_customer);
   } else { // Modify
-    this->logic.modify_customer(new_customer);
+    status = this->logic.modify_customer(new_customer);
   }
 
+  update_status(status);
 }
 
 static void
@@ -172,13 +174,15 @@ void MainWindow::on_offer_id_textChanged(const QString &arg1)
 void MainWindow::on_offer_add_released()
 {
   auto new_offer = offer_parse_info();
+  bool status;
 
   if (sql::any(new_offer.id)) { // Add
-    this->logic.add_offer(new_offer);
+    status = this->logic.add_offer(new_offer);
   } else { // Modify
-    this->logic.modify_offer(new_offer);
+    status = this->logic.modify_offer(new_offer);
   }
 
+  update_status(status);
 }
 
 static void
@@ -285,7 +289,9 @@ void MainWindow::on_tour_extra_meals_toggled(bool checked)
 void MainWindow::on_tour_modify_released()
 {
   tour_t tour = tour_parse_info();
-  this->logic.modify_tour(tour);
+  bool status = this->logic.modify_tour(tour);
+
+  update_status(status);
 }
 
 static void
@@ -329,7 +335,9 @@ void MainWindow::on_tour_resign_released()
     return;
 
   auto tour_id = tour_itemlist[0]->text().toInt();
-  this->logic.drop_reservation(tour_id);
+  bool status = this->logic.drop_reservation(tour_id);
+
+  update_status(status);
 }
 
 void MainWindow::on_tour_results_cellClicked(int row, int column)
@@ -382,13 +390,15 @@ void MainWindow::on_employee_id_textChanged(const QString &arg1)
 void MainWindow::on_employee_add_released()
 {
   auto new_employee = employee_parse_info();
+  bool status;
 
   if (sql::any(new_employee.id)) { // Add
-    this->logic.add_employee(new_employee);
+    status = this->logic.add_employee(new_employee);
   } else { // Modify
-    this->logic.modify_employee(new_employee);
+    status = this->logic.modify_employee(new_employee);
   }
 
+  update_status(status);
 }
 
 static void
@@ -492,6 +502,12 @@ void MainWindow::on_new_tour_customer_search_released()
       customer_result_add_row(this->ui->new_tour_customer_results, c);
 }
 
+void MainWindow::update_status(bool status) noexcept
+{
+    const auto& info_str = status ? success_info : fail_info;
+    this->ui->status->setText(info_str);
+}
+
 void MainWindow::on_new_tour_buy_released()
 {
     auto customer_itemlist = this->ui->new_tour_customer_results->selectedItems();
@@ -512,8 +528,7 @@ void MainWindow::on_new_tour_buy_released()
 
     auto status = this->logic.make_reservation(offer_id, customer_id, ticket_count, insurance, extra_meals);
 
-    const auto& info_str = status ? success_info : fail_info;
-    this->ui->status->setText(info_str);
+    update_status(status);
 }
 
 void MainWindow::on_new_tour_offer_search_released()
@@ -598,6 +613,12 @@ void MainWindow::on_new_tour_offer_results_cellClicked(int row, int column)
     ++column;
     item = this->ui->new_tour_offer_results->item(row, column);
     this->ui->new_tour_offer_extra_meals_cost->setText(item->text());
+
+    ++column;
+    item = this->ui->new_tour_offer_results->item(row, column);
+    auto catid = item->text().toInt();
+    auto cat = logic.get_category_by_id(catid);
+    this->ui->new_tour_offer_category->setCurrentIndex(catid);
 
     ++column;
     item = this->ui->new_tour_offer_results->item(row, column);
