@@ -90,7 +90,8 @@ private slots:
 private:
   Ui::MainWindow *ui;
   app::logic::hldb_i &logic;
-  std::unique_ptr<QtCharts::QChart> chart;
+  std::unique_ptr<QtCharts::QChart> t_chart;
+  std::unique_ptr<QtCharts::QChart> ai_chart;
   std::unique_ptr<QtCharts::QBarSeries> ai_series;
   std::unique_ptr<QtCharts::QBarSeries> tour_series;
   std::array<QtCharts::QBarSet*, months_in_year> annual_months;

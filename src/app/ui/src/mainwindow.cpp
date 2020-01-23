@@ -22,7 +22,8 @@ MainWindow::MainWindow(hldb_i &hldb, QWidget *parent)
 
   ai_series = std::make_unique<QBarSeries>();
   tour_series = std::make_unique<QBarSeries>();
-  chart = std::make_unique<QChart>();
+  t_chart = std::make_unique<QChart>();
+  ai_chart = std::make_unique<QChart>();
   annual_months[0]= new QBarSet("January");
   annual_months[1]= new QBarSet("February");
   annual_months[2]= new QBarSet("March");
@@ -39,20 +40,38 @@ MainWindow::MainWindow(hldb_i &hldb, QWidget *parent)
   for(auto &am : annual_months)
       tour_series->append(am);
 
-  chart->addSeries(tour_series.get());
-  chart->setTitle("Tour statistic");
-  chart->setAnimationOptions(QChart::SeriesAnimations);
+  t_chart->addSeries(tour_series.get());
+  t_chart->setTitle("Tour statistic");
+  t_chart->setAnimationOptions(QChart::SeriesAnimations);
   QStringList categories;
   categories << "Jan" << "Feb" << "Mar" << "Apr" << "May" << "Jun" << "Jul" <<"Aug" <<"Sep" << "Oct" <<"Nov" <<"Dec";
   QBarCategoryAxis *axisX = new QBarCategoryAxis();
   axisX->append(categories);
-  chart->addAxis(axisX, Qt::AlignBottom);
+  t_chart->addAxis(axisX, Qt::AlignBottom);
   tour_series->attachAxis(axisX);
-  chart->legend()->setVisible(true);
-  chart->legend()->setAlignment(Qt::AlignBottom);
-  QChartView *chartView = new QChartView(chart.get());
+  t_chart->legend()->setVisible(false);
+  t_chart->legend()->setAlignment(Qt::AlignBottom);
+  QChartView *chartView = new QChartView(t_chart.get());
   chartView->setRenderHint(QPainter::Antialiasing);
   ui->tour_chart_layout->addWidget(chartView,0);
+
+  // cause we dont have manager for annual income
+  auto res = logic.raw_query_res("SELECT DATE_FORMAT(year,'%Y'),balance FROM annual_income");
+  for (uint i = 0; i < res->row_count; i++) {
+    auto row = mysql_fetch_row(res.get());
+    auto bar = new QBarSet(row[0]);
+    *bar << atoi(row[1]);
+    ai_series->append(bar);
+  }
+  ai_chart->legend()->setVisible(true);
+  ai_chart->addSeries(ai_series.get());
+  ai_chart->setTitle("Annual income statistic");
+  ai_chart->setAnimationOptions(QChart::SeriesAnimations);
+  ai_chart->legend()->setAlignment(Qt::AlignBottom);
+  chartView = new QChartView(ai_chart.get());
+  chartView->setRenderHint(QPainter::Antialiasing);
+  ui->annual_income_chart_layout->addWidget(chartView);
+
 }
 
 MainWindow::~MainWindow()
@@ -196,8 +215,8 @@ offer_parse_info(Ui::MainWindow *ui)
   if (!ui->offer_extra_meals_cost->text().isEmpty())
     new_offer.extra_meals_cost = ui->offer_extra_meals_cost->text().toInt();
 
-  if (!ui->offer_category_id->text().isEmpty())
-    new_offer.categoryid = ui->offer_category_id->text().toInt();
+//  if (!ui->offer_category_id->text().isEmpty())
+//    new_offer.categoryid = ui->offer_category_id->text().toInt();
 
   if (!ui->offer_ticket_count->text().isEmpty())
     new_offer.tickets_count = ui->offer_ticket_count->text().toInt();
@@ -684,8 +703,8 @@ new_tour_offer_parse_info(Ui::MainWindow *ui)
   if (!ui->new_tour_offer_extra_meals_cost->text().isEmpty())
     new_offer.extra_meals_cost = ui->new_tour_offer_extra_meals_cost->text().toInt();
 
-  if (!ui->new_tour_offer_category_id->text().isEmpty())
-    new_offer.categoryid = ui->new_tour_offer_category_id->text().toInt();
+//  if (!ui->new_tour_offer_category_id->text().isEmpty())
+//    new_offer.categoryid = ui->new_tour_offer_category_id->text().toInt();
 
   if (!ui->new_tour_offer_ticket_count->text().isEmpty())
     new_offer.tickets_count = ui->new_tour_offer_ticket_count->text().toInt();
