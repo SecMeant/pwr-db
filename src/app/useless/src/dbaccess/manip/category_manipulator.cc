@@ -12,7 +12,7 @@ namespace app::dbaccess {
 
     auto *hldb_inst = this->parent()->parent();
     auto res = hldb_inst->raw_query_res(
-      "SELECT id, name, login, pass_hash, privilege "
+      "SELECT id, name "
       "FROM category");
     category_t category;
     std::vector<category_t> data{};
@@ -22,7 +22,7 @@ namespace app::dbaccess {
     for (uint i = 0; i < res->row_count; i++) {
       auto row = mysql_fetch_row(res.get());
       category.id = atoi(row[0]);
-      category.name = atoi(row[1]);
+      category.name = row[1];
       data.push_back(category);
     }
     return data;

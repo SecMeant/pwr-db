@@ -28,6 +28,9 @@ namespace app::logic {
 
     if (m_dbconn)
       this->category_cache = this->get_all_category();
+
+    if (this->category_cache.size() == 0)
+      fmt::print(stderr, "Failed to fetch categories (size 0 retunred)\n");
   }
 
   std::vector<customer_t>
@@ -337,6 +340,22 @@ namespace app::logic {
       return *it;
     return {};
   }
+
+  int
+  hldb::get_category_id_by_name(std::string_view cat_name)
+  {
+    fmt::print("Looking for category name: {}\n", cat_name);
+    auto it = std::find_if(std::begin(this->category_cache),
+                           std::end(this->category_cache),
+                           [cat_name](const auto &c) {
+                           fmt::print("Catname :{}\n", c.name);
+                           return c.name == cat_name;});
+
+    if (it != std::end(this->category_cache))
+      return it->id;
+    return INVALID<int>;
+  }
+
   privilege_level
   hldb::get_user_privilage()
   {

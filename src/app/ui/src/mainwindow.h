@@ -88,6 +88,14 @@ private slots:
     void on_choose_year_currentIndexChanged(const QString &arg1);
 
 private:
+    app::dbaccess::customer_t customer_parse_info() noexcept;
+    app::dbaccess::offer_t offer_parse_info() noexcept;
+    app::dbaccess::customer_t new_tour_customer_parse_info() noexcept;
+    app::dbaccess::offer_t new_tour_offer_parse_info() noexcept;
+    app::dbaccess::tour_t tour_parse_info() noexcept;
+    app::dbaccess::employee_t employee_parse_info() noexcept;
+
+private:
   Ui::MainWindow *ui;
   app::logic::hldb_i &logic;
   std::unique_ptr<QtCharts::QChart> chart;
