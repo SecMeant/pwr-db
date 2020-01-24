@@ -1,72 +1,180 @@
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
+extern "C"{
 #include <CSlim/SlimList.h>
 #include <CSlim/Fixtures.h>
 #include <CSlim/compatibility.h>
+}
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <fmt/format.h>
+#include "hldb.h"
+#include <string>
+#include <fstream>
 
-class cMultiplication
+using namespace std;
+using namespace app::logic;
+using namespace app::dbaccess;
+constexpr const char *DB_SCRIPT_INIT_PATH = "../dbinit/base_init.sql";
+constexpr const char *DB_SCRIPT_DEP_PATH = "../dbinit/offer_dep_test.sql";
+constexpr const char *DB_DATABASE_TEST = "biuro_podrozy_test";
+
+class cOfferModification
 {
 public:
-	cMultiplication(){};
-	~cMultiplication(){};
-	double product()
+	cOfferModification()
+  {
+    if (!hldb_inst.m_dbconn) {
+      exit(1);
+    }
+
+    std::fstream fs(DB_SCRIPT_INIT_PATH, std::fstream::in);
+
+    if (!fs.is_open()) {
+      exit(1);
+    }
+    std::string query;
+    while (std::getline(fs, query, ';')) {
+      if (query == "") {
+        continue;
+      }
+      if (hldb_inst.m_dbconn.query(query.c_str()) == false) {
+        exit(1);
+      }
+    }
+    fs.close();
+    fs.open(DB_SCRIPT_DEP_PATH, std::fstream::in);
+
+    if (!fs.is_open()) {
+      exit(1);
+    }
+    while (std::getline(fs, query, ';')) {
+      if (query == "" || query == "\n") {
+        continue;
+      }
+      if (hldb_inst.m_dbconn.query(query.c_str()) == false) {
+        exit(1);
+      }
+    }
+  }
+	~cOfferModification(){};
+	bool modifiedOffer()
 	{
-		return m1*m2;
+		return hldb_inst.change_offer(o);
 	}
-	double m1;
-	double m2;
+  offer_t o;
 	char result[32];
+  hldb hldb_inst{ DB_DATABASE_TEST };
 };
 
 #ifndef CPP_COMPILING
 extern "C" {
 #endif
-typedef struct Multiplication
+typedef struct OfferModification
 {
-	cMultiplication multiplication;
+	cOfferModification OfferModification;
 	char result[32];
-} Multiplication;
+} OfferModification;
 
-void* Multiplication_Create(StatementExecutor* errorHandler, SlimList* args)
+void* OfferModification_Create(StatementExecutor* errorHandler, SlimList* args)
 {
-	Multiplication* self = (Multiplication*)malloc(sizeof(Multiplication));
+	OfferModification* self = (OfferModification*)malloc(sizeof(OfferModification));
 	self->result[0] = 0;
-  // self->multiplication = new cMultiplication();
 	return self;
 }
 
-void Multiplication_Destroy(void* void_self)
+void OfferModification_Destroy(void* void_self)
 {
-	Multiplication* self = (Multiplication*)void_self;
-  // delete self->multiplication;
+	OfferModification* self = (OfferModification*)void_self;
 	free(self);
 }
 
-static const char* setMultiplicand1(void* void_self, SlimList* args) {
-	Multiplication* self = (Multiplication*)void_self;
-	self->multiplication.m1 = atof(SlimList_GetStringAt(args, 0));
+static const char* setId(void* void_self, SlimList* args) {
+	OfferModification* self = (OfferModification*)void_self;
+	self->OfferModification.o.id = atoi(SlimList_GetStringAt(args, 0));
 	return self->result;
 }
+static const char* setName(void* void_self, SlimList* args)
+{
+  OfferModification* self = (OfferModification*)void_self;
+  self->OfferModification.o.name = SlimList_GetStringAt(args, 0);
+  return self->result;
+};
+static const char* setCountry(void* void_self, SlimList* args)
+{
+  OfferModification* self = (OfferModification*)void_self;
+  self->OfferModification.o.country = SlimList_GetStringAt(args, 0);
+  return self->result;
+};
+static const char* setCity(void* void_self, SlimList* args)
+{
+  OfferModification* self = (OfferModification*)void_self;
+  self->OfferModification.o.city = SlimList_GetStringAt(args, 0);
+  return self->result;
+};
+static const char* setDate_begin(void* void_self, SlimList* args)
+{
+  OfferModification* self = (OfferModification*)void_self;
+  self->OfferModification.o.date_begin =str2epoch(SlimList_GetStringAt(args, 0));
+  return self->result;
+};
+static const char* setDate_end(void* void_self, SlimList* args)
+{
+  OfferModification* self = (OfferModification*)void_self;
+  self->OfferModification.o.date_end==str2epoch(SlimList_GetStringAt(args, 0));
+  return self->result;
+};
+static const char* setPrice(void* void_self, SlimList* args)
+{
+  OfferModification* self = (OfferModification*)void_self;
+  self->OfferModification.o.price =  atoi(SlimList_GetStringAt(args, 0));
+  return self->result;
+};
+static const char* setInsurance_cost(void* void_self, SlimList* args)
+{
+  OfferModification* self = (OfferModification*)void_self;
+  self->OfferModification.o.insurance_cost = atoi(SlimList_GetStringAt(args, 0));
+  return self->result;
+};
+static const char* setExtra_meals_cost(void* void_self, SlimList* args)
+{
+  OfferModification* self = (OfferModification*)void_self;
+  self->OfferModification.o.extra_meals_cost = atoi(SlimList_GetStringAt(args, 0));
+  return self->result;
+};
+static const char* setCategoryid(void* void_self, SlimList* args)
+{
+  OfferModification* self = (OfferModification*)void_self;
+  self->OfferModification.o.categoryid = atoi(SlimList_GetStringAt(args, 0));
+  return self->result;
+};
+static const char* setTickets_count(void* void_self, SlimList* args)
+{
+  OfferModification* self = (OfferModification*)void_self;
+  self->OfferModification.o.tickets_count = atoi(SlimList_GetStringAt(args, 0));
+  return self->result;
+};
 
-static const char* setMultiplicand2(void* void_self, SlimList* args) {
-	Multiplication* self = (Multiplication*)void_self;
-	self->multiplication.m2 = atof(SlimList_GetStringAt(args, 0));
-	return self->result;
+static const char* ModifiedOffer(void* void_self, SlimList* args) {
+	OfferModification* self = (OfferModification*)void_self;
+	bool correct = self->OfferModification.modifiedOffer();
+	if(correct)
+    return "Yes";
+  return "No";
 }
 
-static const char* Product(void* void_self, SlimList* args) {
-	Multiplication* self = (Multiplication*)void_self;
-	double product = self->multiplication.product();
-	snprintf(self->result, 32, "%g", product);
-	return self->result;
-}
 
-
-SLIM_CREATE_FIXTURE(Multiplication)
-	SLIM_FUNCTION(setMultiplicand1)
-	SLIM_FUNCTION(setMultiplicand2)
-	SLIM_FUNCTION(Product)
+SLIM_CREATE_FIXTURE(OfferModification)
+	SLIM_FUNCTION(setName);
+  SLIM_FUNCTION(setCountry);
+  SLIM_FUNCTION(setCity);
+  SLIM_FUNCTION(setDate_begin);
+  SLIM_FUNCTION(setDate_end);
+  SLIM_FUNCTION(setPrice);
+  SLIM_FUNCTION(setInsurance_cost);
+  SLIM_FUNCTION(setExtra_meals_cost);
+  SLIM_FUNCTION(setCategoryid);
+  SLIM_FUNCTION(setTickets_count);
+  SLIM_FUNCTION(ModifiedOffer);
 SLIM_END
 
 #ifndef CPP_COMPILING

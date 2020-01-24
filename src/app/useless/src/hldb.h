@@ -110,6 +110,11 @@ namespace app::logic {
     virtual ~hldb_i() = default;
     virtual privilege_level
     get_user_privilage()=0;
+    virtual bool
+    change_offer(const dbaccess::offer_t &t1) =0;
+
+    virtual bool
+    drop_offer(const dbaccess::offer_t &t1) =0;
   };
 
   class hldb : public hldb_i
@@ -209,6 +214,12 @@ namespace app::logic {
     drop_reservation(int id);
     bool
     modify_reservation(const dbaccess::tour_t &t1);
+
+    bool
+    change_offer(const dbaccess::offer_t &t1);
+    bool
+    drop_offer(const dbaccess::offer_t &t1);
+
     bool
     raw_query(const std::string &t1);
     dbaccess::mysql_res_t

@@ -52,6 +52,8 @@ namespace app::logic {
     MOCK_METHOD(bool, make_reservation, (int off_id, int cus_id, int ticket_count, bool insurance, bool extra_meals));
     MOCK_METHOD(bool, drop_reservation, (int id));
     MOCK_METHOD(bool, modify_reservation, (const dbaccess::tour_t &t1));
+    MOCK_METHOD(bool, change_offer, (const dbaccess::offer_t &o1));
+    MOCK_METHOD(bool, drop_offer, (const dbaccess::offer_t &o1));
     MOCK_METHOD(bool, raw_query, (const std::string &t1));
     MOCK_METHOD(dbaccess::mysql_res_t, raw_query_res, (const std::string &t1));
     MOCK_METHOD(const dbaccess::employee_t &, get_logged_user, ());

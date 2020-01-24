@@ -361,5 +361,16 @@ namespace app::logic {
   {
     return m_session.privilege();
   }
+  bool
+  hldb::change_offer(const dbaccess::offer_t &o1)
+  {
+    m_offer_manager.modify(o1);
+  }
+
+  bool
+  hldb::drop_offer(const dbaccess::offer_t &o1)
+  {
+    m_offer_manager.drop_offer(o1.id);
+  }
 
 } // namespace app::logic
