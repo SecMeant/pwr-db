@@ -17,4 +17,4 @@ add_executable(${TEST_NAME} ${T_SRC})
 add_executable(${TEST_NAME_SLIM} ${T_SLIM_SRC})
 
 target_link_libraries(${TEST_NAME} ${libgtestmain} ${libgtest} ${libgmock} ${libpthread} useless ${libfmt})
-target_link_libraries(${TEST_NAME_SLIM} useless ${libfmt} CSlim CppUTest::CppUTest CppUTest::CppUTestExt)
+target_link_libraries(${TEST_NAME_SLIM} useless ${libfmt} CSlim_main CSlim CppUTest::CppUTest CppUTest::CppUTestExt)
