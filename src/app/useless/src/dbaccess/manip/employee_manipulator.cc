@@ -110,7 +110,7 @@ namespace app::dbaccess {
                           entity.email,
                           entity.phone_number);
     auto *hldb_impl = this->parent()->parent();
-    return !hldb_impl->raw_query(command);
+    return hldb_impl->raw_query(command);
   }
 
   bool
@@ -127,7 +127,7 @@ namespace app::dbaccess {
     command << fmt::format("WHERE id = {}", entity.id);
 
     auto *hldb_impl = this->parent()->parent();
-    return !hldb_impl->raw_query(command.str());
+    return hldb_impl->raw_query(command.str());
   }
 
   bool
@@ -136,7 +136,7 @@ namespace app::dbaccess {
     std::string command =
       fmt::format("DELETE from employees WHERE id = {}", id);
     auto *hldb_impl = this->parent()->parent();
-    return !hldb_impl->raw_query(command);
+    return hldb_impl->raw_query(command);
   }
 
   data_access_manager *

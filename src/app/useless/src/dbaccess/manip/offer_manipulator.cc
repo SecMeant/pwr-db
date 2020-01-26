@@ -4,6 +4,8 @@
 #include "offer_manipulator.h"
 #include <fmt/format.h>
 #include <sstream>
+#include <fstream>
+
 namespace app::dbaccess {
   std::vector<offer_t>
   offer_manipulator::get_all() const noexcept
@@ -132,24 +134,26 @@ namespace app::dbaccess {
                           entity.tickets_count);
 
     auto *hldb_impl = this->parent()->parent();
-    return !hldb_impl->raw_query(command);
+    return hldb_impl->raw_query(command);
   }
 
   bool
   offer_manipulator::modify(const offer_t &entity) const noexcept
   {
     std::stringstream command;
-    command << "UPDATE offers SET";
+    command << "UPDATE offers SET ";
 
     auto params = glue_params(entity, ", ", "=");
 
+    std::fstream fs("/home/windspring/asdfg", std::fstream::out);
     if (params == "")
       return false;
     command << params;
     command << fmt::format("WHERE id = {}", entity.id);
-
     auto *hldb_impl = this->parent()->parent();
-    return !hldb_impl->raw_query(command.str());
+    fs << command.str();
+    fs.close();
+    return hldb_impl->raw_query(command.str());
   }
 
   bool
@@ -158,7 +162,7 @@ namespace app::dbaccess {
     std::string command =
       fmt::format("DELETE from offers WHERE id = {}", id);
     auto *hldb_impl = this->parent()->parent();
-    return !hldb_impl->raw_query(command);
+    return hldb_impl->raw_query(command);
   }
 
   data_access_manager *

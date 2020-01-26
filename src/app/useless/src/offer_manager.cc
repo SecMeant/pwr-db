@@ -70,8 +70,7 @@ namespace app::logic {
     }
     offer.date_begin = date_t(tb(-1));
     offer.date_end = date_t(tb(-1));
-    parent.modify_offer(offer);
-    return true;
+    return parent.modify_offer(offer);;
   }
 
   bool
@@ -95,8 +94,7 @@ namespace app::logic {
       t->debt = callculate_cost_diff(offer_1, offer_2, *t);
       parent.modify_tour(*t);
     }
-    parent.modify_offer(offer_1);
-    return true;
+    return parent.modify_offer(offer_1);;
   }
 
   bool
