@@ -121,6 +121,8 @@ namespace app::logic {
   {
   public:
     hldb();
+    hldb(const hldb&) = default;
+    hldb(hldb&&) = default;
     hldb(const std::string &database_name);
     dbaccess::db_connection m_dbconn;
     session_manager m_session;

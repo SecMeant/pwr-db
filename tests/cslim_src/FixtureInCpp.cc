@@ -14,14 +14,14 @@ extern "C"{
 using namespace std;
 using namespace app::logic;
 using namespace app::dbaccess;
-constexpr const char *DB_SCRIPT_INIT_PATH = "../dbinit/base_init.sql";
-constexpr const char *DB_SCRIPT_DEP_PATH = "../dbinit/offer_dep_test.sql";
+constexpr const char *DB_SCRIPT_INIT_PATH = "/home/windspring/git_repos/pwr-db/dbinit/base_init.sql";
+constexpr const char *DB_SCRIPT_DEP_PATH = "/home/windspring/git_repos/pwr-db/dbinit/offer_dep_test.sql";
 constexpr const char *DB_DATABASE_TEST = "biuro_podrozy_test";
 
-class cOfferModification
+class cOffermodification
 {
 public:
-	cOfferModification()
+	cOffermodification()
   {
     if (!hldb_inst.m_dbconn) {
       exit(1);
@@ -56,8 +56,8 @@ public:
       }
     }
   }
-	~cOfferModification(){};
-	bool modifiedOffer()
+	~cOffermodification(){};
+	bool modifieOffer()
 	{
 		return hldb_inst.change_offer(o);
 	}
@@ -69,112 +69,116 @@ public:
 #ifndef CPP_COMPILING
 extern "C" {
 #endif
-typedef struct OfferModification
+typedef struct Offermodification
 {
-	cOfferModification OfferModification;
+	cOffermodification Offermodification;
 	char result[32];
-} OfferModification;
+} Offermodification;
 
-void* OfferModification_Create(StatementExecutor* errorHandler, SlimList* args)
+void* Offermodification_Create(StatementExecutor* errorHandler, SlimList* args)
 {
-	OfferModification* self = (OfferModification*)malloc(sizeof(OfferModification));
+	// Offermodification* self = (Offermodification*)malloc(sizeof(Offermodification));
+  Offermodification* self = new Offermodification;
 	self->result[0] = 0;
 	return self;
 }
 
-void OfferModification_Destroy(void* void_self)
+void Offermodification_Destroy(void* void_self)
 {
-	OfferModification* self = (OfferModification*)void_self;
-	free(self);
+	Offermodification* self = (Offermodification*)void_self;
+	// free(self);
+  delete self;
 }
 
-static const char* setId(void* void_self, SlimList* args) {
-	OfferModification* self = (OfferModification*)void_self;
-	self->OfferModification.o.id = atoi(SlimList_GetStringAt(args, 0));
+static const char* set_Offer_id(void* void_self, SlimList* args) {
+	Offermodification* self = (Offermodification*)void_self;
+	self->Offermodification.o.id = atoi(SlimList_GetStringAt(args, 0));
 	return self->result;
 }
-static const char* setName(void* void_self, SlimList* args)
+static const char* set_Offer_name(void* void_self, SlimList* args)
 {
-  OfferModification* self = (OfferModification*)void_self;
-  self->OfferModification.o.name = SlimList_GetStringAt(args, 0);
+  Offermodification* self = (Offermodification*)void_self;
+  self->Offermodification.o.name =SlimList_GetStringAt(args, 0);
   return self->result;
 };
-static const char* setCountry(void* void_self, SlimList* args)
+static const char* set_Offer_country(void* void_self, SlimList* args)
 {
-  OfferModification* self = (OfferModification*)void_self;
-  self->OfferModification.o.country = SlimList_GetStringAt(args, 0);
+  Offermodification* self = (Offermodification*)void_self;
+  const char * asdf = SlimList_GetStringAt(args, 0);
+  self->Offermodification.o.country = SlimList_GetStringAt(args, 0);
   return self->result;
 };
-static const char* setCity(void* void_self, SlimList* args)
+static const char* set_Offer_city(void* void_self, SlimList* args)
 {
-  OfferModification* self = (OfferModification*)void_self;
-  self->OfferModification.o.city = SlimList_GetStringAt(args, 0);
+  Offermodification* self = (Offermodification*)void_self;
+  self->Offermodification.o.city = SlimList_GetStringAt(args, 0);
   return self->result;
 };
-static const char* setDate_begin(void* void_self, SlimList* args)
+static const char* set_Offer_date_begin(void* void_self, SlimList* args)
 {
-  OfferModification* self = (OfferModification*)void_self;
-  self->OfferModification.o.date_begin =str2epoch(SlimList_GetStringAt(args, 0));
+  Offermodification* self = (Offermodification*)void_self;
+  self->Offermodification.o.date_begin =str2epoch(SlimList_GetStringAt(args, 0));
   return self->result;
 };
-static const char* setDate_end(void* void_self, SlimList* args)
+static const char* set_Offer_date_end(void* void_self, SlimList* args)
 {
-  OfferModification* self = (OfferModification*)void_self;
-  self->OfferModification.o.date_end==str2epoch(SlimList_GetStringAt(args, 0));
+  Offermodification* self = (Offermodification*)void_self;
+  self->Offermodification.o.date_end==str2epoch(SlimList_GetStringAt(args, 0));
   return self->result;
 };
-static const char* setPrice(void* void_self, SlimList* args)
+static const char* set_Offer_price(void* void_self, SlimList* args)
 {
-  OfferModification* self = (OfferModification*)void_self;
-  self->OfferModification.o.price =  atoi(SlimList_GetStringAt(args, 0));
+  Offermodification* self = (Offermodification*)void_self;
+  self->Offermodification.o.price =  atoi(SlimList_GetStringAt(args, 0));
   return self->result;
 };
-static const char* setInsurance_cost(void* void_self, SlimList* args)
+static const char* set_Offer_insurance_cost(void* void_self, SlimList* args)
 {
-  OfferModification* self = (OfferModification*)void_self;
-  self->OfferModification.o.insurance_cost = atoi(SlimList_GetStringAt(args, 0));
+  Offermodification* self = (Offermodification*)void_self;
+  self->Offermodification.o.insurance_cost = atoi(SlimList_GetStringAt(args, 0));
   return self->result;
 };
-static const char* setExtra_meals_cost(void* void_self, SlimList* args)
+static const char* set_Offer_extra_meals_cost(void* void_self, SlimList* args)
 {
-  OfferModification* self = (OfferModification*)void_self;
-  self->OfferModification.o.extra_meals_cost = atoi(SlimList_GetStringAt(args, 0));
+  Offermodification* self = (Offermodification*)void_self;
+  self->Offermodification.o.extra_meals_cost = atoi(SlimList_GetStringAt(args, 0));
   return self->result;
 };
-static const char* setCategoryid(void* void_self, SlimList* args)
+static const char* set_Offer_categoryid(void* void_self, SlimList* args)
 {
-  OfferModification* self = (OfferModification*)void_self;
-  self->OfferModification.o.categoryid = atoi(SlimList_GetStringAt(args, 0));
+  Offermodification* self = (Offermodification*)void_self;
+  self->Offermodification.o.categoryid = atoi(SlimList_GetStringAt(args, 0));
   return self->result;
 };
-static const char* setTickets_count(void* void_self, SlimList* args)
+static const char* set_Offer_tickets_count(void* void_self, SlimList* args)
 {
-  OfferModification* self = (OfferModification*)void_self;
-  self->OfferModification.o.tickets_count = atoi(SlimList_GetStringAt(args, 0));
+  Offermodification* self = (Offermodification*)void_self;
+  self->Offermodification.o.tickets_count = atoi(SlimList_GetStringAt(args, 0));
   return self->result;
 };
 
-static const char* ModifiedOffer(void* void_self, SlimList* args) {
-	OfferModification* self = (OfferModification*)void_self;
-	bool correct = self->OfferModification.modifiedOffer();
-	if(correct)
+static const char* offer_Modified(void* void_self, SlimList* args) {
+	Offermodification* self = (Offermodification*)void_self;
+	bool res = self->Offermodification.modifieOffer();
+	if(res)
     return "Yes";
   return "No";
 }
 
 
-SLIM_CREATE_FIXTURE(OfferModification)
-	SLIM_FUNCTION(setName);
-  SLIM_FUNCTION(setCountry);
-  SLIM_FUNCTION(setCity);
-  SLIM_FUNCTION(setDate_begin);
-  SLIM_FUNCTION(setDate_end);
-  SLIM_FUNCTION(setPrice);
-  SLIM_FUNCTION(setInsurance_cost);
-  SLIM_FUNCTION(setExtra_meals_cost);
-  SLIM_FUNCTION(setCategoryid);
-  SLIM_FUNCTION(setTickets_count);
-  SLIM_FUNCTION(ModifiedOffer);
+SLIM_CREATE_FIXTURE(Offermodification)
+	SLIM_FUNCTION(set_Offer_id);
+  SLIM_FUNCTION(set_Offer_name);
+  SLIM_FUNCTION(set_Offer_country);
+  SLIM_FUNCTION(set_Offer_city);
+  SLIM_FUNCTION(set_Offer_date_begin);
+  SLIM_FUNCTION(set_Offer_date_end);
+  SLIM_FUNCTION(set_Offer_price);
+  SLIM_FUNCTION(set_Offer_insurance_cost);
+  SLIM_FUNCTION(set_Offer_extra_meals_cost);
+  SLIM_FUNCTION(set_Offer_categoryid);
+  SLIM_FUNCTION(set_Offer_tickets_count);
+  SLIM_FUNCTION(offer_Modified);
 SLIM_END
 
 #ifndef CPP_COMPILING

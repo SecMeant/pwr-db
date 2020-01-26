@@ -6,13 +6,13 @@ extern "C"{
 }
 #include <stdlib.h>
 #include <string.h>
+
 Slim * slim;
 extern "C"{
 int connection_handler(int socket)
 {
 	int result = 0;
 	TcpComLink * comLink = TcpComLink_Create(socket);
-
   result = Slim_HandleConnection(slim, (void*)comLink, &TcpComLink_send, &TcpComLink_recv);
 
 	TcpComLink_Destroy(comLink);
