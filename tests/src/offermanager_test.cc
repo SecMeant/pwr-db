@@ -206,7 +206,7 @@ TEST_F(OfferManagerTest, drop_disabling_existing_offer_passed_with_clients_payme
     .Times(1)
     .WillOnce(Return(selected_tours));
 
-  int expected_callculated_cost =25469;
+  constexpr int expected_callculated_cost =25469;
   int callculated_cost;
   ON_CALL(hldb_mocked_instance, modify_tour).WillByDefault(Invoke([&](const tour_t &t) ->bool{
     callculated_cost = t.debt;

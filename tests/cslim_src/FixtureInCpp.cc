@@ -61,6 +61,10 @@ public:
 	{
 		return hldb_inst.change_offer(o);
 	}
+  bool dropOffer()
+  {
+    return hldb_inst.drop_offer(o);
+  }
   offer_t o;
 	char result[32];
   hldb hldb_inst{ DB_DATABASE_TEST };
@@ -165,6 +169,13 @@ static const char* offer_Modified(void* void_self, SlimList* args) {
   return "No";
 }
 
+static const char* offer_Removed(void* void_self, SlimList* args) {
+  Offermodification* self = (Offermodification*)void_self;
+  bool res = self->Offermodification.dropOffer();
+  if(res)
+    return "Yes";
+  return "No";
+}
 
 SLIM_CREATE_FIXTURE(Offermodification)
 	SLIM_FUNCTION(set_Offer_id);
@@ -179,6 +190,7 @@ SLIM_CREATE_FIXTURE(Offermodification)
   SLIM_FUNCTION(set_Offer_categoryid);
   SLIM_FUNCTION(set_Offer_tickets_count);
   SLIM_FUNCTION(offer_Modified);
+  SLIM_FUNCTION(offer_Removed);
 SLIM_END
 
 #ifndef CPP_COMPILING
